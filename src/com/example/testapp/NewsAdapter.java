@@ -6,13 +6,14 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class EfficientAdapter extends BaseAdapter {
+public class NewsAdapter extends BaseAdapter {
 
 	private Activity activity;
 	private ArrayList<Post> data;
@@ -21,7 +22,7 @@ public class EfficientAdapter extends BaseAdapter {
 	private HashMap<String, String> dayMap;
 	private HashMap<String, String> monthMap;
 	
-	public EfficientAdapter(Activity a, ArrayList<Post> d) {
+	public NewsAdapter(Activity a, ArrayList<Post> d) {
 		this.dayMap = new HashMap<String, String>();
 		this.monthMap = new HashMap<String, String>();
 		
@@ -74,9 +75,9 @@ public class EfficientAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View vi = convertView;
-		
+		Log.i(Utils.TAG, "NEWS " + position);
 		if(convertView == null) {
-			vi = inflater.inflate(R.layout.row, null);
+			vi = inflater.inflate(R.layout.row_news, null);
 			holder = new ViewHolder();
 			holder.title = (TextView) vi.findViewById(R.id.title);
 			holder.desc = (TextView) vi.findViewById(R.id.details);
@@ -85,15 +86,11 @@ public class EfficientAdapter extends BaseAdapter {
 		} else 
 			holder = (ViewHolder) vi.getTag();
 		
-		holder.title.setText(data.get(position).getTitle().toUpperCase());
-		
 		String sweDate = translateDate(data.get(position).getPubDate());
-		
+
+		holder.title.setText(data.get(position).getTitle().toUpperCase());
 		holder.pubDate.setText(sweDate.toLowerCase());
 		holder.desc.setText(Html.fromHtml(data.get(position).getDesc()).toString().trim());
-		
-		System.out.println("TEXT " + Html.fromHtml(data.get(position).getDesc()).toString() + " SLUT");
-		System.out.println("TEXT " + Html.fromHtml(data.get(position).getDesc()).toString().trim() + " SLUT");
 		
 		return vi;
 	}
@@ -107,7 +104,7 @@ public class EfficientAdapter extends BaseAdapter {
 		return split[0] + " " + split[1] + " " + split[2] + " " + split[3];
 	}
 
-	public static class ViewHolder {
+	class ViewHolder {
 		public TextView title;
 		public TextView pubDate;
 		public TextView desc;

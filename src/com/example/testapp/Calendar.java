@@ -4,31 +4,34 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.example.testapp.News.LoadingTask;
+import com.example.testapp.News.RSSHandler;
+import com.example.testapp.News.SAXHelper;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.Menu;
 import android.widget.ListView;
+import android.widget.Toast;
 
+public class Calendar extends Activity {
 
-public class News extends Activity {
-	
-	private final String rss_feed = "http://paggebella.tumblr.com/rss";
+	private final String rss_feed = "http://paggebella.tumblr.com/cal/rss";
 	
 	private ProgressDialog showProgress;
 	private ArrayList<Post> postList;
@@ -37,21 +40,13 @@ public class News extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_news);
+		setContentView(R.layout.activity_cal);
 		
 		postList = new ArrayList<Post>();
 		newsList = (ListView) findViewById(R.id.news_list);
 		
-		showProgress = ProgressDialog.show(News.this, "", "Laddar nyheter...");
+		showProgress = ProgressDialog.show(Calendar.this, "", "Laddar schema...");
 		new LoadingTask(getApplicationContext()).execute(rss_feed);
-		
-//		newsList.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(postList.get(position).getUrl()));
-//				startActivity(intent);
-//			}
-//		});
 	}
 	
 	class LoadingTask extends AsyncTask<String, Void, String> {
@@ -83,9 +78,29 @@ public class News extends Activity {
 					Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
 					break;
 				default:
-					newsList.setAdapter(new NewsAdapter(News.this, postList));
+					processResponse(postList);
+					newsList.setAdapter(new CalAdapter(Calendar.this, postList));
 					showProgress.dismiss();
 					break;
+			}
+		}
+
+		private void processResponse(ArrayList<Post> postList) {
+			String post = Html.fromHtml(postList.remove(0).getDesc()).toString();
+			
+			String[] split = post.split("\n\n");
+
+			for (int i = 0; i < split.length; i++) {
+				String[] inner = split[i].split("\n");
+				
+				Post p = new Post();
+				p.setTitle(inner[0]);
+				String total = "";
+				for (int j = 1; j < inner.length; j++) { //Kommer behandla varje inner för att få ut plats och spara den i post
+					total += inner[j] + "\n";
+				}
+				p.setDesc(total);
+				postList.add(p);
 			}
 		}
 
@@ -136,18 +151,6 @@ public class News extends Activity {
 		
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
-			if(localName.equalsIgnoreCase("title") && currentPost.getTitle() == null && isItem)
-				currentPost.setTitle(chars.toString());
-			
-			if(localName.equalsIgnoreCase("pubDate") && currentPost.getPubDate() == null && isItem)
-				currentPost.setPubDate(chars.toString());
-			
-			if(localName.equalsIgnoreCase("thumbnail") && currentPost.getThumbnail() == null && isItem)
-				currentPost.setThumbnail(chars.toString());
-			
-			if(localName.equalsIgnoreCase("link") && currentPost.getUrl() == null && isItem)
-				currentPost.setUrl(chars.toString());
-			
 			if(localName.equalsIgnoreCase("description") && currentPost.getDesc() == null && isItem)
 				currentPost.setDesc(chars.toString());
 			

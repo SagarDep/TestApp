@@ -39,6 +39,15 @@ public class Main extends Activity {
 			}
 		});
 		
+		Button cal = (Button) findViewById(R.id.button2);
+		cal.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent myIntent = new Intent(v.getContext(), Calendar.class);
+				startActivityForResult(myIntent, 0);
+			}
+		});
+		
 		ImageButton sponsor1 = (ImageButton) findViewById(R.id.imageView2);
 		sponsor1.setOnClickListener(new View.OnClickListener() {
 			@Override
