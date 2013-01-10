@@ -13,17 +13,21 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 
 public class News extends Activity {
+	
 	private final String rss_feed = "http://paggebella.tumblr.com/rss";
 	
 	private ProgressDialog showProgress;
@@ -39,7 +43,7 @@ public class News extends Activity {
 		newsList = (ListView) findViewById(R.id.news_list);
 		
 		showProgress = ProgressDialog.show(News.this, "", "Laddar nyheter...");
-		new LoadingTask().execute(rss_feed);
+		new LoadingTask(getApplicationContext()).execute(rss_feed);
 		
 //		newsList.setOnItemClickListener(new OnItemClickListener() {
 //			@Override
@@ -51,31 +55,53 @@ public class News extends Activity {
 	}
 	
 	class LoadingTask extends AsyncTask<String, Void, String> {
+		private Context context;
+		private int error = Utils.ECODE_NO_ERROR;
 
+		public LoadingTask(Context context) {
+			this.context = context;
+		}
+		
 		@Override
 		protected String doInBackground(String... urls) {
 			SAXHelper sh = null;
 			
 			try {
-				sh = new SAXHelper(urls[0]);
+				sh = new SAXHelper(this, urls[0]);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 			sh.parseContent("");
+			
 			return "";
 		}
 		
 		protected void onPostExecute(String s) {
-			newsList.setAdapter(new EfficientAdapter(News.this, postList));
-			showProgress.dismiss();
+			
+			switch(error) {
+				case Utils.ECODE_NO_INTERNET_CONNECTION:
+					showProgress.dismiss();
+					Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+					break;
+				default:
+					newsList.setAdapter(new EfficientAdapter(News.this, postList));
+					showProgress.dismiss();
+					break;
+			}
+		}
+
+		public void raiseError(int errorCode) {
+			this.error = errorCode;
 		}
 	}
 	
 	public class SAXHelper {
 		public HashMap<String, String> userList = new HashMap<String, String>();
 		private URL url;
+		private LoadingTask task;
 
-		public SAXHelper(String url) throws MalformedURLException {
+		public SAXHelper(LoadingTask loadingTask, String url) throws MalformedURLException {
+			this.task = loadingTask;
 			this.url = new URL(url);
 		}
 
@@ -88,6 +114,8 @@ public class News extends Activity {
 				xr.setContentHandler(df);
 				xr.parse(new InputSource(url.openStream()));
 			} catch (Exception e) {
+				Log.i(Utils.TAG, Utils.EMSG_NO_INTERNET_CONNECTION);
+				task.raiseError(Utils.ECODE_NO_INTERNET_CONNECTION);
 				e.printStackTrace();
 			}
 			return df;
