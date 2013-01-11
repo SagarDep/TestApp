@@ -1,8 +1,9 @@
 package com.example.testapp;
 
 public abstract class ScheduleItem {
-	private static final int TYPE_CALDATE = 0;
-	private static final int TYPE_CALDESC = 1;
+	public static final int TYPE_CALDATE = 0;
+	public static final int TYPE_CALDESC = 1;
+	public static final int TYPE_CALSEP  = 2;
 	
 	private int type;
 	

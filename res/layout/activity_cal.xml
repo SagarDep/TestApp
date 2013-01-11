@@ -27,8 +27,7 @@
         android:focusable="false"
         android:fadeScrollbars="true"
 		android:focusableInTouchMode="false"
-		android:headerDividersEnabled="false"
-		android:footerDividersEnabled="false"
+		android:divider="@null"
 		android:background="@drawable/stroke" >
     </ListView>
 </RelativeLayout>

@@ -94,17 +94,17 @@ public class Calendar extends Activity {
 
 			for (int i = 0; i < split.length; i++) {
 				String[] inner = split[i].split("\n");
+				String[] date = inner[0].split("<>");
 				
-				Post p = new Post();
-				p.setTitle(inner[0]);
-				String total = "";
-				for (int j = 1; j < inner.length; j++) { //Kommer behandla varje inner för att få ut plats och spara den i post
-					total += inner[j] + "\n";
+				list.add(new CalDate(ScheduleItem.TYPE_CALDATE, date[0], date[1]));
+				
+				for (int j = 1; j < inner.length; j++) {
+					String[] desc = inner[j].split("<>");
+					list.add(new CalDesc(ScheduleItem.TYPE_CALDESC, desc[0], " " + desc[1], desc[2].trim()));
 				}
-				p.setDesc(total);
-				postList.add(p);
+				
+				list.add(new CalSep(ScheduleItem.TYPE_CALSEP));
 			}
-			
 			return list;
 		}
 

@@ -75,7 +75,6 @@ public class NewsAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View vi = convertView;
-		Log.i(Utils.TAG, "NEWS " + position);
 		if(convertView == null) {
 			vi = inflater.inflate(R.layout.row_news, null);
 			holder = new ViewHolder();

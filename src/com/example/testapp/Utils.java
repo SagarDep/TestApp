@@ -7,7 +7,7 @@ public class Utils {
 	public static final String TAG = "App";
 	
 	public static final int ECODE_NO_ERROR				 	= -1;
-	public static final int ECODE_NO_INTERNET_CONNECTION	= 0;
+	public static final int ECODE_NO_INTERNET_CONNECTION	=  0;
 	
 	public static final String EMSG_NO_INTERNET_CONNECTION	= "Nätverk ej tillgängligt\nVisar data från 9 Jan 2013";
 	
