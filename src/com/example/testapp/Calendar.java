@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -78,14 +79,15 @@ public class Calendar extends Activity {
 					Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
 					break;
 				default:
-					processResponse(postList);
-					newsList.setAdapter(new CalAdapter(Calendar.this, postList));
+					ArrayList<ScheduleItem> list = processResponse(postList);
+					newsList.setAdapter(new CalAdapter(Calendar.this, list));
 					showProgress.dismiss();
 					break;
 			}
 		}
 
-		private void processResponse(ArrayList<Post> postList) {
+		private ArrayList<ScheduleItem> processResponse(ArrayList<Post> postList) {
+			ArrayList<ScheduleItem> list = new ArrayList<ScheduleItem>();
 			String post = Html.fromHtml(postList.remove(0).getDesc()).toString();
 			
 			String[] split = post.split("\n\n");
@@ -102,6 +104,8 @@ public class Calendar extends Activity {
 				p.setDesc(total);
 				postList.add(p);
 			}
+			
+			return list;
 		}
 
 		public void raiseError(int errorCode) {

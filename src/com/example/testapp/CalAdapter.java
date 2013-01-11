@@ -2,6 +2,7 @@ package com.example.testapp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import com.example.testapp.NewsAdapter.ViewHolder;
 
@@ -16,13 +17,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class CalAdapter extends BaseAdapter {
-
+	
 	private Activity activity;
-	private ArrayList<Post> data;
+	private ArrayList<ScheduleItem> data;
 	private LayoutInflater inflater;
 	protected ViewHolder holder;
 	
-	public CalAdapter(Activity a, ArrayList<Post> d) {
+	public CalAdapter(Activity a, ArrayList<ScheduleItem> d) {
 		this.activity = a;
 		this.data = d;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -56,9 +57,8 @@ public class CalAdapter extends BaseAdapter {
 		} else 
 			holder = (ViewHolder) vi.getTag();
 
-		holder.title.setText(data.get(position).getTitle().toUpperCase());
-		holder.desc.setText(data.get(position).getDesc().toString().trim());
-		
+//		holder.title.setText(data.get(position).getTitle().toUpperCase());
+//		holder.desc.setText(data.get(position).getDesc().toString().trim());
 		return vi;
 	}
 
