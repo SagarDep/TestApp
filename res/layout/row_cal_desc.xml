@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/row_cal_desc"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="0dp" >
+    android:layout_height="wrap_content" >
 
      <TextView
          android:id="@+id/desc_time"
@@ -30,9 +29,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/desc_time"
+        android:layout_marginTop="-5dp"
         android:textColor="#8e8e8e"
         android:textSize="12sp"
         android:layout_alignParentLeft="true"
+        android:textStyle="italic"
          />
 
    

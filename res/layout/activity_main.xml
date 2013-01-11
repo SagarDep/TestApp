@@ -40,7 +40,9 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/button1"
             android:text="@string/Button2"
-            android:layout_marginTop="@dimen/main_buttons_spacing" />
+            android:layout_marginTop="@dimen/main_buttons_spacing"
+            android:background="@drawable/btn_red_states"
+            style="@style/ButtonText" />
 
         <Button
             android:id="@+id/button3"
