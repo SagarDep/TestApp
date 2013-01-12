@@ -29,7 +29,7 @@ import android.widget.ListView;
 public class News extends Activity {
 	
 	private final String rss_feed = "http://paggebella.tumblr.com/rss";
-	
+	public static String testString = "onCreate";
 	private ProgressDialog showProgress;
 	private ArrayList<Post> postList;
 	private ListView newsList;
@@ -44,6 +44,7 @@ public class News extends Activity {
 		
 		showProgress = ProgressDialog.show(News.this, "", "Laddar nyheter...");
 		new LoadingTask(getApplicationContext()).execute(rss_feed);
+		Log.v(Utils.TAG, testString);
 		
 //		newsList.setOnItemClickListener(new OnItemClickListener() {
 //			@Override
@@ -53,6 +54,14 @@ public class News extends Activity {
 //			}
 //		});
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		testString = "onResume";
+		Log.v(Utils.TAG, testString);
+	}
+	
 	
 	class LoadingTask extends AsyncTask<String, Void, String> {
 		private Context context;

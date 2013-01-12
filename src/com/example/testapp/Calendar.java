@@ -35,7 +35,8 @@ public class Calendar extends Activity {
 	private final String rss_feed = "http://paggebella.tumblr.com/cal/rss";
 	
 	private ProgressDialog showProgress;
-	private ArrayList<Post> postList;
+	private static ArrayList<Post> postList = null;
+	private static ArrayList<ScheduleItem> scheduleList = null;
 	private ListView newsList;
 	
 	@Override
@@ -43,11 +44,18 @@ public class Calendar extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cal);
 		
-		postList = new ArrayList<Post>();
 		newsList = (ListView) findViewById(R.id.news_list);
 		
 		showProgress = ProgressDialog.show(Calendar.this, "", "Laddar schema...");
-		new LoadingTask(getApplicationContext()).execute(rss_feed);
+		if(scheduleList == null) {
+			Log.d(Utils.TAG, "Visar ny version");
+			postList = new ArrayList<Post>();
+			new LoadingTask(getApplicationContext()).execute(rss_feed);
+		} else {
+			Log.d(Utils.TAG, "Visar gammal version");
+			newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+			showProgress.dismiss();
+		}
 	}
 	
 	class LoadingTask extends AsyncTask<String, Void, String> {
@@ -79,8 +87,8 @@ public class Calendar extends Activity {
 					Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
 					break;
 				default:
-					ArrayList<ScheduleItem> list = processResponse(postList);
-					newsList.setAdapter(new CalAdapter(Calendar.this, list));
+					scheduleList = processResponse(postList);
+					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					break;
 			}
