@@ -60,7 +60,9 @@
             android:layout_alignParentLeft="@+id/button2"
             android:layout_below="@+id/button3"
             android:text="@string/Button4"
-            android:layout_marginTop="@dimen/main_buttons_spacing" />
+            android:layout_marginTop="@dimen/main_buttons_spacing"
+            android:background="@drawable/btn_green_states"
+            style="@style/ButtonText" />
 
         <Button
             android:id="@+id/button5"

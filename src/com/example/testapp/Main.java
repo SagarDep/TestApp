@@ -21,13 +21,6 @@ public class Main extends Activity {
 		initButtons();
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
-	
 	private void initButtons() {
 		Button news = (Button) findViewById(R.id.button1);
 		news.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +36,15 @@ public class Main extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent myIntent = new Intent(v.getContext(), Calendar.class);
+				startActivityForResult(myIntent, 0);
+			}
+		});
+		
+		Button map = (Button) findViewById(R.id.button4);
+		map.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent myIntent = new Intent(v.getContext(), Map.class);
 				startActivityForResult(myIntent, 0);
 			}
 		});

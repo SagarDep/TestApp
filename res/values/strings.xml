@@ -30,5 +30,6 @@
     </style>
 
     <string name="title_activity_calendar">Calendar</string>
+    <string name="title_activity_map">Map</string>
 
 </resources>
