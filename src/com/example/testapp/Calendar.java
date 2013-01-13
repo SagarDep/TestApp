@@ -51,7 +51,7 @@ public class Calendar extends Activity {
 		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 
 		if (scheduleList != null && timeDiff < validTime) {
-			Log.i(Utils.TAG, "NEWS USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+			Log.i(Utils.TAG, "CALENDAR USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 			newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 			showProgress.dismiss();
 		} else {
@@ -82,6 +82,7 @@ public class Calendar extends Activity {
 			return "";
 		}
 
+		@SuppressWarnings("unchecked")
 		protected void onPostExecute(String s) {
 			switch (error) {
 				case Utils.ECODE_NO_INTERNET_CONNECTION:
@@ -99,9 +100,13 @@ public class Calendar extends Activity {
 							scheduleList = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
 							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
 						} catch (IOException e) {
+							scheduleList = null;
+							lastUpdateTime = -1L;
 							Log.e(Utils.TAG, "CALENDAR retrieve_from_file IOException");
 							e.printStackTrace();
 						} catch (ClassCastException e) {
+							scheduleList = null;
+							lastUpdateTime = -1L;
 							Log.e(Utils.TAG, "CALENDAR retrieve_from_file ClassCastException");
 							e.printStackTrace();
 						}

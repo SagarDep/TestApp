@@ -1,5 +1,6 @@
 package com.example.testapp;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,11 +46,10 @@ public class News extends Activity {
 		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 		
 		if(postList != null && timeDiff < validTime) {
-			Log.v(Utils.TAG, "NEWS Laddar in gammalt timeDiff=" + timeDiff + " (" + (timeDiff / 1000.0) / 60.0 + " min)");
+			Log.i(Utils.TAG, "NEWS USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 			newsList.setAdapter(new NewsAdapter(News.this, postList));
 			showProgress.dismiss();
 		} else {
-			Log.v(Utils.TAG, "NEWS Laddar in nytt");
 			backupPostList = postList;
 			postList = new ArrayList<Post>();
 			new LoadingTask(getApplicationContext()).execute(rss_feed);
@@ -84,6 +86,7 @@ public class News extends Activity {
 			return "";
 		}
 		
+		@SuppressWarnings("unchecked")
 		protected void onPostExecute(String s) {
 			switch(error) {
 				case Utils.ECODE_NO_INTERNET_CONNECTION:
@@ -96,18 +99,56 @@ public class News extends Activity {
 						String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 						Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
 					} else {
-						Log.v(Utils.TAG, "Ingen connection har inget gammalt");
-						Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+						SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+						try {
+							postList = (ArrayList<Post>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_NEWS, null));
+							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_NEWS_DATE, -1L);
+						} catch (IOException e) {
+							postList = null;
+							lastUpdateTime = -1L;
+							Log.e(Utils.TAG, "NEWS retrieve_from_file IOException");
+							e.printStackTrace();
+						} catch (ClassCastException e) {
+							postList = null;
+							lastUpdateTime = -1L;
+							Log.e(Utils.TAG, "NEWS retrieve_from_file ClassCastException");
+							e.printStackTrace();
+						}
+	
+						if (postList != null) {
+							Log.i(Utils.TAG, "NEWS (no connection)  USING STORED VERSION");
+							newsList.setAdapter(new NewsAdapter(News.this, postList));
+							String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
+							Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
+						} else {
+							Log.i(Utils.TAG, "NEWS (no connection) NO DATA TO SHOW");
+							Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+						}
 					}
 					break;
 				default:
+					Log.i(Utils.TAG, "NEWS USING FRESHLY DOWNLOADED");
 					newsList.setAdapter(new NewsAdapter(News.this, postList));
 					showProgress.dismiss();
 					lastUpdateTime = System.currentTimeMillis();
+					saveToFile();
 					break;
 			}
 		}
-
+		
+		private void saveToFile() {
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			Editor editor = prefs.edit();
+			try {
+				editor.putString(Utils.PREFS_KEY_NEWS, ObjectSerializer.serialize(postList));
+				editor.putLong(Utils.PREFS_KEY_NEWS_DATE, lastUpdateTime);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(Utils.TAG, "NEWS save_to_file IOException");
+			}
+			editor.commit();
+		}
+		
 		public void raiseError(int errorCode) {
 			this.error = errorCode;
 		}
