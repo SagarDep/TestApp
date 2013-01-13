@@ -57,7 +57,7 @@
             android:id="@+id/button4"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/button2"
+            android:layout_alignParentLeft="@+id/button2"
             android:layout_below="@+id/button3"
             android:text="@string/Button4"
             android:layout_marginTop="@dimen/main_buttons_spacing" />
@@ -68,7 +68,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/button4"
-            android:layout_centerVertical="true"
             android:text="@string/Button5"
             android:layout_marginTop="@dimen/main_buttons_spacing" />
     </RelativeLayout>

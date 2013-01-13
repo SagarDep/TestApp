@@ -3,6 +3,7 @@ package com.example.testapp;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -14,24 +15,21 @@ import org.xml.sax.helpers.DefaultHandler;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-
 public class News extends Activity {
+	private final String rss_feed				= "http://paggebella.tumblr.com/rss";
+	private final long validTime				= 300000L;
 	
-	private final String rss_feed = "http://paggebella.tumblr.com/rss";
-	public static String testString = "onCreate";
+	private static ArrayList<Post> postList		= null;
+	private static long lastUpdateTime			= -1L;
+	
+	private ArrayList<Post> backupPostList		= null;
 	private ProgressDialog showProgress;
-	private ArrayList<Post> postList;
 	private ListView newsList;
 	
 	@Override
@@ -39,12 +37,21 @@ public class News extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_news);
 		
-		postList = new ArrayList<Post>();
 		newsList = (ListView) findViewById(R.id.news_list);
+		showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS);
 		
-		showProgress = ProgressDialog.show(News.this, "", "Laddar nyheter...");
-		new LoadingTask(getApplicationContext()).execute(rss_feed);
-		Log.v(Utils.TAG, testString);
+		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
+		
+		if(postList != null && timeDiff < validTime) {
+			Log.v(Utils.TAG, "NEWS Laddar in gammalt timeDiff=" + timeDiff + " (" + (timeDiff / 1000.0) / 60.0 + " min)");
+			newsList.setAdapter(new NewsAdapter(News.this, postList));
+			showProgress.dismiss();
+		} else {
+			Log.v(Utils.TAG, "NEWS Laddar in nytt");
+			backupPostList = postList;
+			postList = new ArrayList<Post>();
+			new LoadingTask(getApplicationContext()).execute(rss_feed);
+		}
 		
 //		newsList.setOnItemClickListener(new OnItemClickListener() {
 //			@Override
@@ -54,14 +61,6 @@ public class News extends Activity {
 //			}
 //		});
 	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		testString = "onResume";
-		Log.v(Utils.TAG, testString);
-	}
-	
 	
 	class LoadingTask extends AsyncTask<String, Void, String> {
 		private Context context;
@@ -89,11 +88,22 @@ public class News extends Activity {
 			switch(error) {
 				case Utils.ECODE_NO_INTERNET_CONNECTION:
 					showProgress.dismiss();
-					Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+					if(backupPostList != null) {
+						postList = backupPostList;
+						backupPostList = null;
+						Log.v(Utils.TAG, "Ingen connection Läser in gammalt");
+						newsList.setAdapter(new NewsAdapter(News.this, postList));
+						String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
+						Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
+					} else {
+						Log.v(Utils.TAG, "Ingen connection har inget gammalt");
+						Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+					}
 					break;
 				default:
 					newsList.setAdapter(new NewsAdapter(News.this, postList));
 					showProgress.dismiss();
+					lastUpdateTime = System.currentTimeMillis();
 					break;
 			}
 		}
@@ -122,7 +132,6 @@ public class News extends Activity {
 				xr.setContentHandler(df);
 				xr.parse(new InputSource(url.openStream()));
 			} catch (Exception e) {
-				Log.i(Utils.TAG, Utils.EMSG_NO_INTERNET_CONNECTION);
 				task.raiseError(Utils.ECODE_NO_INTERNET_CONNECTION);
 				e.printStackTrace();
 			}
@@ -131,9 +140,10 @@ public class News extends Activity {
 	}
 	
 	class RSSHandler extends DefaultHandler {
-		private Post currentPost = new Post();
 		private StringBuffer chars = new StringBuffer();
+		private Post currentPost = new Post(0);
 		private boolean isItem = false;
+		private int counter = 1;
 		
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) {
@@ -162,7 +172,8 @@ public class News extends Activity {
 			
 			if(localName.equalsIgnoreCase("item") && isItem) {
 				postList.add(currentPost);
-				currentPost = new Post();
+				currentPost = new Post(counter);
+				counter++;
 				isItem = false;
 			}
 		}

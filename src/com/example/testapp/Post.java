@@ -1,11 +1,16 @@
 package com.example.testapp;
 
-public class Post {
+public class Post implements Comparable<Post> {
+	private int id;
 	private String title;
 	private String thumbnail;
 	private String url;
 	private String desc;
 	private String pubDate;
+	
+	public Post(int id) {
+		this.id = id;
+	}
 	
 	public String getTitle() {
 		return title;
@@ -37,4 +42,10 @@ public class Post {
 	public void setPubDate(String pubDate) {
 		this.pubDate = pubDate;
 	}
+	
+	@Override
+	public int compareTo(Post b) {
+		return Integer.valueOf(id).compareTo(b.id);
+	}
 }
+

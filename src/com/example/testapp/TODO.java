@@ -3,10 +3,7 @@ package com.example.testapp;
 public class TODO {
 	/*
 	 	
-		TODO: Kolla så att inga uppkopplingar ligger igång efter att rss är hämtad
-		TODO: Fixa så att appen inte krashar om man saknar internetuppkoppling.
 	 	TODO: Gör 9 patch knappar för focus och focus/pressed
-	 	TODO: Ändra EMSG_NO_INTERNET_CONNECTION
 	 	
 	 	//LADDA INTE NER FÖR MYCKET
 	 	TODO: 1. Kolla om den cachade datan är äldre än en viss tid och om det är fallet uppdatera den (typ 5minuter eller nåt) + punkt 3

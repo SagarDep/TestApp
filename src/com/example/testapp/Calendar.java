@@ -1,11 +1,11 @@
 package com.example.testapp;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -16,30 +16,28 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.example.testapp.News.LoadingTask;
-import com.example.testapp.News.RSSHandler;
-import com.example.testapp.News.SAXHelper;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class Calendar extends Activity {
 
-	private final String rss_feed = "http://paggebella.tumblr.com/cal/rss";
-	private final long validTime = 300000L; //5 minuter
+	private final String rss_feed						= "http://paggebella.tumblr.com/cal/rss";
+	private final long validTime						= 300000L; //5 minuter
 	
 	private static ArrayList<ScheduleItem> scheduleList = null;
-	private static Long	lastUpdateTime 					= -1L;
+	private static long	lastUpdateTime 					= -1L;
 	
-	private ArrayList<Post> postList = null;
+	private ArrayList<Post> postList					= null;
 	private ProgressDialog showProgress;
 	private ListView newsList;
 	
@@ -49,9 +47,11 @@ public class Calendar extends Activity {
 		setContentView(R.layout.activity_cal);
 		
 		newsList = (ListView) findViewById(R.id.news_list);
-		showProgress = ProgressDialog.show(Calendar.this, "", "Laddar schema...");
+		showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE);
 		
 		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
+		
+		
 		
 		if(scheduleList != null && timeDiff < validTime) {
 			Log.d(Utils.TAG, "Visar gammal version " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
@@ -61,7 +61,6 @@ public class Calendar extends Activity {
 			Log.d(Utils.TAG, "Visar ny version");
 			postList = new ArrayList<Post>();
 			new LoadingTask(getApplicationContext()).execute(rss_feed);
-			lastUpdateTime = System.currentTimeMillis();
 		}
 	}
 	
@@ -91,14 +90,35 @@ public class Calendar extends Activity {
 			switch(error) {
 				case Utils.ECODE_NO_INTERNET_CONNECTION:
 					showProgress.dismiss();
-					Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+					if(scheduleList != null) {
+						newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+						String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
+						Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
+					} else 
+						Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
 					break;
 				default:
 					scheduleList = processResponse(postList);
 					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
+					lastUpdateTime = System.currentTimeMillis();
+					saveToFile();
 					break;
 			}
+		}
+
+		private void saveToFile() {
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			Editor editor = prefs.edit();
+			
+			try {
+				editor.putString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(scheduleList));
+				editor.putLong(Utils.PREFS_KEY_SCHEDULE_DATE, lastUpdateTime);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			editor.commit();
 		}
 
 		private ArrayList<ScheduleItem> processResponse(ArrayList<Post> postList) {
@@ -106,19 +126,22 @@ public class Calendar extends Activity {
 			String post = Html.fromHtml(postList.remove(0).getDesc()).toString();
 			
 			String[] split = post.split("\n\n");
-
+			int idCounter = 0;
 			for (int i = 0; i < split.length; i++) {
 				String[] inner = split[i].split("\n");
 				String[] date = inner[0].split("<>");
 				
-				list.add(new CalDate(ScheduleItem.TYPE_CALDATE, date[0], date[1]));
+				list.add(new CalDate(ScheduleItem.TYPE_CALDATE, idCounter, date[0], date[1]));
+				idCounter++;
 				
 				for (int j = 1; j < inner.length; j++) {
 					String[] desc = inner[j].split("<>");
-					list.add(new CalDesc(ScheduleItem.TYPE_CALDESC, desc[0], " " + desc[1], desc[2].trim()));
+					list.add(new CalDesc(ScheduleItem.TYPE_CALDESC, idCounter, desc[0], " " + desc[1], desc[2].trim()));
+					idCounter++;
 				}
 				
-				list.add(new CalSep(ScheduleItem.TYPE_CALSEP));
+				list.add(new CalSep(ScheduleItem.TYPE_CALSEP, idCounter));
+				idCounter++;
 			}
 			return list;
 		}
@@ -156,9 +179,10 @@ public class Calendar extends Activity {
 	}
 	
 	class RSSHandler extends DefaultHandler {
-		private Post currentPost = new Post();
 		private StringBuffer chars = new StringBuffer();
+		private Post currentPost = new Post(0);
 		private boolean isItem = false;
+		private int counter = 1;
 		
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) {
@@ -175,7 +199,8 @@ public class Calendar extends Activity {
 			
 			if(localName.equalsIgnoreCase("item") && isItem) {
 				postList.add(currentPost);
-				currentPost = new Post();
+				currentPost = new Post(counter);
+				counter++;
 				isItem = false;
 			}
 		}

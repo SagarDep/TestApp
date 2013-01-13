@@ -1,17 +1,95 @@
 package com.example.testapp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.Toast;
 
+@SuppressLint("SimpleDateFormat")
 public class Utils {
-	public static final String TAG = "App";
+	public static final String TAG							= "APP";
+	public static final String PREFS_FILE					= "prefsFile";
+	public static final String PREFS_KEY_NEWS				= "news";
+	public static final String PREFS_KEY_NEWS_DATE			= "newsDate";
+	public static final String PREFS_KEY_SCHEDULE			= "schedule";
+	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
 	
+	
+	
+	public static final String MSG_LOADING_NEWS				= "Laddar nyheter...";
+	public static final String MSG_LOADING_SCHEDULE 		= "Laddar schema...";
+
 	public static final int ECODE_NO_ERROR				 	= -1;
 	public static final int ECODE_NO_INTERNET_CONNECTION	=  0;
 	
-	public static final String EMSG_NO_INTERNET_CONNECTION	= "Nätverk ej tillgängligt\nVisar data från 9 Jan 2013";
+	public static final String EMSG_NO_INTERNET_CONNECTION	= "Nätverk ej tillgängligt.";
 	
-	public static void showToast(Context context, String msg, int time) {
-		Toast.makeText(context, msg, time).show();
+	private static final SimpleDateFormat DATE_FORMAT		= new SimpleDateFormat("d MMM HH:mm");
+
+	private static HashMap<String, String> dayMap			= new HashMap<String, String>();
+	private static HashMap<String, String> monthMap			= new HashMap<String, String>(); 
+	
+	static {
+		dayMap.put("Mon,", "Mån,");
+		dayMap.put("Tue,", "Tis,");
+		dayMap.put("Wed,", "Ons,");
+		dayMap.put("Thu,", "Tor,");
+		dayMap.put("Fri,", "Fre,");
+		dayMap.put("Sat,", "Lör,");
+		dayMap.put("Sun,", "Sön,");
+		
+		monthMap.put("Jan", "Jan");
+		monthMap.put("Feb", "Feb");
+		monthMap.put("Mar", "Mar");
+		monthMap.put("Apr", "Apr");
+		monthMap.put("May", "Maj");
+		monthMap.put("Jun", "Jun");
+		monthMap.put("Jul", "Jul");
+		monthMap.put("Aug", "Aug");
+		monthMap.put("Sep", "Sep");
+		monthMap.put("Oct", "Okt");
+		monthMap.put("Nov", "Nov");
+		monthMap.put("Dec", "Dec");
+		
+		DATE_FORMAT.setLenient(false);
+	}
+	
+	public static String errWithDate(int errCode, Date date, boolean newLine) {
+		String msg = "";
+		switch(errCode) {
+			case ECODE_NO_INTERNET_CONNECTION:
+				msg = EMSG_NO_INTERNET_CONNECTION;
+				msg += (newLine) ? "\n" : " ";
+				msg += "Visar data från ";
+				msg += translateMonth(DATE_FORMAT.format(date).toString(), 1);
+				break;
+		}
+		return msg;
+	}
+	
+	public static void showToast(Context context, String msg, int duration) {
+		Toast.makeText(context, msg, duration).show();
+	}
+	
+	private static String translateMonth(String date, int monthIndex) {
+		String[] split = date.split(" ");
+		split[monthIndex] = monthMap.get(split[monthIndex]);
+		String res = "";
+		for (String s : split) {
+			res += s + " ";
+		}
+		return res;
+	}
+	
+	public static String translateDate(String pubDate) {
+		String[] split = pubDate.split(" ");
+		
+		split[0] = dayMap.get(split[0]);
+		split[2] = monthMap.get(split[2]);
+		
+		return split[0] + " " + split[1] + " " + split[2] + " " + split[3];
 	}
 }
