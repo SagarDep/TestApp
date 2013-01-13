@@ -51,11 +51,10 @@ public class Calendar extends Activity {
 		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 
 		if (scheduleList != null && timeDiff < validTime) {
-			Log.d(Utils.TAG, "Visar gammal version " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+			Log.i(Utils.TAG, "NEWS USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 			newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 			showProgress.dismiss();
 		} else {
-			Log.d(Utils.TAG, "Visar ny version");
 			postList = new ArrayList<Post>();
 			new LoadingTask(getApplicationContext()).execute(rss_feed);
 		}
@@ -88,15 +87,16 @@ public class Calendar extends Activity {
 				case Utils.ECODE_NO_INTERNET_CONNECTION:
 					showProgress.dismiss();
 					if (scheduleList != null) {
+						Log.i(Utils.TAG, "CALENDAR (no connection) USING CACHED VERSION");
 						newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 						String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 						Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
 					} else {
 	
 						SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
-	
+						
 						try {
-							scheduleList = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(new ArrayList<ScheduleItem>())));
+							scheduleList = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
 							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
 						} catch (IOException e) {
 							Log.e(Utils.TAG, "CALENDAR retrieve_from_file IOException");
@@ -107,13 +107,18 @@ public class Calendar extends Activity {
 						}
 	
 						if (scheduleList != null) {
+							Log.i(Utils.TAG, "CALENDAR (no connection)  USING STORED VERSION");
 							newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 							String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 							Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
-						} else Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+						} else {
+							Log.i(Utils.TAG, "CALENDAR (no connection) NO DATA TO SHOW");
+							Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+						}
 					}
 					break;
 				default:
+					Log.i(Utils.TAG, "CALENDAR USING FRESHLY DOWNLOADED");
 					scheduleList = processResponse(postList);
 					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();

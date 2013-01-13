@@ -1,6 +1,9 @@
 package com.example.testapp;
 
-public class Post implements Comparable<Post> {
+import java.io.Serializable;
+
+public class Post implements Comparable<Post>, Serializable {
+	private static final long serialVersionUID = 5252540264609668096L;
 	private int id;
 	private String title;
 	private String thumbnail;

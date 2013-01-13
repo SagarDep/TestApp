@@ -1,6 +1,9 @@
 package com.example.testapp;
 
-public abstract class ScheduleItem implements Comparable<ScheduleItem> {
+import java.io.Serializable;
+
+public abstract class ScheduleItem implements Comparable<ScheduleItem>, Serializable {
+	private static final long serialVersionUID = 4534668534601715346L;
 	public static final int TYPE_CALDATE = 0;
 	public static final int TYPE_CALDESC = 1;
 	public static final int TYPE_CALSEP  = 2;

@@ -1,6 +1,7 @@
 package com.example.testapp;
 
 public class CalDesc extends ScheduleItem {
+	private static final long serialVersionUID = -559586710111000941L;
 	private String time;
 	private String desc;
 	private String place;
