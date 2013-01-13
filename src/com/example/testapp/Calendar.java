@@ -2,6 +2,7 @@ package com.example.testapp;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +34,13 @@ import android.widget.Toast;
 public class Calendar extends Activity {
 
 	private final String rss_feed = "http://paggebella.tumblr.com/cal/rss";
+	private final long validTime = 300000L; //5 minuter
 	
-	private ProgressDialog showProgress;
-	private static ArrayList<Post> postList = null;
 	private static ArrayList<ScheduleItem> scheduleList = null;
+	private static Long	lastUpdateTime 					= -1L;
+	
+	private ArrayList<Post> postList = null;
+	private ProgressDialog showProgress;
 	private ListView newsList;
 	
 	@Override
@@ -45,16 +49,19 @@ public class Calendar extends Activity {
 		setContentView(R.layout.activity_cal);
 		
 		newsList = (ListView) findViewById(R.id.news_list);
-		
 		showProgress = ProgressDialog.show(Calendar.this, "", "Laddar schema...");
-		if(scheduleList == null) {
+		
+		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
+		
+		if(scheduleList != null && timeDiff < validTime) {
+			Log.d(Utils.TAG, "Visar gammal version " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+			newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+			showProgress.dismiss();
+		} else {
 			Log.d(Utils.TAG, "Visar ny version");
 			postList = new ArrayList<Post>();
 			new LoadingTask(getApplicationContext()).execute(rss_feed);
-		} else {
-			Log.d(Utils.TAG, "Visar gammal version");
-			newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
-			showProgress.dismiss();
+			lastUpdateTime = System.currentTimeMillis();
 		}
 	}
 	
