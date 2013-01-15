@@ -11,6 +11,8 @@ public class TODO {
 	 	TODO: 3. Gör så att man kan refresha nyheter utan att gå ut och tillbaka
 
 
+		FIXME: Se till att info window i map inte tar upp hela bredden, ser konstigt ut.
+
 		IDEA: Läs in allt på en gång när appen startar. Kör en diff mellan en sparad Array och en nyss nerladdade och notera på
 			  knappen till tex nyheter att det har hänt nåt nytt.
 	*/

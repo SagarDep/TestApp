@@ -29,7 +29,8 @@
 		android:focusableInTouchMode="false"
 		android:headerDividersEnabled="false"
 		android:footerDividersEnabled="false"
-		android:background="@drawable/stroke" >
+		android:background="@drawable/stroke"
+		android:cacheColorHint="#00000000" >
     </ListView>
 
 </RelativeLayout>

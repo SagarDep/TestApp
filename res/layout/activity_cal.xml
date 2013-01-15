@@ -27,6 +27,7 @@
         android:focusable="false"
         android:fadeScrollbars="true"
 		android:focusableInTouchMode="false"
-		android:divider="@null" >
+		android:divider="@null"
+		android:cacheColorHint="#00000000" >
     </ListView>
 </RelativeLayout>
