@@ -18,10 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -41,40 +37,31 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends FragmentActivity {
-	private static BitmapDescriptor MARKER_HOSPITAL;
-	private static BitmapDescriptor MARKER_MED;
-	private static BitmapDescriptor MARKER_TRAIN;
-	private static BitmapDescriptor MARKER_STORE;
-	private static BitmapDescriptor MARKER_FASTFOOD;
+	private final LatLng POS_LUND = new LatLng(55.711350, 13.190117);
 	
-	private static HashMap<String, BitmapDescriptor> markMap;
+	private static HashMap<String, BitmapDescriptor> markMap = null;
 	private static ArrayList<CustomMarker> markers = null;
 	
-	private final LatLng POS_LUND = new LatLng(55.704580, 13.190632);
-	private GoogleMap map;
-	
-	
+	private GoogleMap map = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
-		
-		
+
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-		
-		String content = connectToDB();
-		markers = getMarkers(content);
 
-		initMarkerIcons();
+		if(markMap == null)
+			initMarkerIcons();
+		
+		if(markers == null) {
+			String content = connectToDB();
+			markers = getMarkers(content);
+		}
 		addMarkers();
 		
-//		initMarkers();
-		
-		//TEST AV INFO WINDOW
 		map.setInfoWindowAdapter(new InfoWindowAdapter(){
-
 			@Override
 			public View getInfoContents(Marker marker) {
 				View v = getLayoutInflater().inflate(R.layout.map_info, null);
@@ -94,42 +81,11 @@ public class Map extends FragmentActivity {
 
 			@Override
 			public View getInfoWindow(Marker arg0) {
-				// TODO Auto-generated method stub
 				return null;
 			}});
 
-
-		LocationManager locManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-		LocationListener locationListener = new LocationListener() {
-			public void onLocationChanged(Location location) {
-//				Gör nåt vettigt med koord
-//				targetMe(location);
-			}
-
-			public void onStatusChanged(String provider, int status, Bundle extras) {
-			}
-
-			public void onProviderEnabled(String provider) {
-			}
-
-			public void onProviderDisabled(String provider) {
-			}
-		};
-
-		locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
 		CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(13).build();
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
-
-//		Location myLoc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-//		targetMe(POS_LUND);
-
-//		if (myLoc != null && myLoc.distanceTo(POS_LUND) > 10000) {
-//			targetMe(myLoc);
-//		} else if (myLoc == null){
-//			targetMe(POS_LUND);
-//		}
 	}
 	
 	private void addMarkers() {
@@ -143,7 +99,6 @@ public class Map extends FragmentActivity {
 	private ArrayList<CustomMarker> getMarkers(String content) {
 		
 		try {
-			Log.v(Utils.TAG, "MAP JSON " + content);
 			JSONArray array = new JSONArray(content);
 			markers = new ArrayList<Map.CustomMarker>();
 			for (int i = 0; i < array.length(); i++) {
@@ -181,6 +136,8 @@ public class Map extends FragmentActivity {
 				while((line = br.readLine()) != null) {
 					builder.append(line);
 				}
+				br.close();
+				content.close();
 			} else {
 				Log.e(Utils.TAG, "MAP Failed to download JSON file");
 			}
@@ -193,14 +150,6 @@ public class Map extends FragmentActivity {
 		return builder.toString();
 	}
 
-	private void initMarkers() {
-		map.addMarker(new MarkerOptions().position(new LatLng(55.711350, 13.199730)).title("Universitetssjukhus").icon(MARKER_HOSPITAL));
-		map.addMarker(new MarkerOptions().position(new LatLng(55.712051, 13.201382)).title("BMC").icon(MARKER_MED));
-		map.addMarker(new MarkerOptions().position(new LatLng(55.705233, 13.186963)).title("Tågstation").icon(MARKER_TRAIN));
-		map.addMarker(new MarkerOptions().position(new LatLng(55.724125, 13.203002)).title("ICA Fäladen").icon(MARKER_STORE));
-		map.addMarker(new MarkerOptions().position(new LatLng(55.720420, 13.201520)).title("McDonalds").icon(MARKER_FASTFOOD));
-	}
-
 	private void initMarkerIcons() {
 		markMap = new HashMap<String, BitmapDescriptor>();
 		markMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
@@ -208,12 +157,6 @@ public class Map extends FragmentActivity {
 		markMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
 		markMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
 		markMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
-	}
-
-	private void targetMe(Location myLoc) {
-		LatLng latLng = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
-		CameraPosition camPos = new CameraPosition.Builder().target(latLng).zoom(13).build();
-		map.animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
 	
 	class CustomMarker {

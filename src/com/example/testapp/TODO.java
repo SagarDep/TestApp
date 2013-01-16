@@ -3,6 +3,10 @@ package com.example.testapp;
 public class TODO {
 	/*
 	 	
+	 	KARTAN
+	 	TODO: Lägg till loading
+	 	TODO: Cacha undan 
+	 	
 	 	TODO: Gör 9 patch knappar för focus och focus/pressed
 	 	
 	 	//LADDA INTE NER FÖR MYCKET
