@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -39,8 +43,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class Map extends FragmentActivity {
 	private final LatLng POS_LUND = new LatLng(55.711350, 13.190117);
 	
-	private static HashMap<String, BitmapDescriptor> markMap = null;
-	private static ArrayList<CustomMarker> markers = null;
+	private static ArrayList<MarkerInfo> markers = null;
+	private static HashMap<String, BitmapDescriptor> iconMap = null;
+	private static HashMap<Marker, MarkerInfo> markMap = null;
+	private static HashMap<Integer, Bitmap> imgMap = null;
 	
 	private GoogleMap map = null;
 	
@@ -51,30 +57,54 @@ public class Map extends FragmentActivity {
 
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-
-		if(markMap == null)
+		
+		if(imgMap == null)
+			imgMap = new HashMap<Integer, Bitmap>();
+		
+		if(iconMap == null)
 			initMarkerIcons();
 		
 		if(markers == null) {
 			String content = connectToDB();
 			markers = getMarkers(content);
 		}
-		addMarkers();
 		
+		addMarkers();
 		map.setInfoWindowAdapter(new InfoWindowAdapter(){
 			@Override
 			public View getInfoContents(Marker marker) {
 				View v = getLayoutInflater().inflate(R.layout.map_info, null);
+				
+				MarkerInfo info = markMap.get(marker);
+				Bitmap icon = null;
+				
+				if(imgMap.containsKey(info.id))
+					icon = imgMap.get(info.id);
+				else {
+					InputStream is;
+					try {
+						is = new URL(Utils.DB_IMAGE_URL + info.id + ".png").openStream();
+						icon = BitmapFactory.decodeStream(is);
+						if(icon != null)
+							imgMap.put(info.id, icon);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+				}
 				
 				ImageView im = (ImageView) v.findViewById(R.id.map_info_icon);
 				TextView tv1 = (TextView) v.findViewById(R.id.map_info_title);
 				TextView tv2 = (TextView) v.findViewById(R.id.map_info_address);
 				TextView tv3 = (TextView) v.findViewById(R.id.map_info_desc);
 				
-				im.setImageResource(R.drawable.pink_square_big);
-				tv1.setText(marker.getTitle());
-				tv2.setText("von Scheelevägen 11");
-				tv3.setText("Where all the true nerds go to party. Where all the true nerds go to party. Where all the true nerds go to party. ");
+				if(icon != null)
+					im.setImageBitmap(icon);
+				tv1.setText(info.title);
+				tv2.setText(info.address);
+				tv3.setText(info.desc);
 				
 				return v;
 			}
@@ -90,20 +120,22 @@ public class Map extends FragmentActivity {
 	
 	private void addMarkers() {
 		if(markers != null) {
-			for (CustomMarker m : markers) {
-				map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(markMap.get(m.cat)));
+			for (MarkerInfo m : markers) {
+				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
+				markMap.put(marker, m);
 			}
 		}
 	}
 
-	private ArrayList<CustomMarker> getMarkers(String content) {
+	private ArrayList<MarkerInfo> getMarkers(String content) {
 		
 		try {
 			JSONArray array = new JSONArray(content);
-			markers = new ArrayList<Map.CustomMarker>();
+			markers = new ArrayList<Map.MarkerInfo>();
 			for (int i = 0; i < array.length(); i++) {
 				JSONObject o = array.getJSONObject(i);
-				CustomMarker m = new CustomMarker();
+				MarkerInfo m = new MarkerInfo();
+				m.id		= o.getInt("ID");
 				m.title		= o.getString("TITLE");
 				m.address	= o.getString("ADDRESS");
 				m.desc		= o.getString("DESC");
@@ -122,7 +154,7 @@ public class Map extends FragmentActivity {
 	private String connectToDB() {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet("http://nutty.rymdraket.net/android/markers.php");
+		HttpGet request = new HttpGet(Utils.DB_MARKER_URL);
 		
 		try {
 			HttpResponse response = client.execute(request);
@@ -151,15 +183,16 @@ public class Map extends FragmentActivity {
 	}
 
 	private void initMarkerIcons() {
-		markMap = new HashMap<String, BitmapDescriptor>();
-		markMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
-		markMap.put("MED", BitmapDescriptorFactory.fromResource(R.drawable.marker_med));
-		markMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
-		markMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
-		markMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
+		iconMap = new HashMap<String, BitmapDescriptor>();
+		iconMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
+		iconMap.put("MED", BitmapDescriptorFactory.fromResource(R.drawable.marker_med));
+		iconMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
+		iconMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
+		iconMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
 	}
 	
-	class CustomMarker {
+	class MarkerInfo {
+		int id;
 		String title;
 		String address;
 		String desc;

@@ -17,7 +17,8 @@ public class Utils {
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
 	
-	
+	public static final String DB_MARKER_URL				= "http://nutty.rymdraket.net/android/markers.php";
+	public static final String DB_IMAGE_URL					= "http://nutty.rymdraket.net/android/imgs/";
 	
 	public static final String MSG_LOADING_NEWS				= "Laddar nyheter...";
 	public static final String MSG_LOADING_SCHEDULE 		= "Laddar schema...";
