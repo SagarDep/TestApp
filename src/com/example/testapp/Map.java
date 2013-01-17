@@ -1,8 +1,6 @@
 package com.example.testapp;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -61,12 +58,11 @@ public class Map extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
-
 		
 		showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP);
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-		
+
 		if(imgArray == null) {
 			imgArray = new SparseArray<Bitmap>();
 			initImgArray();
@@ -111,7 +107,8 @@ public class Map extends FragmentActivity {
 			public View getInfoWindow(Marker arg0) {
 				return null;
 			}});
-		CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(13).build();
+		int zoom = Integer.parseInt(this.getString(R.string.map_default_zoom));
+		CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(zoom).build();
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
 	
@@ -130,11 +127,16 @@ public class Map extends FragmentActivity {
 
 	private void initMarkerIcons() {
 		iconMap = new HashMap<String, BitmapDescriptor>();
-		iconMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
-		iconMap.put("MED", BitmapDescriptorFactory.fromResource(R.drawable.marker_med));
-		iconMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
-		iconMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
+		iconMap.put("ATM", BitmapDescriptorFactory.fromResource(R.drawable.marker_atm));
+		iconMap.put("BASEBALL", BitmapDescriptorFactory.fromResource(R.drawable.marker_baseball));
+		iconMap.put("BMC", BitmapDescriptorFactory.fromResource(R.drawable.marker_bmc));
 		iconMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
+		iconMap.put("FOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_food));
+		iconMap.put("HOME", BitmapDescriptorFactory.fromResource(R.drawable.marker_home));
+		iconMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
+		iconMap.put("NATION", BitmapDescriptorFactory.fromResource(R.drawable.marker_nation));
+		iconMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
+		iconMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
 	}
 	
 	class DBTask extends AsyncTask<String, Void, String> {
