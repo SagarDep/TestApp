@@ -1,6 +1,8 @@
 package com.example.testapp;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -98,8 +101,10 @@ public class Map extends FragmentActivity {
 					try {
 						is = new URL(Utils.DB_IMAGE_URL + info.id + ".png").openStream();
 						icon = BitmapFactory.decodeStream(is);
-						if(icon != null)
+						if(icon != null) {
 							imgArray.put(info.id, icon);
+							saveToFile(""+ info.id, icon);
+						}
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -137,6 +142,20 @@ public class Map extends FragmentActivity {
 			newMap.put(marker, m);
 		}
 		markMap = newMap;
+	}
+	
+	private void saveToFile(String fileName, Bitmap bitMap) {
+		FileOutputStream fos;
+		
+		try {
+			fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+			bitMap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initMarkerIcons() {
