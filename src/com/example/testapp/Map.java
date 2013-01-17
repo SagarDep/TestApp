@@ -50,31 +50,34 @@ public class Map extends FragmentActivity {
 	private static HashMap<String, BitmapDescriptor> iconMap = null;
 	private static HashMap<Marker, MarkerInfo> markMap = null;
 	private static SparseArray<Bitmap> imgArray = null;
+	private ProgressDialog showProgress;
 	
 	private GoogleMap map = null;
-	private ProgressDialog showProgress;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 
-		showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP);
 		
+		showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP);
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
 		
-		if(imgArray == null)
+		if(imgArray == null) 
 			imgArray = new SparseArray<Bitmap>();
 		
-		if(markMap == null)
+		if(markMap == null) 
 			markMap = new HashMap<Marker, MarkerInfo>();
 		
-		if(iconMap == null)
+		if(iconMap == null) 
 			initMarkerIcons();
 		
-		if(markers == null) {
+		if(markers == null) 
 			new DBTask().execute("");
+		else {
+			addMarkers();
+			showProgress.dismiss();
 		}
 		
 		map.setInfoWindowAdapter(new InfoWindowAdapter(){
@@ -84,6 +87,9 @@ public class Map extends FragmentActivity {
 				
 				MarkerInfo info = markMap.get(marker);
 				Bitmap icon = null;
+				
+				Log.w(Utils.TAG, "MAP info == " + (info == null ? "null" : "something"));
+				Log.w(Utils.TAG, "MAP imgArray == " + (imgArray == null ? "null" : "something"));
 				
 				if(imgArray.get(info.id) != null)
 					icon = imgArray.get(info.id);
@@ -125,6 +131,14 @@ public class Map extends FragmentActivity {
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
 	
+	private void addMarkers() {
+		HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
+		for (MarkerInfo m : markMap.values()) {
+			Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
+			newMap.put(marker, m);
+		}
+		markMap = newMap;
+	}
 
 	private void initMarkerIcons() {
 		iconMap = new HashMap<String, BitmapDescriptor>();
@@ -140,7 +154,6 @@ public class Map extends FragmentActivity {
 		@Override
 		protected void onPreExecute() {
 			showProgress.show();
-			
 		}
 		
 		@Override
@@ -174,8 +187,6 @@ public class Map extends FragmentActivity {
 				e.printStackTrace();
 			}
 			
-			
-			
 			return builder.toString();
 		}
 		
@@ -183,7 +194,7 @@ public class Map extends FragmentActivity {
 		protected void onPostExecute(final String success) {
 			try {
 				JSONArray array = new JSONArray(success);
-				markers = new ArrayList<Map.MarkerInfo>();
+				markers = new ArrayList<MarkerInfo>();
 				for (int i = 0; i < array.length(); i++) {
 					JSONObject o = array.getJSONObject(i);
 					MarkerInfo m = new MarkerInfo();
