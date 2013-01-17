@@ -93,9 +93,6 @@ public class Map extends FragmentActivity {
 				MarkerInfo info = markMap.get(marker);
 				Bitmap icon = imgArray.get(info.id);
 				
-				Log.w(Utils.TAG, "MAP info == " + (info == null ? "null" : "something"));
-				Log.w(Utils.TAG, "MAP imgArray == " + (imgArray == null ? "null" : "something"));
-				
 				ImageView im = (ImageView) v.findViewById(R.id.map_info_icon);
 				TextView tv1 = (TextView) v.findViewById(R.id.map_info_title);
 				TextView tv2 = (TextView) v.findViewById(R.id.map_info_address);
@@ -141,6 +138,7 @@ public class Map extends FragmentActivity {
 	}
 	
 	class DBTask extends AsyncTask<String, Void, String> {
+		private JSONArray array;
 
 		@Override
 		protected void onPreExecute() {
@@ -167,6 +165,7 @@ public class Map extends FragmentActivity {
 					}
 					br.close();
 					content.close();
+					this.array = new JSONArray(builder.toString());
 				} else {
 					Log.e(Utils.TAG, "MAP Failed to download JSON file");
 				}
@@ -176,15 +175,33 @@ public class Map extends FragmentActivity {
 			} catch (IOException e) {
 				Log.e(Utils.TAG, "MAP connectToDB IOException");
 				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 			
-			return builder.toString();
+			//Download images
+			for (int i = 1; i <= array.length(); i++) {
+				Bitmap icon = null;
+				InputStream is;
+				try {
+					is = new URL(Utils.DB_IMAGE_URL + i + ".png").openStream();
+					icon = BitmapFactory.decodeStream(is);
+					if(icon != null) {
+						imgArray.put(i, icon);
+					}
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					Log.w(Utils.TAG, "MAP image " + i + ".png could not be found.");
+					e.printStackTrace();
+				}
+			}
+			return "";
 		}
 		
 		@Override
 		protected void onPostExecute(final String success) {
 			try {
-				JSONArray array = new JSONArray(success);
 				markers = new ArrayList<MarkerInfo>();
 				for (int i = 0; i < array.length(); i++) {
 					//Download markerinfo
@@ -202,22 +219,6 @@ public class Map extends FragmentActivity {
 					markers.add(m);
 					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
 					markMap.put(marker, m);
-					
-					//Download image
-					Bitmap icon = null;
-					InputStream is;
-					try {
-						is = new URL(Utils.DB_IMAGE_URL + m.id + ".png").openStream();
-						icon = BitmapFactory.decodeStream(is);
-						if(icon != null) {
-							imgArray.put(m.id, icon);
-						}
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						Log.w(Utils.TAG, "MAP image " + m.id + ".png could not be found.");
-						e.printStackTrace();
-					}
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
