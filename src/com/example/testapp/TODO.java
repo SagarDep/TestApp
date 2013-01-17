@@ -4,7 +4,8 @@ public class TODO {
 	/*
 	 	
 	 	KARTAN
-	 	TODO: Lägg till loading
+		FIXME: Bugg: Gå in i kartan en gång, gå ut, gå in igen så står den bara och laddar
+		TODO: Se till så att så lite som möjligt laddas ner om man lämnar vyn och kommer tillbaka
 	 	TODO: Cacha undan 
 	 	
 	 	TODO: Gör 9 patch knappar för focus och focus/pressed
