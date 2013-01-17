@@ -126,7 +126,6 @@ public class Map extends FragmentActivity {
 			public View getInfoWindow(Marker arg0) {
 				return null;
 			}});
-
 		CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(13).build();
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
