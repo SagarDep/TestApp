@@ -67,8 +67,10 @@ public class Map extends FragmentActivity {
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
 		
-		if(imgArray == null) 
+		if(imgArray == null) {
 			imgArray = new SparseArray<Bitmap>();
+			initImgArray();
+		}
 		
 		if(markMap == null) 
 			markMap = new HashMap<Marker, MarkerInfo>();
@@ -89,36 +91,17 @@ public class Map extends FragmentActivity {
 				View v = getLayoutInflater().inflate(R.layout.map_info, null);
 				
 				MarkerInfo info = markMap.get(marker);
-				Bitmap icon = null;
+				Bitmap icon = imgArray.get(info.id);
 				
 				Log.w(Utils.TAG, "MAP info == " + (info == null ? "null" : "something"));
 				Log.w(Utils.TAG, "MAP imgArray == " + (imgArray == null ? "null" : "something"));
-				
-				if(imgArray.get(info.id) != null)
-					icon = imgArray.get(info.id);
-				else {
-					InputStream is;
-					try {
-						is = new URL(Utils.DB_IMAGE_URL + info.id + ".png").openStream();
-						icon = BitmapFactory.decodeStream(is);
-						if(icon != null) {
-							imgArray.put(info.id, icon);
-							saveToFile(""+ info.id, icon);
-						}
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-				}
 				
 				ImageView im = (ImageView) v.findViewById(R.id.map_info_icon);
 				TextView tv1 = (TextView) v.findViewById(R.id.map_info_title);
 				TextView tv2 = (TextView) v.findViewById(R.id.map_info_address);
 				TextView tv3 = (TextView) v.findViewById(R.id.map_info_desc);
 				
-				if(icon != null)
+				if(icon != null) //Else shows pink_square_big
 					im.setImageBitmap(icon);
 				tv1.setText(info.title);
 				tv2.setText(info.address);
@@ -135,6 +118,10 @@ public class Map extends FragmentActivity {
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
 	
+	private void initImgArray() {
+		
+	}
+
 	private void addMarkers() {
 		HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
 		for (MarkerInfo m : markMap.values()) {
@@ -142,20 +129,6 @@ public class Map extends FragmentActivity {
 			newMap.put(marker, m);
 		}
 		markMap = newMap;
-	}
-	
-	private void saveToFile(String fileName, Bitmap bitMap) {
-		FileOutputStream fos;
-		
-		try {
-			fos = openFileOutput(fileName, Context.MODE_PRIVATE);
-			bitMap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void initMarkerIcons() {
@@ -214,6 +187,7 @@ public class Map extends FragmentActivity {
 				JSONArray array = new JSONArray(success);
 				markers = new ArrayList<MarkerInfo>();
 				for (int i = 0; i < array.length(); i++) {
+					//Download markerinfo
 					JSONObject o = array.getJSONObject(i);
 					MarkerInfo m = new MarkerInfo();
 					m.id		= o.getInt("ID");
@@ -223,14 +197,31 @@ public class Map extends FragmentActivity {
 					m.lat		= o.getDouble("LATITUDE");
 					m.lng		= o.getDouble("LONGITUDE");
 					m.cat		= o.getString("CATEGORY");
+					
+					//Save marker
 					markers.add(m);
 					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
 					markMap.put(marker, m);
+					
+					//Download image
+					Bitmap icon = null;
+					InputStream is;
+					try {
+						is = new URL(Utils.DB_IMAGE_URL + m.id + ".png").openStream();
+						icon = BitmapFactory.decodeStream(is);
+						if(icon != null) {
+							imgArray.put(m.id, icon);
+						}
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						Log.w(Utils.TAG, "MAP image " + m.id + ".png could not be found.");
+						e.printStackTrace();
+					}
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
 			showProgress.dismiss();
 		}
 		
