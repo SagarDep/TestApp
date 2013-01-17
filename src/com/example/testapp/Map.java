@@ -20,11 +20,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,30 +49,34 @@ public class Map extends FragmentActivity {
 	private static ArrayList<MarkerInfo> markers = null;
 	private static HashMap<String, BitmapDescriptor> iconMap = null;
 	private static HashMap<Marker, MarkerInfo> markMap = null;
-	private static HashMap<Integer, Bitmap> imgMap = null;
+	private static SparseArray<Bitmap> imgArray = null;
 	
 	private GoogleMap map = null;
+	private ProgressDialog showProgress;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 
+		showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP);
+		
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
 		
-		if(imgMap == null)
-			imgMap = new HashMap<Integer, Bitmap>();
+		if(imgArray == null)
+			imgArray = new SparseArray<Bitmap>();
+		
+		if(markMap == null)
+			markMap = new HashMap<Marker, MarkerInfo>();
 		
 		if(iconMap == null)
 			initMarkerIcons();
 		
 		if(markers == null) {
-			String content = connectToDB();
-			markers = getMarkers(content);
+			new DBTask().execute("");
 		}
 		
-		addMarkers();
 		map.setInfoWindowAdapter(new InfoWindowAdapter(){
 			@Override
 			public View getInfoContents(Marker marker) {
@@ -78,15 +85,15 @@ public class Map extends FragmentActivity {
 				MarkerInfo info = markMap.get(marker);
 				Bitmap icon = null;
 				
-				if(imgMap.containsKey(info.id))
-					icon = imgMap.get(info.id);
+				if(imgArray.get(info.id) != null)
+					icon = imgArray.get(info.id);
 				else {
 					InputStream is;
 					try {
 						is = new URL(Utils.DB_IMAGE_URL + info.id + ".png").openStream();
 						icon = BitmapFactory.decodeStream(is);
 						if(icon != null)
-							imgMap.put(info.id, icon);
+							imgArray.put(info.id, icon);
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -118,69 +125,6 @@ public class Map extends FragmentActivity {
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
 	
-	private void addMarkers() {
-		if(markers != null) {
-			for (MarkerInfo m : markers) {
-				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
-				markMap.put(marker, m);
-			}
-		}
-	}
-
-	private ArrayList<MarkerInfo> getMarkers(String content) {
-		
-		try {
-			JSONArray array = new JSONArray(content);
-			markers = new ArrayList<Map.MarkerInfo>();
-			for (int i = 0; i < array.length(); i++) {
-				JSONObject o = array.getJSONObject(i);
-				MarkerInfo m = new MarkerInfo();
-				m.id		= o.getInt("ID");
-				m.title		= o.getString("TITLE");
-				m.address	= o.getString("ADDRESS");
-				m.desc		= o.getString("DESC");
-				m.lat		= o.getDouble("LATITUDE");
-				m.lng		= o.getDouble("LONGITUDE");
-				m.cat		= o.getString("CATEGORY");
-				markers.add(m);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		return markers;
-	}
-
-	private String connectToDB() {
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(Utils.DB_MARKER_URL);
-		
-		try {
-			HttpResponse response = client.execute(request);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if(statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader br = new BufferedReader(new InputStreamReader(content));
-				String line;
-				while((line = br.readLine()) != null) {
-					builder.append(line);
-				}
-				br.close();
-				content.close();
-			} else {
-				Log.e(Utils.TAG, "MAP Failed to download JSON file");
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return builder.toString();
-	}
 
 	private void initMarkerIcons() {
 		iconMap = new HashMap<String, BitmapDescriptor>();
@@ -189,6 +133,78 @@ public class Map extends FragmentActivity {
 		iconMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
 		iconMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
 		iconMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
+	}
+	
+	class DBTask extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+			showProgress.show();
+			
+		}
+		
+		@Override
+		protected String doInBackground(String... strings) {
+			StringBuilder builder = new StringBuilder();
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(Utils.DB_MARKER_URL);
+			
+			try {
+				HttpResponse response = client.execute(request);
+				StatusLine statusLine = response.getStatusLine();
+				int statusCode = statusLine.getStatusCode();
+				if(statusCode == 200) {
+					HttpEntity entity = response.getEntity();
+					InputStream content = entity.getContent();
+					BufferedReader br = new BufferedReader(new InputStreamReader(content));
+					String line;
+					while((line = br.readLine()) != null) {
+						builder.append(line);
+					}
+					br.close();
+					content.close();
+				} else {
+					Log.e(Utils.TAG, "MAP Failed to download JSON file");
+				}
+			} catch (ClientProtocolException e) {
+				Log.e(Utils.TAG, "MAP connectToDB ClientProtocolException");
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.e(Utils.TAG, "MAP connectToDB IOException");
+				e.printStackTrace();
+			}
+			
+			
+			
+			return builder.toString();
+		}
+		
+		@Override
+		protected void onPostExecute(final String success) {
+			try {
+				JSONArray array = new JSONArray(success);
+				markers = new ArrayList<Map.MarkerInfo>();
+				for (int i = 0; i < array.length(); i++) {
+					JSONObject o = array.getJSONObject(i);
+					MarkerInfo m = new MarkerInfo();
+					m.id		= o.getInt("ID");
+					m.title		= o.getString("TITLE");
+					m.address	= o.getString("ADDRESS");
+					m.desc		= o.getString("DESC");
+					m.lat		= o.getDouble("LATITUDE");
+					m.lng		= o.getDouble("LONGITUDE");
+					m.cat		= o.getString("CATEGORY");
+					markers.add(m);
+					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
+					markMap.put(marker, m);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			showProgress.dismiss();
+		}
+		
 	}
 	
 	class MarkerInfo {

@@ -10,7 +10,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/pink_square"
+        android:src="@drawable/pink_square_big"
         android:layout_marginRight="8dp"
         />
    

@@ -22,6 +22,7 @@ public class Utils {
 	
 	public static final String MSG_LOADING_NEWS				= "Laddar nyheter...";
 	public static final String MSG_LOADING_SCHEDULE 		= "Laddar schema...";
+	public static final String MSG_LOADING_MAP				= "Laddar karta...";
 
 	public static final int ECODE_NO_ERROR				 	= -1;
 	public static final int ECODE_NO_INTERNET_CONNECTION	=  0;
