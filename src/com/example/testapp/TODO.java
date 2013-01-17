@@ -7,6 +7,7 @@ public class TODO {
 		FIXME: Bugg: Gå in i kartan en gång, gå ut, gå in igen så står den bara och laddar
 		TODO: Se till så att så lite som möjligt laddas ner om man lämnar vyn och kommer tillbaka
 	 	TODO: Centrera om kartan vid start för stora skärmar.
+	 	TODO: Fixa bilder till de nya plupparna.
 	 	
 	 	TODO: Gör 9 patch knappar för focus och focus/pressed
 	 	
