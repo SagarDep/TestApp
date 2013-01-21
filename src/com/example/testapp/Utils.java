@@ -11,11 +11,16 @@ import android.widget.Toast;
 @SuppressLint("SimpleDateFormat")
 public class Utils {
 	public static final String TAG							= "APP";
+	
 	public static final String PREFS_FILE					= "prefsFile";
 	public static final String PREFS_KEY_NEWS				= "news";
 	public static final String PREFS_KEY_NEWS_DATE			= "newsDate";
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
+	public static final String PREFS_KEY_MAP				= "map";
+	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
+	
+	public static final String IMG_FOLDER_PATH					= "imgs/";
 	
 	public static final String DB_MARKER_URL				= "http://nutty.rymdraket.net/android/markers.php";
 	public static final String DB_IMAGE_URL					= "http://nutty.rymdraket.net/android/imgs/";
