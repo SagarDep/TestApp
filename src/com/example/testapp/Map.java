@@ -55,17 +55,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class Map extends FragmentActivity {
 	private final LatLng POS_LUND = new LatLng(55.711350, 13.190117);
 
-	private static HashMap<String, BitmapDescriptor> iconMap = null;
-	private static SparseArray<Bitmap> imgArray = null;
+	private static Long									lastUpdateTime	= -1L;
+	private final long									validTime 		= 900000; // 15 minuter
 
-	private static HashMap<Marker, MarkerInfo> markMap = null;
-	private static Long lastUpdateTime = -1L;
+	private static HashMap<String, BitmapDescriptor>	iconMap			= null;
+	private static HashMap<Marker, MarkerInfo>			markMap			= null;
+	private static SparseArray<Bitmap>					imgArray		= null;
 	
-	private final long validTime = 20000L; // 5 minuter
-
+	private GoogleMap 									map 			= null;
 	private ProgressDialog showProgress;
-
-	private GoogleMap map = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
