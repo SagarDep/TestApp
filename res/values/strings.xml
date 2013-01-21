@@ -13,9 +13,8 @@
     <string name="Sponsor1">Sponsor 1</string>
     <string name="Sponsor2">Sponsor 2</string>
     <string name="title_activity_news">News</string>
-
     <string name="map_default_zoom">13</string>
-    
+
     <style name="ButtonText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -33,5 +32,6 @@
 
     <string name="title_activity_calendar">Calendar</string>
     <string name="title_activity_map">Map</string>
+    <string name="title_activity_places">Places</string>
 
 </resources>

@@ -8,7 +8,7 @@ public class TODO {
 	 	TODO: Centrera om kartan vid start för stora skärmar.
 	 	TODO: Fixa bilder till de nya plupparna.
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
-	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas
+	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
 	 	
 	 	TODO: Gör 9 patch knappar för focus och focus/pressed
 	 	

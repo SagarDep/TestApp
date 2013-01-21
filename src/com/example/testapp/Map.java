@@ -62,8 +62,6 @@ public class Map extends FragmentActivity {
 		showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP);
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-
-		
 		
 		if(imgArray == null) {
 			imgArray = new SparseArray<Bitmap>();
