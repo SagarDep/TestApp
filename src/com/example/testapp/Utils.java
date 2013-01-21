@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 @SuppressLint("SimpleDateFormat")
@@ -19,8 +20,6 @@ public class Utils {
 	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
 	public static final String PREFS_KEY_MAP				= "map";
 	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
-	
-	public static final String IMG_FOLDER_PATH					= "imgs/";
 	
 	public static final String DB_MARKER_URL				= "http://nutty.rymdraket.net/android/markers.php";
 	public static final String DB_IMAGE_URL					= "http://nutty.rymdraket.net/android/imgs/";
@@ -40,26 +39,26 @@ public class Utils {
 	private static HashMap<String, String> monthMap			= new HashMap<String, String>(); 
 	
 	static {
-		dayMap.put("Mon,", "Mån,");
-		dayMap.put("Tue,", "Tis,");
-		dayMap.put("Wed,", "Ons,");
-		dayMap.put("Thu,", "Tor,");
-		dayMap.put("Fri,", "Fre,");
-		dayMap.put("Sat,", "Lör,");
-		dayMap.put("Sun,", "Sön,");
+		dayMap.put("mon,", "Mån,");
+		dayMap.put("tue,", "Tis,");
+		dayMap.put("wed,", "Ons,");
+		dayMap.put("thu,", "Tor,");
+		dayMap.put("fri,", "Fre,");
+		dayMap.put("sat,", "Lör,");
+		dayMap.put("sun,", "Sön,");
 		
-		monthMap.put("Jan", "Jan");
-		monthMap.put("Feb", "Feb");
-		monthMap.put("Mar", "Mar");
-		monthMap.put("Apr", "Apr");
-		monthMap.put("May", "Maj");
-		monthMap.put("Jun", "Jun");
-		monthMap.put("Jul", "Jul");
-		monthMap.put("Aug", "Aug");
-		monthMap.put("Sep", "Sep");
-		monthMap.put("Oct", "Okt");
-		monthMap.put("Nov", "Nov");
-		monthMap.put("Dec", "Dec");
+		monthMap.put("jan", "Jan");
+		monthMap.put("feb", "Feb");
+		monthMap.put("mar", "Mar");
+		monthMap.put("apr", "Apr");
+		monthMap.put("may", "Maj");
+		monthMap.put("jun", "Jun");
+		monthMap.put("jul", "Jul");
+		monthMap.put("aug", "Aug");
+		monthMap.put("sep", "Sep");
+		monthMap.put("oct", "Okt");
+		monthMap.put("nov", "Nov");
+		monthMap.put("dec", "Dec");
 		
 		DATE_FORMAT.setLenient(false);
 	}
@@ -72,6 +71,7 @@ public class Utils {
 				msg += (newLine) ? "\n" : " ";
 				msg += "Visar data från ";
 				msg += translateMonth(DATE_FORMAT.format(date).toString(), 1);
+				Log.i(TAG, "UTIL FORM " + msg);
 				break;
 		}
 		return msg;
@@ -82,21 +82,18 @@ public class Utils {
 	}
 	
 	private static String translateMonth(String date, int monthIndex) {
-		String[] split = date.split(" ");
+		String[] split = date.toLowerCase().split(" ");
 		split[monthIndex] = monthMap.get(split[monthIndex]);
 		String res = "";
-		for (String s : split) {
+		for (String s : split)
 			res += s + " ";
-		}
 		return res;
 	}
 	
 	public static String translateDate(String pubDate) {
-		String[] split = pubDate.split(" ");
-		
+		String[] split = pubDate.toLowerCase().split(" ");
 		split[0] = dayMap.get(split[0]);
 		split[2] = monthMap.get(split[2]);
-		
 		return split[0] + " " + split[1] + " " + split[2] + " " + split[3];
 	}
 }
