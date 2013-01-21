@@ -40,6 +40,15 @@ public class Main extends Activity {
 			}
 		});
 		
+		Button places = (Button) findViewById(R.id.button3);
+		places.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent myIntent = new Intent(v.getContext(), Places.class);
+				startActivityForResult(myIntent, 0);
+			}
+		});
+
 		Button map = (Button) findViewById(R.id.button4);
 		map.setOnClickListener(new View.OnClickListener() {
 			@Override

@@ -7,9 +7,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 	
@@ -67,10 +69,20 @@ public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 				time.setText(calDesc.getTime());
 				desc.setText(calDesc.getDesc());
 				place.setText(calDesc.getPlace());
+				vi.setOnClickListener(new OnClickListener(){
+					
+					@Override
+					public void onClick(View vi) {
+						TextView tv = (TextView) vi.findViewById(R.id.desc_time);
+						Utils.showToast(activity, "Test " + tv.getText(), Toast.LENGTH_SHORT);
+					}
+					
+				});
 			} else {
 				vi = inflater.inflate(R.layout.row_cal_sep, null);
 			}
 		}
+		
 		return vi;
 	}
 }

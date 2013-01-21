@@ -10,6 +10,8 @@ public class TODO {
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
 	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
 	 	
+	 	TODO: Gör så att om man klickar på ett schemaevent så kommer man till platsen det handlar om
+	 	
 	 	TODO: Gör 9 patch knappar för focus och focus/pressed
 	 	
 	 	//LADDA INTE NER FÖR MYCKET
