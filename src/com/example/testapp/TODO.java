@@ -1,7 +1,7 @@
 package com.example.testapp;
 
 public class TODO {
-	/*
+/*
 	 	
 	 	KARTAN
 		TODO: Se till så att så lite som möjligt laddas ner om man lämnar vyn och kommer tillbaka
@@ -10,7 +10,7 @@ public class TODO {
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
 	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
 	 	
-	 	FIXME: Nätverksfelmeddelande sa 21 null 2013
+	 	IDEA: Istället för att ladda ner bildern i map och spara dem kan man bara strunta i bilder vid brist på uppkoppling.
 	 	
 	 	TODO: Lägg till Settings för att ställa uppdateringsfrekvens
 	 	
@@ -23,10 +23,9 @@ public class TODO {
 	 	TODO: DONE! 2. Spara ner de senaste nerladdade nyheterna så om uppkoppling saknas läses de gamla in.
 	 	TODO: 3. Gör så att man kan refresha nyheter utan att gå ut och tillbaka
 
-
 		FIXME: Se till att info window i map inte tar upp hela bredden, ser konstigt ut.
 
 		IDEA: Läs in allt på en gång när appen startar. Kör en diff mellan en sparad Array och en nyss nerladdade och notera på
 			  knappen till tex nyheter att det har hänt nåt nytt.
-	*/
+*/
 }

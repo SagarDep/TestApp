@@ -7,7 +7,7 @@
 
      <TextView
         android:id="@+id/title"
-        android:text="TITLE"
+        android:text="@string/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -23,7 +23,7 @@
         android:layout_alignRight="@+id/title"
         android:layout_below="@+id/title"
         android:textColor="#8e8e8e"
-        android:text="date"
+        android:text="@string/date"
         android:textSize="12sp" />
      
     <TextView
@@ -34,21 +34,7 @@
         android:layout_alignRight="@+id/title"
         android:layout_below="@+id/date"
         android:textColor="#505050"
-        android:text="description"
+        android:text="@string/desc"
        android:textAppearance="?android:attr/textAppearanceSmall" />
-<!--
-    <TextView
-        android:id="@+id/arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/details"
-        android:padding="0px"
-        android:text="läs mer..."
-        android:textColor="#3c3c3c"
-        android:textSize="11sp" 
-        android:textStyle="bold" />
--->
+
 </RelativeLayout>

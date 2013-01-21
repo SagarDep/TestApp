@@ -16,6 +16,7 @@
         android:src="@drawable/pink_square_big"
         android:layout_marginRight="8dp"
         android:background="@drawable/stroke"
+        android:contentDescription="@string/map_icon"
         />
    
     <TextView
@@ -24,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/map_info_icon"
         android:textColor="#3c3c3c"
-        android:text="Title"
+        android:text="@string/title"
         android:textStyle="bold" />
     
     <TextView 
@@ -34,7 +35,7 @@
         android:layout_below="@+id/map_info_title" 
         android:layout_toRightOf="@+id/map_info_icon"
         android:textSize="12sp"
-        android:text="Address" />
+        android:text="@string/addr" />
     
     <TextView 
         android:id="@+id/map_info_desc"
@@ -43,7 +44,7 @@
         android:layout_below="@+id/map_info_address" 
         android:layout_toRightOf="@+id/map_info_icon"
         android:textColor="#505050"
-        android:text="Description" />
+        android:text="@string/desc" />
 
     
 
