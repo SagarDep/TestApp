@@ -63,6 +63,8 @@ public class Map extends FragmentActivity {
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
 
+		
+		
 		if(imgArray == null) {
 			imgArray = new SparseArray<Bitmap>();
 			initImgArray();

@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:background="#ffffff"
     android:padding="4dp"
+    android:clickable="false"
+    android:focusable="false"
     >
     
     <ImageView

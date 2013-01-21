@@ -51,7 +51,7 @@ public class Calendar extends Activity {
 		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 
 		if (scheduleList != null && timeDiff < validTime) {
-			Log.i(Utils.TAG, "CALENDAR USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+			Log.i(Utils.TAG, "CAL USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 			newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 			showProgress.dismiss();
 		} else {
@@ -88,7 +88,7 @@ public class Calendar extends Activity {
 				case Utils.ECODE_NO_INTERNET_CONNECTION:
 					showProgress.dismiss();
 					if (scheduleList != null) {
-						Log.i(Utils.TAG, "CALENDAR (no connection) USING CACHED VERSION");
+						Log.i(Utils.TAG, "CAL (no connection) USING CACHED VERSION");
 						newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 						String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 						Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
@@ -102,28 +102,28 @@ public class Calendar extends Activity {
 						} catch (IOException e) {
 							scheduleList = null;
 							lastUpdateTime = -1L;
-							Log.e(Utils.TAG, "CALENDAR retrieve_from_file IOException");
+							Log.e(Utils.TAG, "CAL retrieve_from_file IOException");
 							e.printStackTrace();
 						} catch (ClassCastException e) {
 							scheduleList = null;
 							lastUpdateTime = -1L;
-							Log.e(Utils.TAG, "CALENDAR retrieve_from_file ClassCastException");
+							Log.e(Utils.TAG, "CAL retrieve_from_file ClassCastException");
 							e.printStackTrace();
 						}
 	
 						if (scheduleList != null) {
-							Log.i(Utils.TAG, "CALENDAR (no connection)  USING STORED VERSION");
+							Log.i(Utils.TAG, "CAL (no connection)  USING STORED VERSION");
 							newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 							String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 							Utils.showToast(context, errMsg, Toast.LENGTH_LONG);
 						} else {
-							Log.i(Utils.TAG, "CALENDAR (no connection) NO DATA TO SHOW");
+							Log.i(Utils.TAG, "CAL (no connection) NO DATA TO SHOW");
 							Utils.showToast(context, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
 						}
 					}
 					break;
 				default:
-					Log.i(Utils.TAG, "CALENDAR USING FRESHLY DOWNLOADED");
+					Log.i(Utils.TAG, "CAL USING FRESHLY DOWNLOADED");
 					scheduleList = processResponse(postList);
 					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
@@ -141,7 +141,7 @@ public class Calendar extends Activity {
 				editor.putLong(Utils.PREFS_KEY_SCHEDULE_DATE, lastUpdateTime);
 			} catch (IOException e) {
 				e.printStackTrace();
-				Log.e(Utils.TAG, "CALENDAR save_to_file IOException");
+				Log.e(Utils.TAG, "CAL save_to_file IOException");
 			}
 			editor.commit();
 		}
