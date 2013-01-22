@@ -12,6 +12,8 @@ public class TODO {
 	 	
 	 	IDEA: Istället för att ladda ner bildern i map och spara dem kan man bara strunta i bilder vid brist på uppkoppling.
 	 	
+	 	TODO: Kolla upp hur man kan använda savedInstanceState och om den kan användas för nåt vettigt.
+	 	
 	 	TODO: Lägg till Settings för att ställa uppdateringsfrekvens samt om man ska spara saker på SD
 	 	
 	 	TODO: Använd lastTimeUpdate till att se om cameran ska resetas, behövs bara om man inte använt appen på en stund, annars bara störande.
