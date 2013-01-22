@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -76,6 +75,8 @@ public class Calendar extends Activity {
 				sh = new SAXHelper(this, urls[0]);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+				error = Utils.ECODE_NO_INTERNET_CONNECTION;
+				return "";
 			}
 			sh.parseContent("");
 
@@ -177,7 +178,6 @@ public class Calendar extends Activity {
 	}
 
 	class SAXHelper {
-		public HashMap<String, String> userList = new HashMap<String, String>();
 		private URL url;
 		private LoadingTask task;
 

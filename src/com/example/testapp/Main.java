@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 public class Main extends Activity {
-	private final String sponsor_1_address = "http://www.google.com";
-	private final String sponsor_2_address = "http://www.facebook.com";
+	private static final String sponsor_1_address = "http://www.google.com";
+	private static final String sponsor_2_address = "http://www.facebook.com";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -2,6 +2,8 @@ package com.example.testapp;
 
 public class TODO {
 /*
+	 	Ctrl + Shift + L => Lista med alla kortkommandon
+	 	Alt + Left/Right => Navigerar mellan de senaste markör positionerna
 	 	
 	 	KARTAN
 		TODO: Se till så att så lite som möjligt laddas ner om man lämnar vyn och kommer tillbaka
@@ -9,6 +11,8 @@ public class TODO {
 	 	TODO: Fixa bilder till de nya plupparna.
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
 	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
+	 	
+	 	FIXME: I Utils, translateMonth, byt ut for loop mot concat 
 	 	
 	 	IDEA: Istället för att ladda ner bildern i map och spara dem kan man bara strunta i bilder vid brist på uppkoppling.
 	 	
