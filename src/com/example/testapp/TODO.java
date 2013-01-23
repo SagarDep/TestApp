@@ -12,13 +12,15 @@ public class TODO {
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
 	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
 	 	
+	 	FIXME: Appen crashar om man startar Map den för första gången utan internet
+	 	
 	 	TODO: I Utils, translateMonth, byt ut for loop mot concat 
 	 	
 	 	IDEA: Istället för att ladda ner bildern i map och spara dem kan man bara strunta i bilder vid brist på uppkoppling.
 	 	
 	 	TODO: Kolla upp hur man kan använda savedInstanceState och om den kan användas för nåt vettigt.
 	 	
-	 	TODO: Lägg till Settings för att ställa uppdateringsfrekvens samt om man ska spara saker på SD
+	 	TODO: Lägg till Settings för att ställa uppdateringsfrekvens samt om man ska spara saker på SD. Lägg till Clear data knapp.
 	 	
 	 	TODO: Använd lastTimeUpdate till att se om cameran ska resetas, behövs bara om man inte använt appen på en stund, annars bara störande.
 	 	
