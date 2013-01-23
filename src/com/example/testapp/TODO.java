@@ -12,7 +12,7 @@ public class TODO {
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
 	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
 	 	
-	 	FIXME: I Utils, translateMonth, byt ut for loop mot concat 
+	 	TODO: I Utils, translateMonth, byt ut for loop mot concat 
 	 	
 	 	IDEA: Istället för att ladda ner bildern i map och spara dem kan man bara strunta i bilder vid brist på uppkoppling.
 	 	

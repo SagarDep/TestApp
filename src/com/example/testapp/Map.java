@@ -58,9 +58,9 @@ public class Map extends FragmentActivity {
 	private static Long									lastUpdateTime	= -1L;
 	private final long									validTime 		= 900000; // 15 minuter
 
-	private static HashMap<String, BitmapDescriptor>	iconMap			= null;
-	private static HashMap<Marker, MarkerInfo>			markMap			= null;
-	private static SparseArray<Bitmap>					imgArray		= null;
+	protected static HashMap<String, BitmapDescriptor>	iconMap			= null;
+	protected static HashMap<Marker, MarkerInfo>		markMap			= null;
+	protected static SparseArray<Bitmap>				imgArray		= null;
 	
 	private GoogleMap 									map 			= null;
 	private ProgressDialog showProgress;
