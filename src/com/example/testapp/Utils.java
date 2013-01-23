@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
@@ -35,10 +38,13 @@ public class Utils {
 	
 	private static final SimpleDateFormat DATE_FORMAT		= new SimpleDateFormat("d MMM HH:mm");
 
-	private static HashMap<String, String> dayMap			= new HashMap<String, String>();
-	private static HashMap<String, String> monthMap			= new HashMap<String, String>(); 
+	public static HashMap<String, BitmapDescriptor>	iconMap	= null;
+
+	private static HashMap<String, String> dayMap			= null;
+	private static HashMap<String, String> monthMap			= null;
 	
 	static {
+		dayMap = new HashMap<String, String>();
 		dayMap.put("mon,", "Mån,");
 		dayMap.put("tue,", "Tis,");
 		dayMap.put("wed,", "Ons,");
@@ -47,6 +53,7 @@ public class Utils {
 		dayMap.put("sat,", "Lör,");
 		dayMap.put("sun,", "Sön,");
 		
+		monthMap = new HashMap<String, String>();
 		monthMap.put("jan", "Jan");
 		monthMap.put("feb", "Feb");
 		monthMap.put("mar", "Mar");
@@ -61,6 +68,18 @@ public class Utils {
 		monthMap.put("dec", "Dec");
 		
 		DATE_FORMAT.setLenient(false);
+		
+		iconMap = new HashMap<String, BitmapDescriptor>();
+		iconMap.put("ATM", BitmapDescriptorFactory.fromResource(R.drawable.marker_atm));
+		iconMap.put("BASEBALL", BitmapDescriptorFactory.fromResource(R.drawable.marker_baseball));
+		iconMap.put("BMC", BitmapDescriptorFactory.fromResource(R.drawable.marker_bmc));
+		iconMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
+		iconMap.put("FOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_food));
+		iconMap.put("HOME", BitmapDescriptorFactory.fromResource(R.drawable.marker_home));
+		iconMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
+		iconMap.put("NATION", BitmapDescriptorFactory.fromResource(R.drawable.marker_nation));
+		iconMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
+		iconMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
 	}
 	
 	public static String errWithDate(int errCode, Date date, boolean newLine) {
@@ -95,5 +114,9 @@ public class Utils {
 		split[0] = dayMap.get(split[0]);
 		split[2] = monthMap.get(split[2]);
 		return split[0] + " " + split[1] + " " + split[2] + " " + split[3];
+	}
+	
+	public static BitmapDescriptor getMarkerIcon(String category) {
+		return iconMap.get(category);
 	}
 }

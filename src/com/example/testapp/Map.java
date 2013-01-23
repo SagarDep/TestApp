@@ -45,8 +45,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -58,7 +56,7 @@ public class Map extends FragmentActivity {
 	private static Long									lastUpdateTime	= -1L;
 	private final long									validTime 		= 900000; // 15 minuter
 
-	protected static HashMap<String, BitmapDescriptor>	iconMap			= null;
+	
 	protected static HashMap<Marker, MarkerInfo>		markMap			= null;
 	protected static SparseArray<Bitmap>				imgArray		= null;
 	
@@ -76,9 +74,6 @@ public class Map extends FragmentActivity {
 
 		if (imgArray == null) // Finns i minnet
 			imgArray = new SparseArray<Bitmap>();
-
-		if (iconMap == null)
-			initMarkerIcons();
 
 		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 
@@ -143,32 +138,18 @@ public class Map extends FragmentActivity {
 		if(list == null) {
 			HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
 			for (MarkerInfo m : markMap.values()) {
-				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
+				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
 				newMap.put(marker, m);
 			}
 			markMap = newMap;
 		} else {
 			HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
 			for (MarkerInfo m : list) {
-				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
+				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
 				newMap.put(marker, m);
 			}
 			markMap = newMap;
 		}
-	}
-
-	private void initMarkerIcons() {
-		iconMap = new HashMap<String, BitmapDescriptor>();
-		iconMap.put("ATM", BitmapDescriptorFactory.fromResource(R.drawable.marker_atm));
-		iconMap.put("BASEBALL", BitmapDescriptorFactory.fromResource(R.drawable.marker_baseball));
-		iconMap.put("BMC", BitmapDescriptorFactory.fromResource(R.drawable.marker_bmc));
-		iconMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
-		iconMap.put("FOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_food));
-		iconMap.put("HOME", BitmapDescriptorFactory.fromResource(R.drawable.marker_home));
-		iconMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
-		iconMap.put("NATION", BitmapDescriptorFactory.fromResource(R.drawable.marker_nation));
-		iconMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
-		iconMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
 	}
 
 	class DBTask extends AsyncTask<String, Void, String> {
@@ -261,7 +242,7 @@ public class Map extends FragmentActivity {
 						m.cat = o.getString("CATEGORY");
 
 						// Save marker
-						Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(iconMap.get(m.cat)));
+						Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
 						markMap.put(marker, m);
 					}
 					Log.i(Utils.TAG, "MAP USING FRESHLY DOWNLOADED");
