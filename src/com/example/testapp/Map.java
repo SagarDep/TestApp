@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.Marker;
 public class Map extends FragmentActivity {
 	private final LatLng POS_LUND = new LatLng(55.711350, 13.190117);
 
-	private final long									validTime 		= 900000; // 15 minuter
+	private final long									validTime 		= 900000L; // 15 minuter
 	private GoogleMap 									map 			= null;
 
 	private ProgressDialog showProgress;

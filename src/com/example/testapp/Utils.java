@@ -61,6 +61,7 @@ public class Utils {
 	
 	public static final String MSG_LOADING_NEWS				= "Laddar nyheter...";
 	public static final String MSG_LOADING_SCHEDULE 		= "Laddar schema...";
+	public static final String MSG_LOADING_PLACES			= "Laddar platser...";
 	public static final String MSG_LOADING_MAP				= "Laddar karta...";
 
 	public static final int ECODE_NO_ERROR				 	= -1;
@@ -71,12 +72,14 @@ public class Utils {
 	private static final SimpleDateFormat DATE_FORMAT		= new SimpleDateFormat("d MMM HH:mm");
 
 
+
 	private static HashMap<String, String> dayMap				= null;
 	private static HashMap<String, String> monthMap				= null;
 	private static HashMap<String, BitmapDescriptor> iconMap	= null;
 	
 	public static HashMap<Marker, MarkerInfo>		markMap		= null;
 	public static SparseArray<Bitmap>				imgArray	= null;
+	public static ArrayList<MarkerInfo>				markList	= null;
 	
 	public static Long	lastUpdateTime							= -1L;
 
@@ -167,7 +170,7 @@ public class Utils {
 		showProgress.dismiss();
 	}
 	
-	private static void saveInfoToFile(Context activity) {
+	private static void saveDataToFile(Context activity) {
 		ArrayList<MarkerInfo> list = new ArrayList<MarkerInfo>(markMap.values());
 		SharedPreferences prefs = activity.getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
@@ -241,11 +244,14 @@ public class Utils {
 		private Context activity;
 		private ProgressDialog showProgress;
 		private GoogleMap map;
-
+		private String parent;
+		
 		public DBTask(Context a, ProgressDialog pd, GoogleMap map) {
 			this.activity = a;
 			this.showProgress = pd;
 			this.map = map;
+			
+			parent = (map != null) ? "MAP" : "PLACES";
 		}
 
 		@Override
@@ -275,14 +281,14 @@ public class Utils {
 					content.close();
 					this.array = new JSONArray(builder.toString());
 				} else {
-					Log.e(Utils.TAG, "MAP Failed to download JSON file");
+					Log.e(Utils.TAG, parent + " Failed to download JSON file");
 				}
 			} catch (ClientProtocolException e) {
-				Log.e(Utils.TAG, "MAP connectToDB ClientProtocolException");
+				Log.e(Utils.TAG, parent + " connectToDB ClientProtocolException");
 				e.printStackTrace();
 				connectionOK = false;
 			} catch (IOException e) { // Ingen kontakt med DB
-				Log.e(Utils.TAG, "MAP no connection to DB");
+				Log.e(Utils.TAG, parent + " no connection to DB");
 				connectionOK = false;
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -303,7 +309,7 @@ public class Utils {
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
-						Log.w(Utils.TAG, "MAP image " + i + ".png could not be found.");
+						Log.w(Utils.TAG, parent + " image " + i + ".png could not be found.");
 					}
 				}
 			}
@@ -315,7 +321,7 @@ public class Utils {
 		protected void onPostExecute(final String success) {
 			if (connectionOK) {
 				try {
-					markMap = new HashMap<Marker, MarkerInfo>();
+					markList = new ArrayList<MarkerInfo>();
 					for (int i = 0; i < array.length(); i++) {
 						// Download markerinfo
 						JSONObject o = array.getJSONObject(i);
@@ -329,22 +335,32 @@ public class Utils {
 						m.cat = o.getString("CATEGORY");
 
 						// Save marker
-						Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
-						markMap.put(marker, m);
+						if(map != null) {
+							if(markMap == null)
+								markMap = new HashMap<Marker, MarkerInfo>();
+								
+							Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
+							markMap.put(marker, m);
+						}
+						
+						markList.add(m);
 					}
-					Log.i(Utils.TAG, "MAP USING FRESHLY DOWNLOADED");
+					Log.i(Utils.TAG, parent + " USING FRESHLY DOWNLOADED");
 					lastUpdateTime = System.currentTimeMillis();
 					
 					// Save to SD
-					saveInfoToFile(activity);
+					saveDataToFile(activity);
 					saveImagesToFile(activity);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} else {
 				String errMsg;
-				if (markMap != null) {
-					Log.i(Utils.TAG, "MAP (no connection)  USING CACHED VERSION");
+				if(map == null && markList != null) {
+					Log.i(Utils.TAG, parent + " (no connection)  USING CACHED VERSION");
+					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
+				} else if (markMap != null) {
+					Log.i(Utils.TAG, parent + " (no connection)  USING CACHED VERSION");
 					addMarkers(null, map);
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 				} else {
@@ -353,27 +369,31 @@ public class Utils {
 					try {
 						list = (ArrayList<MarkerInfo>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_MAP, null));
 						if(list != null) {
-							addMarkers(list, map);
+							if(map != null)
+								addMarkers(list, map);
+							markList = list;
 							initImgArray(activity);
 							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
 						}
 					} catch (IOException e) {
-						Log.e(Utils.TAG, "MAP retrieve_from_file IOException");
+						Log.e(Utils.TAG, parent + " retrieve_from_file IOException");
 						markMap = null;
+						markList = null;
 						lastUpdateTime = -1L;
 						e.printStackTrace();
 					} catch (ClassCastException e) {
-						Log.e(Utils.TAG, "MAP retrieve_from_file ClassCastException");
+						Log.e(Utils.TAG, parent + " retrieve_from_file ClassCastException");
 						markMap = null;
+						markList = null;
 						lastUpdateTime = -1L;
 						e.printStackTrace();
 					}
 
-					if (markMap != null) {
-						Log.i(Utils.TAG, "MAP (no connection)  USING STORED VERSION");
+					if (markMap != null || (markList != null && map == null)) {
+						Log.i(Utils.TAG, parent + " (no connection)  USING STORED VERSION");
 						errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					} else {
-						Log.i(Utils.TAG, "MAP (no connection) NO DATA TO SHOW");
+						Log.i(Utils.TAG, parent + " (no connection) NO DATA TO SHOW");
 						errMsg = Utils.EMSG_NO_INTERNET_CONNECTION;
 					}
 				}
