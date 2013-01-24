@@ -341,11 +341,11 @@ public class Utils {
 				}
 				showProgress.dismiss();
 			} else {
+				String errMsg;
 				if (markMap != null) {
 					Log.i(Utils.TAG, "MAP (no connection)  USING CACHED VERSION");
 					addMarkers(null, map);
-					String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
-					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
+					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 				} else {
 					ArrayList<MarkerInfo> list = null;
 					SharedPreferences prefs = activity.getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
@@ -370,14 +370,14 @@ public class Utils {
 
 					if (markMap != null) {
 						Log.i(Utils.TAG, "MAP (no connection)  USING STORED VERSION");
-						String errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
-						Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
+						errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					} else {
 						Log.i(Utils.TAG, "MAP (no connection) NO DATA TO SHOW");
-						Utils.showToast(activity, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
+						errMsg = Utils.EMSG_NO_INTERNET_CONNECTION;
 					}
 				}
 				showProgress.dismiss();
+				Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 			}
 		}
 	}
