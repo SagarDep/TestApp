@@ -83,7 +83,6 @@ public class Utils {
 	
 	public static Long	lastUpdateTime							= -1L;
 
-	
 	static {
 		DATE_FORMAT.setLenient(false);
 
@@ -131,7 +130,7 @@ public class Utils {
 				msg += (newLine) ? "\n" : " ";
 				msg += "Visar data från ";
 				msg += translateMonth(DATE_FORMAT.format(date).toString(), 1);
-				Log.i(TAG, "UTIL FORM " + msg);
+				Log.i(TAG, "UTIL " + msg);
 				break;
 		}
 		return msg;
@@ -174,11 +173,10 @@ public class Utils {
 	}
 	
 	private static void saveDataToFile(Context activity) {
-		ArrayList<MarkerInfo> list = new ArrayList<MarkerInfo>(markMap.values());
 		SharedPreferences prefs = activity.getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
 		try {
-			editor.putString(Utils.PREFS_KEY_MAP, ObjectSerializer.serialize(list));
+			editor.putString(Utils.PREFS_KEY_MAP, ObjectSerializer.serialize(markList));
 			editor.putLong(Utils.PREFS_KEY_MAP_DATE, lastUpdateTime);
 		} catch (IOException e) {
 			Log.e(Utils.TAG, "MAP Could not save info to PREFS");
@@ -208,7 +206,7 @@ public class Utils {
 	private static void initImgArray(Context activity) {
 		imgArray = new SparseArray<Bitmap>();
 		Bitmap icon = null;
-		for (int i = 1; i <= markMap.size(); i++) {
+		for (int i = 1; i <= markList.size(); i++) {
 			try {
 				FileInputStream fi = activity.openFileInput(i + ".png");
 				icon = BitmapFactory.decodeStream(fi);
@@ -400,7 +398,7 @@ public class Utils {
 						errMsg = Utils.EMSG_NO_INTERNET_CONNECTION;
 					}
 				}
-				Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
+				Utils.showToast(activity.getApplicationContext(), errMsg, Toast.LENGTH_LONG);
 			}
 			if(map != null)
 				showProgress.dismiss();

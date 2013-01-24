@@ -67,7 +67,9 @@
 
         <activity
             android:name="com.example.testapp.Places"
-            android:label="@string/title_activity_places" >
+            android:label="@string/title_activity_places"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
     </application>
 
