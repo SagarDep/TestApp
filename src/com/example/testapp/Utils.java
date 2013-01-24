@@ -334,12 +334,13 @@ public class Utils {
 					}
 					Log.i(Utils.TAG, "MAP USING FRESHLY DOWNLOADED");
 					lastUpdateTime = System.currentTimeMillis();
+					
+					// Save to SD
 					saveInfoToFile(activity);
 					saveImagesToFile(activity);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				showProgress.dismiss();
 			} else {
 				String errMsg;
 				if (markMap != null) {
@@ -376,9 +377,9 @@ public class Utils {
 						errMsg = Utils.EMSG_NO_INTERNET_CONNECTION;
 					}
 				}
-				showProgress.dismiss();
 				Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 			}
+			showProgress.dismiss();
 		}
 	}
 }
