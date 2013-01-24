@@ -34,7 +34,7 @@ public class Map extends FragmentActivity {
 		map.setMyLocationEnabled(true);
 
 		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
-		if (Utils.imgArray != null && Utils.markMap != null && timeDiff < validTime)
+		if (Utils.imgArray != null && (Utils.markMap != null || Utils.markList != null) && timeDiff < validTime)
 			Utils.initFromCache(map, showProgress);
 		else
 			Utils.initFromDB(getApplicationContext(), showProgress, map);
