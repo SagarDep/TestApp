@@ -1,27 +1,44 @@
 package com.example.testapp;
 
+import java.util.ArrayList;
+
+import com.example.testapp.placeitem.PlaceItem;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ListView;
 
 public class Places extends Activity {
 
 	private final long		validTime 		= 900000L; // 15 minuter
+	private ArrayList<PlaceItem> placeList;
 	private ProgressDialog	showProgress;
+	private ListView newsList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_places);
 		
+		newsList = (ListView) findViewById(R.id.places_list);
 		showProgress = ProgressDialog.show(Places.this, "", Utils.MSG_LOADING_PLACES);
 		
 		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
 		
-		if (Utils.imgArray == null || Utils.markList == null || (Utils.markMap != null && timeDiff < validTime))
+		if (Utils.markList != null && timeDiff < validTime) {
+			Log.i(Utils.TAG, "PLACES USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+			newsList.setAdapter(new PlaceAdapter(Places.this, placeList));
+			showProgress.dismiss();
+		} else {
 			Utils.initFromDB(getApplicationContext(), showProgress, null);
-		else
-			Utils.initFromCache(null, showProgress);
+			newsList.setAdapter(new PlaceAdapter(Places.this, placeList));
+			showProgress.dismiss();
+		}
+			
+		
+		
 		
 	}
 

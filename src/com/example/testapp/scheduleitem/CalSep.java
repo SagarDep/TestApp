@@ -1,4 +1,4 @@
-package com.example.testapp;
+package com.example.testapp.scheduleitem;
 
 public class CalSep extends ScheduleItem {
 	private static final long serialVersionUID = 5775971828524534331L;

@@ -166,7 +166,10 @@ public class Utils {
 	}
 
 	public static void initFromCache(GoogleMap map, ProgressDialog showProgress) {
-		addMarkers(null, map);
+		if(markMap != null)
+			addMarkers(null, map);
+		else
+			addMarkers(markList, map);
 		showProgress.dismiss();
 	}
 	
@@ -399,7 +402,8 @@ public class Utils {
 				}
 				Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 			}
-			showProgress.dismiss();
+			if(map != null)
+				showProgress.dismiss();
 		}
 	}
 }

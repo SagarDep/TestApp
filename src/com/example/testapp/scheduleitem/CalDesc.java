@@ -1,4 +1,4 @@
-package com.example.testapp;
+package com.example.testapp.scheduleitem;
 
 public class CalDesc extends ScheduleItem {
 	private static final long serialVersionUID = -559586710111000941L;

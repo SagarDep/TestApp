@@ -2,6 +2,10 @@ package com.example.testapp;
 
 import java.util.ArrayList;
 
+import com.example.testapp.scheduleitem.CalDate;
+import com.example.testapp.scheduleitem.CalDesc;
+import com.example.testapp.scheduleitem.ScheduleItem;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;

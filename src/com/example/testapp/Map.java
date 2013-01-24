@@ -34,10 +34,10 @@ public class Map extends FragmentActivity {
 		map.setMyLocationEnabled(true);
 
 		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
-		if (Utils.imgArray == null || Utils.markMap == null || (Utils.markMap != null && timeDiff < validTime))
-			Utils.initFromDB(getApplicationContext(), showProgress, map);
-		else
+		if (Utils.imgArray != null && Utils.markMap != null && timeDiff < validTime)
 			Utils.initFromCache(map, showProgress);
+		else
+			Utils.initFromDB(getApplicationContext(), showProgress, map);
 
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {
 			@Override

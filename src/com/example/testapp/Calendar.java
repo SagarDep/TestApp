@@ -15,6 +15,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.example.testapp.scheduleitem.CalDate;
+import com.example.testapp.scheduleitem.CalDesc;
+import com.example.testapp.scheduleitem.CalSep;
+import com.example.testapp.scheduleitem.ScheduleItem;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -44,7 +49,7 @@ public class Calendar extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cal);
 
-		newsList = (ListView) findViewById(R.id.news_list);
+		newsList = (ListView) findViewById(R.id.cal_list);
 		showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE);
 
 		long timeDiff = System.currentTimeMillis() - lastUpdateTime;

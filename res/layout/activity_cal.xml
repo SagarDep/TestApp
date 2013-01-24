@@ -16,7 +16,7 @@
     </ImageView>
     
     <ListView
-        android:id="@+id/news_list"
+        android:id="@+id/cal_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/cal_logo"
