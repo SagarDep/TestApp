@@ -1,10 +1,10 @@
 package com.example.testapp.placeitem;
 
-import android.widget.TextView;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 
 public class PlaceTitle extends PlaceItem {
+	private BitmapDescriptor icon;
 	private String title;
-	private String date;
 
 	public PlaceTitle(int type) {
 		super(type);
@@ -18,11 +18,11 @@ public class PlaceTitle extends PlaceItem {
 		this.title = title;
 	}
 
-	public String getDate() {
-		return date;
+	public BitmapDescriptor getIcon() {
+		return icon;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setIcon(BitmapDescriptor icon) {
+		this.icon = icon;
 	}
 }

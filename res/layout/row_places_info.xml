@@ -1,34 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/row_cal_desc"
+    android:id="@+id/row_places_info"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
 
      <TextView
-         android:id="@+id/desc_time"
+         android:id="@+id/place_title"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentLeft="true"
-         android:text="TIME"
+         android:text="@string/title"
          android:textAppearance="?android:attr/textAppearanceSmall"
          android:textColor="#3c3c3c"
          android:textStyle="bold" />
-    
-      <TextView
-        android:id="@+id/desc_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/desc_time"
-        android:text="description"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#505050" />
      
     <TextView
-        android:id="@+id/desc_place"
-        android:text="place"
+        android:id="@+id/place_addr"
+        android:text="@string/addr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/desc_time"
+        android:layout_below="@+id/place_title"
         android:layout_marginTop="-5dp"
         android:textColor="#8e8e8e"
         android:textSize="12sp"

@@ -29,7 +29,6 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 		data = new ArrayList<PlaceItem>();
 		PlaceTitle title = new PlaceTitle(PlaceTitle.TYP_PLACE_TITLE);
 		title.setTitle("TestTitle");
-		title.setDate("AnotherText");
 		data.add(title);
 	}
 	
