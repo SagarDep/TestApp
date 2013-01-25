@@ -3,7 +3,7 @@ package com.example.testapp;
 import java.util.ArrayList;
 
 import com.example.testapp.placeitem.PlaceItem;
-import com.example.testapp.placeitem.PlaceTitle;
+import com.example.testapp.placeitem.PlaceCategory;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +27,7 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		data = new ArrayList<PlaceItem>();
-		PlaceTitle title = new PlaceTitle(PlaceTitle.TYP_PLACE_TITLE);
+		PlaceCategory title = new PlaceCategory(PlaceCategory.TYPE_PLACE_TITLE);
 		title.setTitle("TestTitle");
 		data.add(title);
 	}

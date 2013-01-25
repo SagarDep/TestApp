@@ -25,13 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -43,6 +36,16 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
 import android.widget.Toast;
+
+import com.example.testapp.placeitem.PlaceInfo;
+import com.example.testapp.placeitem.PlaceItem;
+import com.example.testapp.placeitem.PlaceCategory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 @SuppressLint("SimpleDateFormat")
 public class Utils {
@@ -71,15 +74,14 @@ public class Utils {
 	
 	private static final SimpleDateFormat DATE_FORMAT		= new SimpleDateFormat("d MMM HH:mm");
 
-
-
 	private static HashMap<String, String> dayMap				= null;
 	private static HashMap<String, String> monthMap				= null;
 	private static HashMap<String, BitmapDescriptor> iconMap	= null;
 	
-	public static HashMap<Marker, MarkerInfo>		markMap		= null;
-	public static SparseArray<Bitmap>				imgArray	= null;
-	public static ArrayList<MarkerInfo>				markList	= null;
+	public static HashMap<Marker, MarkerInfo>				markMap		= null;
+	public static ArrayList<PlaceItem>						placeList	= null;
+	public static ArrayList<MarkerInfo>						markList	= null;
+	public static SparseArray<Bitmap>						imgArray	= null;
 	
 	public static Long	lastUpdateTime							= -1L;
 
