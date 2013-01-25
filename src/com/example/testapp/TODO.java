@@ -5,6 +5,8 @@ public class TODO {
 	 	Ctrl + Shift + L => Lista med alla kortkommandon
 	 	Alt + Left/Right => Navigerar mellan de senaste markör positionerna
 	 	
+	 	FIXME: Map skriver inte ut Loggar
+	 	
 	 	KARTAN
 		TODO: Se till så att så lite som möjligt laddas ner om man lämnar vyn och kommer tillbaka
 	 	TODO: Centrera om kartan vid start för stora skärmar.

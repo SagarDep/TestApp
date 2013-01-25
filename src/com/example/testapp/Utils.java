@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -26,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -35,11 +37,13 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.testapp.placeitem.PlaceInfo;
 import com.example.testapp.placeitem.PlaceItem;
 import com.example.testapp.placeitem.PlaceCategory;
+import com.example.testapp.placeitem.PlaceSep;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -132,7 +136,6 @@ public class Utils {
 				msg += (newLine) ? "\n" : " ";
 				msg += "Visar data från ";
 				msg += translateMonth(DATE_FORMAT.format(date).toString(), 1);
-				Log.i(TAG, "UTIL " + msg);
 				break;
 		}
 		return msg;
@@ -162,8 +165,8 @@ public class Utils {
 		return iconMap.get(category);
 	}
 	
-	public static void initFromDB(Context context, ProgressDialog showProgress, GoogleMap map) {
-		new DBTask(context, showProgress, map).execute("");
+	public static void initFromDB(Activity activity, ProgressDialog showProgress, GoogleMap map, ListView newsList) {
+		new DBTask(activity, showProgress, map, newsList).execute("");
 	}
 
 	public static void initFromCache(GoogleMap map, ProgressDialog showProgress) {
@@ -223,6 +226,52 @@ public class Utils {
 		}
 	}
 
+	private static void initPlaceList() {
+		ArrayList<MarkerInfo> markers = Utils.markList;
+		if(markers != null) {
+			// Creating all info items and sorting them on category
+			HashMap<String, ArrayList<PlaceInfo>> placeMap = new HashMap<String, ArrayList<PlaceInfo>>();
+			for (MarkerInfo m : markers) {
+				PlaceInfo placeInfo = new PlaceInfo(PlaceItem.TYPE_PLACE_INFO);
+				placeInfo.setTitle(m.title);
+				placeInfo.setAddr(m.address);
+
+				if(placeMap.containsKey(m.cat)) {
+					placeMap.get(m.cat).add(placeInfo);
+				} else {
+					ArrayList<PlaceInfo> array = new ArrayList<PlaceInfo>();
+					array.add(placeInfo);
+					placeMap.put(m.cat, array);
+				}
+			}
+			
+			// Sort the categories based on name
+			String[] keys = placeMap.keySet().toArray(new String[placeMap.keySet().size()]);
+			Arrays.sort(keys);
+			
+			
+			Utils.placeList = new ArrayList<PlaceItem>();
+			ArrayList<PlaceItem> list = Utils.placeList;
+			
+			for (String key : keys) {
+				// Add category
+				PlaceCategory placeCat = new PlaceCategory(PlaceItem.TYPE_PLACE_TITLE);
+				placeCat.setTitle(key);
+				placeCat.setIcon(Utils.getMarkerIcon(key));
+				list.add(placeCat);
+				
+				// Add all items, sorted based on name
+				PlaceInfo[] places = placeMap.get(key).toArray(new PlaceInfo[placeMap.get(key).size()]);
+				Arrays.sort(places);
+				for (PlaceInfo item : places) {
+					list.add(item);
+				}
+				// Add a separator
+				list.add(new PlaceSep(PlaceItem.TYPE_PLACE_SEP));
+			}
+		}
+	}
+	
 	private static void addMarkers(ArrayList<MarkerInfo> list, GoogleMap map) {
 		if(list == null) {
 			HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
@@ -244,15 +293,17 @@ public class Utils {
 	static class DBTask extends AsyncTask<String, Void, String> {
 		private JSONArray array;
 		private boolean connectionOK = true;
-		private Context activity;
+		private Activity activity;
 		private ProgressDialog showProgress;
 		private GoogleMap map;
 		private String parent;
+		private ListView list;
 		
-		public DBTask(Context a, ProgressDialog pd, GoogleMap map) {
+		public DBTask(Activity a, ProgressDialog pd, GoogleMap map, ListView list) {
 			this.activity = a;
 			this.showProgress = pd;
 			this.map = map;
+			this.list = list;
 			
 			parent = (map != null) ? "MAP" : "PLACES";
 		}
@@ -404,6 +455,11 @@ public class Utils {
 			}
 			if(map != null)
 				showProgress.dismiss();
+			else {
+				Utils.initPlaceList();
+				list.setAdapter(new PlaceAdapter(activity, placeList));
+				showProgress.dismiss();
+			}
 		}
 	}
 }

@@ -37,7 +37,7 @@ public class Map extends FragmentActivity {
 		if (Utils.imgArray != null && (Utils.markMap != null || Utils.markList != null) && timeDiff < validTime)
 			Utils.initFromCache(map, showProgress);
 		else
-			Utils.initFromDB(getApplicationContext(), showProgress, map);
+			Utils.initFromDB(this, showProgress, map, null);
 
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {
 			@Override

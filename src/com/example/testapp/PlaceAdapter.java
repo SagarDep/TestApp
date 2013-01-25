@@ -25,11 +25,6 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 		this.activity = a;
 		this.data = d;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		data = new ArrayList<PlaceItem>();
-		PlaceCategory title = new PlaceCategory(PlaceCategory.TYPE_PLACE_TITLE);
-		title.setTitle("TestTitle");
-		data.add(title);
 	}
 	
 	@Override
