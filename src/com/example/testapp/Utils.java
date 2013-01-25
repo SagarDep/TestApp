@@ -44,7 +44,9 @@ import com.example.testapp.placeitem.PlaceInfo;
 import com.example.testapp.placeitem.PlaceItem;
 import com.example.testapp.placeitem.PlaceCategory;
 import com.example.testapp.placeitem.PlaceSep;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,41 +55,41 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 @SuppressLint("SimpleDateFormat")
 public class Utils {
-	public static final String TAG							= "APP";
-	
-	public static final String PREFS_FILE					= "prefsFile";
-	public static final String PREFS_KEY_NEWS				= "news";
-	public static final String PREFS_KEY_NEWS_DATE			= "newsDate";
-	public static final String PREFS_KEY_SCHEDULE			= "schedule";
-	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
-	public static final String PREFS_KEY_MAP				= "map";
-	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
-	
-	public static final String DB_MARKER_URL				= "http://nutty.rymdraket.net/android/markers.php";
-	public static final String DB_IMAGE_URL					= "http://nutty.rymdraket.net/android/imgs/";
-	
-	public static final String MSG_LOADING_NEWS				= "Laddar nyheter...";
-	public static final String MSG_LOADING_SCHEDULE 		= "Laddar schema...";
-	public static final String MSG_LOADING_PLACES			= "Laddar platser...";
-	public static final String MSG_LOADING_MAP				= "Laddar karta...";
+	public static final String TAG = "APP";
 
-	public static final int ECODE_NO_ERROR				 	= -1;
-	public static final int ECODE_NO_INTERNET_CONNECTION	=  0;
-	
-	public static final String EMSG_NO_INTERNET_CONNECTION	= "Nätverk ej tillgängligt.";
-	
-	private static final SimpleDateFormat DATE_FORMAT		= new SimpleDateFormat("d MMM HH:mm");
+	public static final String PREFS_FILE = "prefsFile";
+	public static final String PREFS_KEY_NEWS = "news";
+	public static final String PREFS_KEY_NEWS_DATE = "newsDate";
+	public static final String PREFS_KEY_SCHEDULE = "schedule";
+	public static final String PREFS_KEY_SCHEDULE_DATE = "scheduleDate";
+	public static final String PREFS_KEY_MAP = "map";
+	public static final String PREFS_KEY_MAP_DATE = "mapDate";
 
-	private static HashMap<String, String> dayMap				= null;
-	private static HashMap<String, String> monthMap				= null;
-	private static HashMap<String, BitmapDescriptor> iconMap	= null;
-	
-	public static HashMap<Marker, MarkerInfo>				markMap		= null;
-	public static ArrayList<PlaceItem>						placeList	= null;
-	public static ArrayList<MarkerInfo>						markList	= null;
-	public static SparseArray<Bitmap>						imgArray	= null;
-	
-	public static Long	lastUpdateTime							= -1L;
+	public static final String DB_MARKER_URL = "http://nutty.rymdraket.net/android/markers.php";
+	public static final String DB_IMAGE_URL = "http://nutty.rymdraket.net/android/imgs/";
+
+	public static final String MSG_LOADING_NEWS = "Laddar nyheter...";
+	public static final String MSG_LOADING_SCHEDULE = "Laddar schema...";
+	public static final String MSG_LOADING_PLACES = "Laddar platser...";
+	public static final String MSG_LOADING_MAP = "Laddar karta...";
+
+	public static final int ECODE_NO_ERROR = -1;
+	public static final int ECODE_NO_INTERNET_CONNECTION = 0;
+
+	public static final String EMSG_NO_INTERNET_CONNECTION = "Nätverk ej tillgängligt.";
+
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMM HH:mm");
+
+	private static HashMap<String, String> dayMap = null;
+	private static HashMap<String, String> monthMap = null;
+	private static HashMap<String, BitmapDescriptor> iconMap = null;
+
+	public static HashMap<Marker, MarkerInfo> markMap = null;
+	public static ArrayList<PlaceItem> placeList = null;
+	public static ArrayList<MarkerInfo> markList = null;
+	public static SparseArray<Bitmap> imgArray = null;
+
+	public static Long lastUpdateTime = -1L;
 
 	static {
 		DATE_FORMAT.setLenient(false);
@@ -100,7 +102,7 @@ public class Utils {
 		dayMap.put("fri,", "Fre,");
 		dayMap.put("sat,", "Lör,");
 		dayMap.put("sun,", "Sön,");
-		
+
 		monthMap = new HashMap<String, String>();
 		monthMap.put("jan", "Jan");
 		monthMap.put("feb", "Feb");
@@ -114,7 +116,7 @@ public class Utils {
 		monthMap.put("oct", "Okt");
 		monthMap.put("nov", "Nov");
 		monthMap.put("dec", "Dec");
-		
+
 		iconMap = new HashMap<String, BitmapDescriptor>();
 		iconMap.put("ATM", BitmapDescriptorFactory.fromResource(R.drawable.marker_atm));
 		iconMap.put("BASEBALL", BitmapDescriptorFactory.fromResource(R.drawable.marker_baseball));
@@ -127,24 +129,24 @@ public class Utils {
 		iconMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
 		iconMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
 	}
-	
+
 	public static String errWithDate(int errCode, Date date, boolean newLine) {
 		String msg = "";
-		switch(errCode) {
-			case ECODE_NO_INTERNET_CONNECTION:
-				msg = EMSG_NO_INTERNET_CONNECTION;
-				msg += (newLine) ? "\n" : " ";
-				msg += "Visar data från ";
-				msg += translateMonth(DATE_FORMAT.format(date).toString(), 1);
-				break;
+		switch (errCode) {
+		case ECODE_NO_INTERNET_CONNECTION:
+			msg = EMSG_NO_INTERNET_CONNECTION;
+			msg += (newLine) ? "\n" : " ";
+			msg += "Visar data från ";
+			msg += translateMonth(DATE_FORMAT.format(date).toString(), 1);
+			break;
 		}
 		return msg;
 	}
-	
+
 	public static void showToast(Context context, String msg, int duration) {
 		Toast.makeText(context, msg, duration).show();
 	}
-	
+
 	private static String translateMonth(String date, int monthIndex) {
 		String[] split = date.toLowerCase().split(" ");
 		split[monthIndex] = monthMap.get(split[monthIndex]);
@@ -153,30 +155,28 @@ public class Utils {
 			res += s + " ";
 		return res;
 	}
-	
+
 	public static String translateDate(String pubDate) {
 		String[] split = pubDate.toLowerCase().split(" ");
 		split[0] = dayMap.get(split[0]);
 		split[2] = monthMap.get(split[2]);
 		return split[0] + " " + split[1] + " " + split[2] + " " + split[3];
 	}
-	
+
 	public static BitmapDescriptor getMarkerIcon(String category) {
 		return iconMap.get(category);
 	}
-	
+
 	public static void initFromDB(Activity activity, ProgressDialog showProgress, GoogleMap map, ListView newsList) {
 		new DBTask(activity, showProgress, map, newsList).execute("");
 	}
 
 	public static void initFromCache(GoogleMap map, ProgressDialog showProgress) {
-		if(markMap != null)
-			addMarkers(null, map);
-		else
-			addMarkers(markList, map);
+		if (markMap != null) addMarkers(null, map);
+		else addMarkers(markList, map);
 		showProgress.dismiss();
 	}
-	
+
 	private static void saveDataToFile(Context activity) {
 		SharedPreferences prefs = activity.getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
@@ -191,7 +191,7 @@ public class Utils {
 	}
 
 	private static void saveImagesToFile(Context activity) {
-		for(int i = 1; i <= imgArray.size(); i++) {
+		for (int i = 1; i <= imgArray.size(); i++) {
 			String fileName = "" + i;
 			Bitmap image = imgArray.get(i);
 			try {
@@ -207,7 +207,7 @@ public class Utils {
 			}
 		}
 	}
-	
+
 	private static void initImgArray(Context activity) {
 		imgArray = new SparseArray<Bitmap>();
 		Bitmap icon = null;
@@ -228,7 +228,7 @@ public class Utils {
 
 	private static void initPlaceList() {
 		ArrayList<MarkerInfo> markers = Utils.markList;
-		if(markers != null) {
+		if (markers != null) {
 			// Creating all info items and sorting them on category
 			HashMap<String, ArrayList<PlaceInfo>> placeMap = new HashMap<String, ArrayList<PlaceInfo>>();
 			for (MarkerInfo m : markers) {
@@ -236,7 +236,7 @@ public class Utils {
 				placeInfo.setTitle(m.title);
 				placeInfo.setAddr(m.address);
 
-				if(placeMap.containsKey(m.cat)) {
+				if (placeMap.containsKey(m.cat)) {
 					placeMap.get(m.cat).add(placeInfo);
 				} else {
 					ArrayList<PlaceInfo> array = new ArrayList<PlaceInfo>();
@@ -244,22 +244,21 @@ public class Utils {
 					placeMap.put(m.cat, array);
 				}
 			}
-			
+
 			// Sort the categories based on name
 			String[] keys = placeMap.keySet().toArray(new String[placeMap.keySet().size()]);
 			Arrays.sort(keys);
-			
-			
+
 			Utils.placeList = new ArrayList<PlaceItem>();
 			ArrayList<PlaceItem> list = Utils.placeList;
-			
+
 			for (String key : keys) {
 				// Add category
 				PlaceCategory placeCat = new PlaceCategory(PlaceItem.TYPE_PLACE_TITLE);
 				placeCat.setTitle(key);
 				placeCat.setIcon(Utils.getMarkerIcon(key));
 				list.add(placeCat);
-				
+
 				// Add all items, sorted based on name
 				PlaceInfo[] places = placeMap.get(key).toArray(new PlaceInfo[placeMap.get(key).size()]);
 				Arrays.sort(places);
@@ -271,9 +270,9 @@ public class Utils {
 			}
 		}
 	}
-	
+
 	private static void addMarkers(ArrayList<MarkerInfo> list, GoogleMap map) {
-		if(list == null) {
+		if (list == null) {
 			HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
 			for (MarkerInfo m : markMap.values()) {
 				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
@@ -289,7 +288,7 @@ public class Utils {
 			markMap = newMap;
 		}
 	}
-	
+
 	static class DBTask extends AsyncTask<String, Void, String> {
 		private JSONArray array;
 		private boolean connectionOK = true;
@@ -297,14 +296,14 @@ public class Utils {
 		private ProgressDialog showProgress;
 		private GoogleMap map;
 		private String parent;
-		private ListView list;
-		
+		private ListView newsList;
+
 		public DBTask(Activity a, ProgressDialog pd, GoogleMap map, ListView list) {
 			this.activity = a;
 			this.showProgress = pd;
 			this.map = map;
-			this.list = list;
-			
+			this.newsList = list;
+
 			parent = (map != null) ? "MAP" : "PLACES";
 		}
 
@@ -358,12 +357,11 @@ public class Utils {
 					try {
 						is = new URL(Utils.DB_IMAGE_URL + i + ".png").openStream();
 						icon = BitmapFactory.decodeStream(is);
-						if (icon != null)
-							imgArray.put(i, icon);
+						if (icon != null) imgArray.put(i, icon);
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
-						Log.w(Utils.TAG, parent + " image " + i + ".png could not be found.");
+						Log.w(Utils.TAG, "UTILS image " + i + ".png could not be found.");
 					}
 				}
 			}
@@ -389,31 +387,34 @@ public class Utils {
 						m.cat = o.getString("CATEGORY");
 
 						// Save marker
-						if(map != null) {
-							if(markMap == null)
-								markMap = new HashMap<Marker, MarkerInfo>();
-								
+						if (map != null) {
+							if (markMap == null) markMap = new HashMap<Marker, MarkerInfo>();
+
 							Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
 							markMap.put(marker, m);
 						}
-						
+
 						markList.add(m);
 					}
 					Log.i(Utils.TAG, parent + " USING FRESHLY DOWNLOADED");
 					lastUpdateTime = System.currentTimeMillis();
-					
+
 					// Save to SD
 					saveDataToFile(activity);
 					saveImagesToFile(activity);
+					initPlaceList();
+					newsList.setAdapter(new PlaceAdapter(activity, placeList));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} else {
 				String errMsg;
-				if(map == null && markList != null) {
+				if (map == null && markList != null) {
 					Log.i(Utils.TAG, parent + " (no connection)  USING CACHED VERSION");
+					initPlaceList();
+					newsList.setAdapter(new PlaceAdapter(activity, placeList));
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
-				} else if (markMap != null) {
+				} else if (map != null && markMap != null) {
 					Log.i(Utils.TAG, parent + " (no connection)  USING CACHED VERSION");
 					addMarkers(null, map);
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
@@ -422,11 +423,11 @@ public class Utils {
 					SharedPreferences prefs = activity.getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 					try {
 						list = (ArrayList<MarkerInfo>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_MAP, null));
-						if(list != null) {
-							if(map != null)
-								addMarkers(list, map);
+						if (list != null) {
+							if (map != null) addMarkers(list, map);
 							markList = list;
 							initImgArray(activity);
+							newsList.setAdapter(new PlaceAdapter(activity, placeList));
 							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
 						}
 					} catch (IOException e) {
@@ -445,21 +446,18 @@ public class Utils {
 
 					if (markMap != null || (markList != null && map == null)) {
 						Log.i(Utils.TAG, parent + " (no connection)  USING STORED VERSION");
+						initPlaceList();
+						newsList.setAdapter(new PlaceAdapter(activity, placeList));
 						errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					} else {
 						Log.i(Utils.TAG, parent + " (no connection) NO DATA TO SHOW");
 						errMsg = Utils.EMSG_NO_INTERNET_CONNECTION;
+						showProgress.dismiss();
 					}
 				}
 				Utils.showToast(activity.getApplicationContext(), errMsg, Toast.LENGTH_LONG);
 			}
-			if(map != null)
-				showProgress.dismiss();
-			else {
-				Utils.initPlaceList();
-				list.setAdapter(new PlaceAdapter(activity, placeList));
-				showProgress.dismiss();
-			}
+			showProgress.dismiss();
 		}
 	}
 }
