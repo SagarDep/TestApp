@@ -444,9 +444,11 @@ public class Utils {
 				} else {
 					ArrayList<MarkerInfo> list = null;
 					SharedPreferences prefs = activity.getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+					boolean usingStoredData = false;
 					try {
 						list = (ArrayList<MarkerInfo>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_MAP, null));
 						if (list != null) {
+							usingStoredData = true;
 							if (mode.equals(MODE_MAP)) addMarkers(list, map);
 							markList = list;
 							initImgArray(activity);
@@ -467,7 +469,7 @@ public class Utils {
 						e.printStackTrace();
 					}
 
-					if (markMap != null || (markList != null && mode.equals(MODE_PLACE))) {
+					if (usingStoredData) {
 						Log.i(Utils.TAG, mode + " (no connection)  USING STORED VERSION");
 						initPlaceList();
 						newsList.setAdapter(new PlaceAdapter(activity, placeList));
