@@ -55,7 +55,7 @@ public class Map extends FragmentActivity {
 				TextView tv3 = (TextView) v.findViewById(R.id.map_info_desc);
 
 				if (icon != null) // Else shows pink_square_big
-				im.setImageBitmap(icon);
+					im.setImageBitmap(icon);
 				tv1.setText(info.title);
 				tv2.setText(info.address);
 				tv3.setText(info.desc);

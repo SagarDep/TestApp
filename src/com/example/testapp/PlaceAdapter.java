@@ -60,7 +60,7 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 				vi = inflater.inflate(R.layout.row_places_title, null);
 				PlaceCategory category = (PlaceCategory) item;
 
-				Bitmap icon = Utils.getMarkerIcon(category.getCategory());
+				Bitmap icon = Utils.getMarkerIconBitmap(category.getCategory());
 
 				ImageView im = (ImageView) vi.findViewById(R.id.place_icon);
 				TextView tv = (TextView) vi.findViewById(R.id.place_category);

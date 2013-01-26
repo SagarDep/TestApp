@@ -41,11 +41,12 @@ import android.util.SparseArray;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.testapp.placeitem.PlaceCategory;
 import com.example.testapp.placeitem.PlaceInfo;
 import com.example.testapp.placeitem.PlaceItem;
-import com.example.testapp.placeitem.PlaceCategory;
 import com.example.testapp.placeitem.PlaceSep;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -80,7 +81,8 @@ public class Utils {
 
 	private static HashMap<String, String> dayMap = null;
 	private static HashMap<String, String> monthMap = null;
-	private static HashMap<String, Bitmap> iconMap = null;
+	private static HashMap<String, BitmapDescriptor> iconBMMap = null;
+	private static HashMap<String, Bitmap> iconBMDMap = null;
 
 	public static HashMap<Marker, MarkerInfo> markMap = null;
 	public static ArrayList<PlaceItem> placeList = null;
@@ -114,6 +116,19 @@ public class Utils {
 		monthMap.put("oct", "Okt");
 		monthMap.put("nov", "Nov");
 		monthMap.put("dec", "Dec");
+		
+		iconBMMap = new HashMap<String, BitmapDescriptor>();
+		iconBMMap.put("ATM", BitmapDescriptorFactory.fromResource(R.drawable.marker_atm));
+		iconBMMap.put("BASEBALL", BitmapDescriptorFactory.fromResource(R.drawable.marker_baseball));
+		iconBMMap.put("BMC", BitmapDescriptorFactory.fromResource(R.drawable.marker_bmc));
+		iconBMMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
+		iconBMMap.put("FOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_food));
+		iconBMMap.put("HOME", BitmapDescriptorFactory.fromResource(R.drawable.marker_home));
+		iconBMMap.put("HOSPITAL", BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital));
+		iconBMMap.put("NATION", BitmapDescriptorFactory.fromResource(R.drawable.marker_nation));
+		iconBMMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
+		iconBMMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
+		
 	}
 
 	public static String errWithDate(int errCode, Date date, boolean newLine) {
@@ -149,10 +164,29 @@ public class Utils {
 		return split[0] + " " + split[1] + " " + split[2] + " " + split[3];
 	}
 
-	public static Bitmap getMarkerIcon(String category) {
-		return iconMap.get(category);
+	public static BitmapDescriptor getMarkerIcon(String category) {
+		return iconBMMap.get(category);
 	}
 
+	public static Bitmap getMarkerIconBitmap(String category) {
+		return iconBMDMap.get(category);
+	}
+
+	public static void initMarkerIcons(Activity activity) {
+		Resources res = activity.getResources();
+		iconBMDMap = new HashMap<String, Bitmap>();
+		iconBMDMap.put("ATM", BitmapFactory.decodeResource(res, R.drawable.marker_atm));
+		iconBMDMap.put("BASEBALL", BitmapFactory.decodeResource(res, R.drawable.marker_baseball));
+		iconBMDMap.put("BMC", BitmapFactory.decodeResource(res, R.drawable.marker_bmc));
+		iconBMDMap.put("FASTFOOD", BitmapFactory.decodeResource(res, R.drawable.marker_fastfood));
+		iconBMDMap.put("FOOD", BitmapFactory.decodeResource(res, R.drawable.marker_food));
+		iconBMDMap.put("HOME", BitmapFactory.decodeResource(res, R.drawable.marker_home));
+		iconBMDMap.put("HOSPITAL", BitmapFactory.decodeResource(res, R.drawable.marker_hospital));
+		iconBMDMap.put("NATION", BitmapFactory.decodeResource(res, R.drawable.marker_nation));
+		iconBMDMap.put("STORE", BitmapFactory.decodeResource(res, R.drawable.marker_store));
+		iconBMDMap.put("TRAIN", BitmapFactory.decodeResource(res, R.drawable.marker_train));
+	}
+	
 	public static void initFromDB(Activity activity, ProgressDialog showProgress, GoogleMap map, ListView newsList) {
 		new DBTask(activity, showProgress, map, newsList).execute("");
 	}
@@ -194,12 +228,12 @@ public class Utils {
 		}
 	}
 
-	private static void initImgArray(Context context) {
+	private static void initImgArray(Context activity) {
 		imgArray = new SparseArray<Bitmap>();
 		Bitmap icon = null;
 		for (int i = 1; i <= markList.size(); i++) {
 			try {
-				FileInputStream fi = context.openFileInput(i + ".png");
+				FileInputStream fi = activity.openFileInput(i + ".png");
 				icon = BitmapFactory.decodeStream(fi);
 				imgArray.append(i, icon);
 				fi.close();
@@ -211,25 +245,7 @@ public class Utils {
 			}
 		}
 	}
-	
 
-	public static void initMarkerIcons(Activity activity) {
-		if(iconMap == null) {
-			Resources res = activity.getResources();
-			iconMap = new HashMap<String, Bitmap>();
-			iconMap.put("ATM", BitmapFactory.decodeResource(res, R.drawable.marker_atm));
-			iconMap.put("BASEBALL",BitmapFactory.decodeResource(res, R.drawable.marker_baseball));
-			iconMap.put("BMC", BitmapFactory.decodeResource(res, R.drawable.marker_bmc));
-			iconMap.put("FASTFOOD", BitmapFactory.decodeResource(res, R.drawable.marker_fastfood));
-			iconMap.put("FOOD", BitmapFactory.decodeResource(res, R.drawable.marker_food));
-			iconMap.put("HOME", BitmapFactory.decodeResource(res, R.drawable.marker_home));
-			iconMap.put("HOSPITAL", BitmapFactory.decodeResource(res, R.drawable.marker_hospital));
-			iconMap.put("NATION", BitmapFactory.decodeResource(res, R.drawable.marker_nation));
-			iconMap.put("STORE", BitmapFactory.decodeResource(res, R.drawable.marker_store));
-			iconMap.put("TRAIN", BitmapFactory.decodeResource(res, R.drawable.marker_train));
-		}
-	}
-	
 	private static void initPlaceList() {
 		ArrayList<MarkerInfo> markers = Utils.markList;
 		if (markers != null) {
@@ -260,7 +276,7 @@ public class Utils {
 				// Add category
 				PlaceCategory placeCat = new PlaceCategory(PlaceItem.TYPE_PLACE_TITLE);
 				placeCat.setCategory(key);
-				placeCat.setIcon(Utils.getMarkerIcon(key));
+				placeCat.setIcon(Utils.getMarkerIconBitmap(key));
 				list.add(placeCat);
 
 				// Add all items, sorted based on name
@@ -276,21 +292,21 @@ public class Utils {
 	}
 
 	private static void addMarkers(ArrayList<MarkerInfo> list, GoogleMap map) {
-		HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
 		if (list == null) {
-			Log.e(Utils.TAG, "list == null");
+			HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
 			for (MarkerInfo m : markMap.values()) {
-				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(BitmapDescriptorFactory.fromBitmap(Utils.getMarkerIcon(m.cat))));
+				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
 				newMap.put(marker, m);
 			}
+			markMap = newMap;
 		} else {
-			Log.e(Utils.TAG, "list != null");
+			HashMap<Marker, MarkerInfo> newMap = new HashMap<Marker, MarkerInfo>();
 			for (MarkerInfo m : list) {
-				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(BitmapDescriptorFactory.fromBitmap(Utils.getMarkerIcon(m.cat))));
+				Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
 				newMap.put(marker, m);
 			}
+			markMap = newMap;
 		}
-		markMap = newMap;
 	}
 
 	static class DBTask extends AsyncTask<String, Void, String> {
@@ -394,7 +410,7 @@ public class Utils {
 						if (map != null) {
 							if (markMap == null) markMap = new HashMap<Marker, MarkerInfo>();
 
-							Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(BitmapDescriptorFactory.fromBitmap(Utils.getMarkerIcon(m.cat))));
+							Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
 							markMap.put(marker, m);
 						}
 
