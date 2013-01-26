@@ -128,7 +128,6 @@ public class Utils {
 		iconBMMap.put("NATION", BitmapDescriptorFactory.fromResource(R.drawable.marker_nation));
 		iconBMMap.put("STORE", BitmapDescriptorFactory.fromResource(R.drawable.marker_store));
 		iconBMMap.put("TRAIN", BitmapDescriptorFactory.fromResource(R.drawable.marker_train));
-		
 	}
 
 	public static String errWithDate(int errCode, Date date, boolean newLine) {
@@ -310,21 +309,24 @@ public class Utils {
 	}
 
 	static class DBTask extends AsyncTask<String, Void, String> {
+		private static String MODE_MAP		= "MAP";
+		private static String MODE_PLACE	= "PLACES";
+
 		private JSONArray array;
-		private boolean connectionOK = true;
 		private Activity activity;
 		private ProgressDialog showProgress;
 		private GoogleMap map;
-		private String parent;
 		private ListView newsList;
-
+		private boolean connectionOK = true;
+		private String mode;
+		
 		public DBTask(Activity a, ProgressDialog pd, GoogleMap map, ListView list) {
 			this.activity = a;
 			this.showProgress = pd;
 			this.map = map;
 			this.newsList = list;
 
-			parent = (map != null) ? "MAP" : "PLACES";
+			mode = (map != null) ? MODE_MAP : MODE_PLACE;
 		}
 
 		@Override
@@ -354,14 +356,14 @@ public class Utils {
 					content.close();
 					this.array = new JSONArray(builder.toString());
 				} else {
-					Log.e(Utils.TAG, parent + " Failed to download JSON file");
+					Log.e(Utils.TAG, mode + " Failed to download JSON file");
 				}
 			} catch (ClientProtocolException e) {
-				Log.e(Utils.TAG, parent + " connectToDB ClientProtocolException");
+				Log.e(Utils.TAG, mode + " connectToDB ClientProtocolException");
 				e.printStackTrace();
 				connectionOK = false;
 			} catch (IOException e) { // Ingen kontakt med DB
-				Log.e(Utils.TAG, parent + " no connection to DB");
+				Log.e(Utils.TAG, mode + " no connection to DB");
 				connectionOK = false;
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -407,7 +409,7 @@ public class Utils {
 						m.cat = o.getString("CATEGORY");
 
 						// Save marker
-						if (map != null) {
+						if (mode.equals(MODE_MAP)) {
 							if (markMap == null) markMap = new HashMap<Marker, MarkerInfo>();
 
 							Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(m.lat, m.lng)).title(m.title).icon(Utils.getMarkerIcon(m.cat)));
@@ -416,27 +418,27 @@ public class Utils {
 
 						markList.add(m);
 					}
-					Log.i(Utils.TAG, parent + " USING FRESHLY DOWNLOADED");
+					Log.i(Utils.TAG, mode + " USING FRESHLY DOWNLOADED");
 					lastUpdateTime = System.currentTimeMillis();
 
 					// Save to SD
 					saveDataToFile(activity);
 					saveImagesToFile(activity);
 					initPlaceList();
-					if(newsList !=null)
+					if(mode.equals(MODE_PLACE))
 						newsList.setAdapter(new PlaceAdapter(activity, placeList));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} else {
 				String errMsg;
-				if (map == null && markList != null) {
-					Log.i(Utils.TAG, parent + " (no connection)  USING CACHED VERSION");
+				if (mode.equals(MODE_PLACE) && markList != null) {
+					Log.i(Utils.TAG, mode + " (no connection)  USING CACHED VERSION");
 					initPlaceList();
 					newsList.setAdapter(new PlaceAdapter(activity, placeList));
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
-				} else if (map != null && markMap != null) {
-					Log.i(Utils.TAG, parent + " (no connection)  USING CACHED VERSION");
+				} else if (mode.equals(MODE_MAP) && markMap != null) {
+					Log.i(Utils.TAG, mode + " (no connection)  USING CACHED VERSION");
 					addMarkers(null, map);
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 				} else {
@@ -445,33 +447,33 @@ public class Utils {
 					try {
 						list = (ArrayList<MarkerInfo>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_MAP, null));
 						if (list != null) {
-							if (map != null) addMarkers(list, map);
+							if (mode.equals(MODE_MAP)) addMarkers(list, map);
 							markList = list;
 							initImgArray(activity);
 							newsList.setAdapter(new PlaceAdapter(activity, placeList));
 							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
 						}
 					} catch (IOException e) {
-						Log.e(Utils.TAG, parent + " retrieve_from_file IOException");
+						Log.e(Utils.TAG, mode + " retrieve_from_file IOException");
 						markMap = null;
 						markList = null;
 						lastUpdateTime = -1L;
 						e.printStackTrace();
 					} catch (ClassCastException e) {
-						Log.e(Utils.TAG, parent + " retrieve_from_file ClassCastException");
+						Log.e(Utils.TAG, mode + " retrieve_from_file ClassCastException");
 						markMap = null;
 						markList = null;
 						lastUpdateTime = -1L;
 						e.printStackTrace();
 					}
 
-					if (markMap != null || (markList != null && map == null)) {
-						Log.i(Utils.TAG, parent + " (no connection)  USING STORED VERSION");
+					if (markMap != null || (markList != null && mode.equals(MODE_PLACE))) {
+						Log.i(Utils.TAG, mode + " (no connection)  USING STORED VERSION");
 						initPlaceList();
 						newsList.setAdapter(new PlaceAdapter(activity, placeList));
 						errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					} else {
-						Log.i(Utils.TAG, parent + " (no connection) NO DATA TO SHOW");
+						Log.i(Utils.TAG, mode + " (no connection) NO DATA TO SHOW");
 						errMsg = Utils.EMSG_NO_INTERNET_CONNECTION;
 						showProgress.dismiss();
 					}
