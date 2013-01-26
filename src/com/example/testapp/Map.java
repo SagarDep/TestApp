@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,9 +35,10 @@ public class Map extends FragmentActivity {
 		map.setMyLocationEnabled(true);
 
 		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
-		if (Utils.imgArray != null && (Utils.markMap != null || Utils.markList != null) && timeDiff < validTime)
+		if (Utils.imgArray != null && (Utils.markMap != null || Utils.markList != null) && timeDiff < validTime) {
+			Log.i(Utils.TAG, "MAP USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 			Utils.initFromCache(map, showProgress);
-		else
+		} else
 			Utils.initFromDB(this, showProgress, map, null);
 
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {

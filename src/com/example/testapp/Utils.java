@@ -403,7 +403,8 @@ public class Utils {
 					saveDataToFile(activity);
 					saveImagesToFile(activity);
 					initPlaceList();
-					newsList.setAdapter(new PlaceAdapter(activity, placeList));
+					if(newsList !=null)
+						newsList.setAdapter(new PlaceAdapter(activity, placeList));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
