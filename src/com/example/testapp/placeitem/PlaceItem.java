@@ -20,11 +20,12 @@ public abstract class PlaceItem implements Comparable<PlaceItem> {
 		if(type == TYPE_PLACE_TITLE) {
 			PlaceCategory me = (PlaceCategory) this;
 			PlaceCategory other = (PlaceCategory) b;
-			return me.getTitle().compareTo(other.getTitle());
-		} else {
+			return me.getCategory().compareTo(other.getCategory());
+		} else if (type == TYPE_PLACE_INFO){
 			PlaceInfo me = (PlaceInfo) this;
 			PlaceInfo other = (PlaceInfo) b;
 			return me.getTitle().compareTo(other.getTitle());
-		}
+		} else 
+			return 0;
 	}
 }

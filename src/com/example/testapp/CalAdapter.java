@@ -85,7 +85,6 @@ public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 				vi = inflater.inflate(R.layout.row_cal_sep, null);
 			}
 		}
-		
 		return vi;
 	}
 }

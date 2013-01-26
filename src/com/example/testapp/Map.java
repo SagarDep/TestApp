@@ -33,7 +33,7 @@ public class Map extends FragmentActivity {
 		showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP);
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-
+		
 		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
 		if (Utils.imgArray != null && (Utils.markMap != null || Utils.markList != null) && timeDiff < validTime) {
 			Log.i(Utils.TAG, "MAP USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");

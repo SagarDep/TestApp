@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/row_places_info"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="@drawable/stroke" >
 
      <TextView
          android:id="@+id/place_info_title"
@@ -12,7 +13,8 @@
          android:text="@string/title"
          android:textAppearance="?android:attr/textAppearanceSmall"
          android:textColor="#3c3c3c"
-         android:textStyle="bold" />
+         android:textStyle="bold"
+         />
      
     <TextView
         android:id="@+id/place_info_addr"
@@ -25,13 +27,14 @@
         android:textSize="12sp"
         android:layout_alignParentLeft="true"
         android:textStyle="italic"
-         />
+        />
 
-   	<ImageView 
-   	    android:id="@+id/place_arrow"
-   	    android:layout_width = "wrap_content"
-   	    android:layout_height = "wrap_content"
-   	    android:background="@drawable/pink_square_big"
-   	    android:layout_toRightOf="@+id/place_info_title"/>
+   	<ImageView
+   	    android:id="@+id/place_info_arrow"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignParentRight="true"
+   	    android:layout_alignParentTop="true"
+   	    android:src="@drawable/pink_square_big" />
     
 </RelativeLayout>

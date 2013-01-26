@@ -28,6 +28,8 @@ public class Main extends Activity {
 			e.printStackTrace();
 		}
 		
+		Utils.initMarkerIcons(this);
+		
 		initButtons();
 	}
 	

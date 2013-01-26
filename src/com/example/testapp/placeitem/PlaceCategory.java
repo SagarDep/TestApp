@@ -1,28 +1,28 @@
 package com.example.testapp.placeitem;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
+import android.graphics.Bitmap;
 
 public class PlaceCategory extends PlaceItem {
-	private BitmapDescriptor icon;
-	private String title;
+	private Bitmap icon;
+	private String category;
 
 	public PlaceCategory(int type) {
 		super(type);
 	}
 	
-	public String getTitle() {
-		return title;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
-	public BitmapDescriptor getIcon() {
+	public Bitmap getIcon() {
 		return icon;
 	}
 
-	public void setIcon(BitmapDescriptor icon) {
+	public void setIcon(Bitmap icon) {
 		this.icon = icon;
 	}
 }

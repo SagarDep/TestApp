@@ -6,17 +6,16 @@
 	
     <ImageView
         android:id="@+id/place_icon" 
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_centerVertical="true"
         android:src="@drawable/pink_square_big"
         android:layout_marginRight="8dp"
-        android:background="@drawable/stroke"
         android:contentDescription="@string/map_icon"
         />
 
      <TextView
-         android:id="@+id/place_title"
+         android:id="@+id/place_category"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_centerVertical="true"
