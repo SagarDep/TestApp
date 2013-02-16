@@ -12,6 +12,8 @@ public class TODO {
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
 	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
 	 	
+	 	TODO: Skala om JustNu:s logga till att passa de olika upplösningarna och lägg till som sponsor
+	 	
 	 	FIXME: DONE? Appen crashar om man startar Map den för första gången utan internet
 	 	
 	 	TODO: Gör att Separator raderna är dynamiskt stora baserat på telefon.
