@@ -24,7 +24,7 @@ public class Main extends Activity {
 		try {
 			MapsInitializer.initialize(Main.this);
 		} catch (GooglePlayServicesNotAvailableException e) {
-			Log.e(Utils.TAG, "PLACES MapsInitializer Failed!");
+			Log.e(Utils.TAG, "MAIN  MapsInitializer Failed!");
 			e.printStackTrace();
 		}
 		
