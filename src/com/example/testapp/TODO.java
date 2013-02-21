@@ -14,8 +14,6 @@ public class TODO {
 	 	
 	 	IDEA: Lägg till en väderfunktion som  kanske kan visa väder direkt på knappen om det ska finnas en.
 	 	
-	 	TODO: Minimera mängden som ska laddas ner och se till att allt laddas ner när appen startas.
-	 	
 	 	TODO: Skala om JustNu:s logga till att passa de olika upplösningarna och lägg till som sponsor
 	 	
 	 	FIXME: DONE? Appen crashar om man startar Map den för första gången utan internet
