@@ -21,20 +21,20 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/main_buttons_marginTop"
         android:layout_below="@+id/imageView1"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp" >
+        android:layout_marginTop="@dimen/main_buttons_marginTop"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        >
         
         <Button
             android:id="@+id/button1"
+            style="@style/ButtonText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/button5"
-            android:text="@string/Button1"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_blue_states"
-            style="@style/ButtonText" />
+            android:background="@drawable/btn_real_states"
+            android:text="@string/Button1" />
 
         <Button
             android:id="@+id/button2"
@@ -44,7 +44,7 @@
             android:layout_below="@+id/button1"
             android:text="@string/Button2"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_red_states"
+            android:background="@drawable/btn_real_states"
             style="@style/ButtonText" />
 
         <Button
@@ -54,7 +54,9 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/button2"
             android:text="@string/Button3"
-            android:layout_marginTop="@dimen/main_buttons_spacing" />
+            android:layout_marginTop="@dimen/main_buttons_spacing"
+            android:background="@drawable/btn_real_states"
+            style="@style/ButtonText"/>
 
         <Button
             android:id="@+id/button4"
@@ -64,7 +66,7 @@
             android:layout_below="@+id/button3"
             android:text="@string/Button4"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_green_states"
+            android:background="@drawable/btn_real_states"
             style="@style/ButtonText" />
 
         <Button
@@ -74,7 +76,9 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/button4"
             android:text="@string/Button5"
-            android:layout_marginTop="@dimen/main_buttons_spacing" />
+            android:layout_marginTop="@dimen/main_buttons_spacing"
+            android:background="@drawable/btn_real_states"
+            style="@style/ButtonText"/>
     </RelativeLayout>
 
     <RelativeLayout
