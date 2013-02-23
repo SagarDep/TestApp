@@ -34,7 +34,7 @@
             android:layout_width="@dimen/main_square_button_size"
             android:layout_height="@dimen/main_square_button_size"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_news" />
+            android:background="@drawable/btn_news_states" />
 
         <Button
             android:id="@+id/button2"

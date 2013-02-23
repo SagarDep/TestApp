@@ -1,3 +1,4 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,69 +20,65 @@
         android:src="@drawable/main_logo" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView1"
         android:layout_marginTop="@dimen/main_buttons_marginTop"
         android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        >
-        
+        android:paddingRight="40dp" >
+
         <Button
             android:id="@+id/button1"
             style="@style/ButtonText"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/main_square_button_size"
+            android:layout_height="@dimen/main_square_button_size"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_real_states"
-            android:text="@string/Button1" />
+            android:background="@drawable/btn_news_states" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/button1"
-            android:text="@string/Button2"
-            android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_real_states"
-            style="@style/ButtonText" />
-
+            style="@style/ButtonText"
+            android:layout_width="@dimen/main_square_button_size"
+            android:layout_height="@dimen/main_square_button_size"
+            android:layout_above="@+id/button3"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_schedule_states" />
+        
         <Button
             android:id="@+id/button3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/ButtonText"
+            android:layout_width="@dimen/main_square_button_size"
+            android:layout_height="@dimen/main_square_button_size"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/button2"
-            android:text="@string/Button3"
+            android:layout_below="@+id/button1"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_real_states"
-            style="@style/ButtonText"/>
+            android:background="@drawable/btn_map_states" />
 
         <Button
             android:id="@+id/button4"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="@+id/button2"
-            android:layout_below="@+id/button3"
-            android:text="@string/Button4"
-            android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_real_states"
-            style="@style/ButtonText" />
-
+            style="@style/ButtonText"
+            android:layout_width="@dimen/main_square_button_size"
+            android:layout_height="@dimen/main_square_button_size"
+            android:layout_alignBaseline="@+id/button3"
+            android:layout_alignBottom="@+id/button3"
+            android:layout_alignLeft="@+id/button2"
+            android:background="@drawable/btn_places_states" />
+        
         <Button
             android:id="@+id/button5"
+            style="@style/ButtonText"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_alignParentLeft="true"
+            android:layout_alignRight="@+id/button4"
             android:layout_below="@+id/button4"
-            android:text="@string/Button5"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_real_states"
-            style="@style/ButtonText"/>
-    </RelativeLayout>
+            android:background="@drawable/btn_contact_states" />
 
-    <RelativeLayout
+    </RelativeLayout>
+    
+        <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button5"
@@ -93,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_toLeftOf="@+id/view1"
             android:background="@null"
             android:contentDescription="@string/Sponsor1"
@@ -113,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@null"
             android:contentDescription="@string/Sponsor2"
             android:src="@drawable/main_sponsor_2" />
