@@ -15,8 +15,9 @@ public class TODO {
 	 	IDEA: Lägg till en väderfunktion som  kanske kan visa väder direkt på knappen om det ska finnas en.
 	 	
 	 	TODO: Skriv om nyhetsdelen så att den fungerar som kartagrejorna. Lägg även till så att man först frågar databasen om det faktiskt hänt något innan man tankar ner en massa. Tex med senaste nyhetsID
-	 	
+	 	TODO: Lägg in skugga under top_bar
 	 	FIXME: Se om det går att specialbehandla den sista nyhets rown så att den får lite längre avstånd när man scrollat ända ner.
+	 	
 	 	
 	 	FIXME: DONE? Appen crashar om man startar Map den för första gången utan internet
 	 	
