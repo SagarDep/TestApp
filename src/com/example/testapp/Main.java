@@ -56,7 +56,7 @@ public class Main extends Activity {
 		places.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), Places.class);
+				Intent myIntent = new Intent(v.getContext(), Map.class);
 				startActivityForResult(myIntent, 0);
 			}
 		});
@@ -65,7 +65,7 @@ public class Main extends Activity {
 		map.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), Map.class);
+				Intent myIntent = new Intent(v.getContext(), Places.class);
 				startActivityForResult(myIntent, 0);
 			}
 		});

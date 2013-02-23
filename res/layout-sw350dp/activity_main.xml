@@ -34,8 +34,7 @@
             android:layout_width="@dimen/main_square_button_size"
             android:layout_height="@dimen/main_square_button_size"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_real_states"
-            android:text="@string/Button1" />
+            android:background="@drawable/btn_news" />
 
         <Button
             android:id="@+id/button2"
@@ -44,8 +43,7 @@
             android:layout_height="@dimen/main_square_button_size"
             android:layout_above="@+id/button3"
             android:layout_alignParentRight="true"
-            android:background="@drawable/btn_real_states"
-            android:text="@string/Button2" />
+            android:background="@drawable/btn_schedule" />
         
         <Button
             android:id="@+id/button3"
@@ -55,8 +53,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/button1"
             android:layout_marginTop="@dimen/main_buttons_spacing"
-            android:background="@drawable/btn_real_states"
-            android:text="@string/Button3" />
+            android:background="@drawable/btn_map" />
 
         <Button
             android:id="@+id/button4"
@@ -66,8 +63,7 @@
             android:layout_alignBaseline="@+id/button3"
             android:layout_alignBottom="@+id/button3"
             android:layout_alignLeft="@+id/button2"
-            android:background="@drawable/btn_real_states"
-            android:text="@string/Button4" />
+            android:background="@drawable/btn_places" />
         
         <Button
             android:id="@+id/button5"
