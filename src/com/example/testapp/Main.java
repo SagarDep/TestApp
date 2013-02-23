@@ -13,8 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 public class Main extends Activity {
-	private static final String sponsor_1_address = "http://www.google.com";
-	private static final String sponsor_2_address = "http://www.facebook.com";
+	private static final String sponsor_just_nu = "http://www.justnu.se/";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,20 +69,11 @@ public class Main extends Activity {
 			}
 		});
 		
-		ImageButton sponsor1 = (ImageButton) findViewById(R.id.imageView2);
+		ImageButton sponsor1 = (ImageButton) findViewById(R.id.sponsor_just_nu);
 		sponsor1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sponsor_1_address));
-				startActivity(myIntent);
-			}
-		});
-		
-		ImageButton sponsor2 = (ImageButton) findViewById(R.id.imageView3);
-		sponsor2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sponsor_2_address));
+				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sponsor_just_nu));
 				startActivity(myIntent);
 			}
 		});
