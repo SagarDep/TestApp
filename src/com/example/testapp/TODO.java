@@ -14,7 +14,9 @@ public class TODO {
 	 	
 	 	IDEA: Lägg till en väderfunktion som  kanske kan visa väder direkt på knappen om det ska finnas en.
 	 	
-	 	TODO: Skala om JustNu:s logga till att passa de olika upplösningarna och lägg till som sponsor
+	 	TODO: Skriv om nyhetsdelen så att den fungerar som kartagrejorna. Lägg även till så att man först frågar databasen om det faktiskt hänt något innan man tankar ner en massa. Tex med senaste nyhetsID
+	 	
+	 	FIXME: Se om det går att specialbehandla den sista nyhets rown så att den får lite längre avstånd när man scrollat ända ner.
 	 	
 	 	FIXME: DONE? Appen crashar om man startar Map den för första gången utan internet
 	 	

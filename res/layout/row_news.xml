@@ -32,9 +32,10 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/title"
         android:layout_alignRight="@+id/title"
+        android:paddingRight="30dp"
         android:layout_below="@+id/date"
         android:textColor="#505050"
         android:text="@string/desc"
-       android:textAppearance="?android:attr/textAppearanceSmall" />
+       	android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
