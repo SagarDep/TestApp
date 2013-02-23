@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_tiled"
-    
     tools:context=".News" >
 
     <ImageView
-     	android:id="@+id/top_bar"
-     	android:layout_width="fill_parent"
-     	android:layout_height="wrap_content"
-     	android:src="@drawable/top_bar"
-    />
+        android:id="@+id/top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/top_bar" />
     
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
-	        android:layout_marginTop="25dp"
+	        android:layout_marginTop="0dp"
 	        android:layout_marginBottom="30dp"
 	        android:listSelector="@android:color/transparent"
 	        android:focusable="false"
