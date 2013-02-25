@@ -56,38 +56,42 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class Utils {
 	public static final String TAG = "APP";
 
-	public static final String PREFS_FILE = "prefsFile";
-	public static final String PREFS_KEY_NEWS = "news";
-	public static final String PREFS_KEY_NEWS_DATE = "newsDate";
-	public static final String PREFS_KEY_SCHEDULE = "schedule";
-	public static final String PREFS_KEY_SCHEDULE_DATE = "scheduleDate";
-	public static final String PREFS_KEY_MAP = "map";
-	public static final String PREFS_KEY_MAP_DATE = "mapDate";
+	public static final String PREFS_FILE 				= "prefsFile";
+	public static final String PREFS_KEY_NEWS			= "news";
+	public static final String PREFS_KEY_NEWS_DATE		= "newsDate";
+	public static final String PREFS_KEY_SCHEDULE		= "schedule";
+	public static final String PREFS_KEY_SCHEDULE_DATE	= "scheduleDate";
+	public static final String PREFS_KEY_MAP			= "map";
+	public static final String PREFS_KEY_MAP_DATE		= "mapDate";
 
-	public static final String DB_MARKER_URL = "http://nutty.rymdraket.net/android/markers.php";
-	public static final String DB_IMAGE_URL = "http://nutty.rymdraket.net/android/imgs/";
+	public static final String DB_SCHEDULE_URL	= "http://nutty.rymdraket.net/android/schedule.php?mode=";
+	public static final String DB_MARKER_URL	= "http://nutty.rymdraket.net/android/markers.php";
+	public static final String DB_IMAGE_URL		= "http://nutty.rymdraket.net/android/imgs/";
 
-	public static final String MSG_LOADING_NEWS = "Laddar nyheter...";
-	public static final String MSG_LOADING_SCHEDULE = "Laddar schema...";
-	public static final String MSG_LOADING_PLACES = "Laddar platser...";
-	public static final String MSG_LOADING_MAP = "Laddar karta...";
+	public static final int DB_MODE_REFRESH	= 0;
+	public static final int DB_MODE_GET		= 1;
+	
+	public static final String MSG_LOADING_NEWS		= "Laddar nyheter...";
+	public static final String MSG_LOADING_SCHEDULE	= "Laddar schema...";
+	public static final String MSG_LOADING_PLACES	= "Laddar platser...";
+	public static final String MSG_LOADING_MAP		= "Laddar karta...";
 
-	public static final int ECODE_NO_ERROR = -1;
-	public static final int ECODE_NO_INTERNET_CONNECTION = 0;
+	public static final int ECODE_NO_ERROR					= -1;
+	public static final int ECODE_NO_INTERNET_CONNECTION	=  0;
 
 	public static final String EMSG_NO_INTERNET_CONNECTION = "Nätverk ej tillgängligt.";
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMM HH:mm");
 
-	private static HashMap<String, String> dayMap = null;
-	private static HashMap<String, String> monthMap = null;
-	private static HashMap<String, BitmapDescriptor> iconBMMap = null;
-	private static HashMap<String, Bitmap> iconBMDMap = null;
+	private static HashMap<String, String> dayMap				= null;
+	private static HashMap<String, String> monthMap				= null;
+	private static HashMap<String, BitmapDescriptor> iconBMMap	= null;
+	private static HashMap<String, Bitmap> iconBMDMap			= null;
 
-	public static HashMap<Marker, MarkerInfo> markMap = null;
-	public static ArrayList<PlaceItem> placeList = null;
-	public static ArrayList<MarkerInfo> markList = null;
-	public static SparseArray<Bitmap> imgArray = null;
+	public static HashMap<Marker, MarkerInfo> markMap	= null;
+	public static ArrayList<PlaceItem> placeList		= null;
+	public static ArrayList<MarkerInfo> markList		= null;
+	public static SparseArray<Bitmap> imgArray			= null;
 
 	public static Long lastUpdateTime = -1L;
 

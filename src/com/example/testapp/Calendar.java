@@ -1,6 +1,9 @@
 package com.example.testapp;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,28 +12,36 @@ import java.util.Date;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.example.testapp.scheduleitem.CalDate;
-import com.example.testapp.scheduleitem.CalDesc;
-import com.example.testapp.scheduleitem.CalSep;
-import com.example.testapp.scheduleitem.ScheduleItem;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.testapp.scheduleitem.CalDate;
+import com.example.testapp.scheduleitem.CalDesc;
+import com.example.testapp.scheduleitem.CalSep;
+import com.example.testapp.scheduleitem.ScheduleItem;
 
 public class Calendar extends Activity {
 
@@ -39,6 +50,7 @@ public class Calendar extends Activity {
 
 	private static ArrayList<ScheduleItem> scheduleList = null;
 	private static long lastUpdateTime = -1L;
+	private static int lastUpdateCount = -1;
 
 	private ArrayList<Post> postList = null;
 	private ProgressDialog showProgress;
@@ -62,6 +74,70 @@ public class Calendar extends Activity {
 			postList = new ArrayList<Post>();
 			new LoadingTask(getApplicationContext()).execute(rss_feed);
 		}
+	}
+	
+	class CalendarTask extends AsyncTask<String, Void, String> {
+		private Activity activity;
+		private ProgressDialog showProgress;
+
+		public CalendarTask(Activity a, ProgressDialog pd) {
+			this.activity = a;
+			this.showProgress = pd;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			showProgress.show();
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			if(lastUpdateCount != -1) { //Vi har information sen innan
+				if (refreshNeeded()) {
+					
+				}
+			} else { //Vi har inget alls inläst! Läs in in lastUpdateCount från fil om den finns
+				
+			}
+			
+			
+			
+			return null;
+		}
+		
+		private boolean refreshNeeded() {
+			StringBuilder builder = new StringBuilder();
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_REFRESH);
+			try {
+				HttpResponse response = client.execute(request);
+				int statusCode = response.getStatusLine().getStatusCode();
+				if(statusCode == 200) {
+					HttpEntity entity = response.getEntity();
+					InputStream content = entity.getContent();
+					BufferedReader br = new BufferedReader(new InputStreamReader(content));
+					String line;
+					while((line = br.readLine()) != null) {
+						builder.append(line);
+					}
+					br.close();
+					content.close();
+					JSONObject json = new JSONObject(builder.toString());
+					int count = json.getInt("count");
+					return count > lastUpdateCount;
+				}
+			} catch (ClientProtocolException e) {	e.printStackTrace();
+			} catch (IOException e) {				e.printStackTrace();
+			} catch (JSONException e) {				e.printStackTrace();
+			}
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(final String success) {
+			
+		}
+		
 	}
 
 	class LoadingTask extends AsyncTask<String, Void, String> {
