@@ -6,4 +6,7 @@
     <dimen name="main_buttons_spacing">20dp</dimen>
 	<dimen name="main_square_button_size">135dp</dimen>
 	<dimen name="main_sponsor_bottom_margin">10dp</dimen>
+	<dimen name="top_bar_title_marginTop">20dp</dimen>
+	<dimen name="top_bar_update_marginTop">18dp</dimen>
+	
 </resources>

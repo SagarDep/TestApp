@@ -18,6 +18,7 @@ public class TODO {
 	 	TODO: Lägg in skugga under top_bar
 	 	FIXME: Se om det går att specialbehandla den sista nyhets rown så att den får lite längre avstånd när man scrollat ända ner.
 	 	
+	 	FIXME: Byta ut uppdatera knappen i Top Bar, ser inte ut som en knapp atm
 	 	
 	 	FIXME: DONE? Appen crashar om man startar Map den för första gången utan internet
 	 	
