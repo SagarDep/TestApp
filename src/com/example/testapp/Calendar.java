@@ -74,7 +74,7 @@ public class Calendar extends Activity {
 			showProgress.dismiss();
 		} else {
 			postList = new ArrayList<Post>();
-			new CalendarTask(this, showProgress);
+			new CalendarTask(Calendar.this, showProgress).execute("");
 		}
 	}
 	
@@ -139,6 +139,8 @@ public class Calendar extends Activity {
 			String errMsg;
 			switch(msg) {
 				case MSG_NO_REFRESH_NEEDED:
+					Log.i(Utils.TAG, "CAL NO REFRESH NEEDED");
+					showProgress.dismiss();
 					break;
 				case MSG_REFRESH_FROM_DOWNLOAD:
 					Log.i(Utils.TAG, "CAL USING FRESHLY DOWNLOADED");
@@ -165,6 +167,7 @@ public class Calendar extends Activity {
 					break;
 				default:
 					Log.e(Utils.TAG,"CAL  Failed to recieve data, nothing to show");
+					showProgress.dismiss();
 					break;
 			}
 		}
@@ -225,6 +228,7 @@ public class Calendar extends Activity {
 		
 		private void initFromDownload() {
 			HashMap<String,String> map = new HashMap<String, String>();
+			scheduleList = new ArrayList<ScheduleItem>();
 			try {
 				int counter = 0;
 				for(int i = 0; i < this.array.length(); i++) {
