@@ -56,34 +56,6 @@ public class Calendar extends Activity {
 		new CalendarTask(Calendar.this, showProgress).execute("");
 	}
 	
-	protected String refreshNeeded() {
-		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_REFRESH);
-		try {
-			HttpResponse response = client.execute(request);
-			int statusCode = response.getStatusLine().getStatusCode();
-			if(statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader br = new BufferedReader(new InputStreamReader(content));
-				String line = br.readLine();
-				br.close();
-				content.close();
-				JSONArray arr = new JSONArray(line);
-				String updateTime = arr.getJSONObject(0).getString("UPDATE_TIME");
-				if(lastUpdateDate != null)
-					return Utils.compareTime(updateTime, lastUpdateDate) > 0 ? updateTime : REFRESH_MSG_REFRESH_NOT_NEEDED;
-				else
-					return updateTime;
-			} else 
-				Log.e(Utils.TAG,"CAL  Failed to download JSON file");
-		} catch (ClientProtocolException e) {	e.printStackTrace();
-		} catch (IOException e) {				e.printStackTrace();
-		} catch (JSONException e) {				e.printStackTrace();
-		}
-		return REFRESH_MSG_CONNECTION_FAILURE;
-	}
-	
 	class CalendarTask extends AsyncTask<String, Void, Integer> {
 		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
 		private final int MSG_USE_CACHED_DATA		= 1;
@@ -125,7 +97,6 @@ public class Calendar extends Activity {
 			} else { //Vi har inget alls inläst! Läs in in lastUpdateCount från fil om den finns
 				loadFromFile(true);
 				if(lastUpdateDate != null) {
-					
 					String updateDate = refreshNeeded();
 					if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED || updateDate == REFRESH_MSG_CONNECTION_FAILURE)
 						msg = MSG_LOAD_FROM_FILE;
@@ -133,9 +104,9 @@ public class Calendar extends Activity {
 						this.array = updateScheduleInfo(updateDate);
 						if(this.array != null)
 							msg = MSG_REFRESH_FROM_DOWNLOAD;
-						
+						else
+							msg = MSG_LOAD_FROM_FILE;
 					}
-					
 				} else {
 					this.array = updateScheduleInfo(null);
 					if(this.array != null)
@@ -186,6 +157,34 @@ public class Calendar extends Activity {
 					showProgress.dismiss();
 					break;
 			}
+		}
+		
+		private String refreshNeeded() {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_REFRESH);
+			try {
+				HttpResponse response = client.execute(request);
+				int statusCode = response.getStatusLine().getStatusCode();
+				if(statusCode == 200) {
+					HttpEntity entity = response.getEntity();
+					InputStream content = entity.getContent();
+					BufferedReader br = new BufferedReader(new InputStreamReader(content));
+					String line = br.readLine();
+					br.close();
+					content.close();
+					JSONArray arr = new JSONArray(line);
+					String updateTime = arr.getJSONObject(0).getString("UPDATE_TIME");
+					if(lastUpdateDate != null)
+						return Utils.compareTime(updateTime, lastUpdateDate) > 0 ? updateTime : REFRESH_MSG_REFRESH_NOT_NEEDED;
+					else
+						return updateTime;
+				} else 
+					Log.e(Utils.TAG,"CAL  Failed to download JSON file");
+			} catch (ClientProtocolException e) {	e.printStackTrace();
+			} catch (IOException e) {				e.printStackTrace();
+			} catch (JSONException e) {				e.printStackTrace();
+			}
+			return REFRESH_MSG_CONNECTION_FAILURE;
 		}
 		
 		private JSONArray updateScheduleInfo(String updateDate) {
