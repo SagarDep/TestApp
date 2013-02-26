@@ -18,6 +18,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.Attributes;
@@ -76,9 +77,15 @@ public class Calendar extends Activity {
 		}
 	}
 	
-	class CalendarTask extends AsyncTask<String, Void, String> {
+	class CalendarTask extends AsyncTask<String, Void, Integer> {
+		private final int MSG_NO_REFRESH_NEEDED		= 0;
+		private final int MSG_REFRESH_FROM_DOWNLOAD	= 1;
+		private final int MSG_USE_CACHED_DATA		= 2;
+		private final int MSG_LOAD_FROM_FILE		= 3;
+		
 		private Activity activity;
 		private ProgressDialog showProgress;
+		private JSONArray array;
 
 		public CalendarTask(Activity a, ProgressDialog pd) {
 			this.activity = a;
@@ -91,22 +98,35 @@ public class Calendar extends Activity {
 		}
 		
 		@Override
-		protected String doInBackground(String... params) {
+		protected Integer doInBackground(String... params) {
+			int msg = -1;
 			if(lastUpdateCount != -1) { //Vi har information sen innan
 				if (refreshNeeded()) {
-					
+					this.array = updateScheduleInfo();
+					if(this.array != null)
+						msg = MSG_REFRESH_FROM_DOWNLOAD;
+					else
+						msg = MSG_USE_CACHED_DATA;
 				}
 			} else { //Vi har inget alls inläst! Läs in in lastUpdateCount från fil om den finns
-				
+				loadFromFile(true);
 			}
-			
-			
 			
 			return null;
 		}
 		
+
+
+		@Override
+		protected void onPostExecute(final Integer msg) {
+			switch(msg) {
+				case MSG_NO_REFRESH_NEEDED:
+					break;
+					
+			}
+		}
+		
 		private boolean refreshNeeded() {
-			StringBuilder builder = new StringBuilder();
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_REFRESH);
 			try {
@@ -116,16 +136,13 @@ public class Calendar extends Activity {
 					HttpEntity entity = response.getEntity();
 					InputStream content = entity.getContent();
 					BufferedReader br = new BufferedReader(new InputStreamReader(content));
-					String line;
-					while((line = br.readLine()) != null) {
-						builder.append(line);
-					}
+					String line = br.readLine();
 					br.close();
 					content.close();
-					JSONObject json = new JSONObject(builder.toString());
-					int count = json.getInt("count");
+					int count = new JSONObject(line).getInt("count");
 					return count > lastUpdateCount;
-				}
+				} else 
+					Log.e(Utils.TAG,"CAL  Failed to download JSON file");
 			} catch (ClientProtocolException e) {	e.printStackTrace();
 			} catch (IOException e) {				e.printStackTrace();
 			} catch (JSONException e) {				e.printStackTrace();
@@ -133,11 +150,67 @@ public class Calendar extends Activity {
 			return true;
 		}
 
-		@Override
-		protected void onPostExecute(final String success) {
+		private JSONArray updateScheduleInfo() {
+			StringBuilder builder = new StringBuilder();
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_GET);
 			
+			try {
+				HttpResponse response = client.execute(request);
+				int statusCode = response.getStatusLine().getStatusCode();
+				if(statusCode == 200) {
+					HttpEntity entity = response.getEntity();
+					InputStream content = entity.getContent();
+					BufferedReader br = new BufferedReader(new InputStreamReader(content));
+					String line;
+					
+					while((line = br.readLine()) != null)
+						builder.append(line);
+					
+					br.close();
+					content.close();
+					return new JSONArray(builder.toString());
+				} else 
+					Log.e(Utils.TAG,"CAL  Failed to download JSON file");
+			} catch (ClientProtocolException e) {	e.printStackTrace();
+			} catch (IOException e) {				e.printStackTrace();
+			} catch (JSONException e) {				e.printStackTrace();
+			}
+
+			return null;
 		}
 		
+		private void saveToFile() {
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			Editor editor = prefs.edit();
+			try {
+				editor.putString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(scheduleList));
+				editor.putLong(Utils.PREFS_KEY_SCHEDULE_DATE, lastUpdateTime);
+				editor.putInt(Utils.PREFS_KEY_SCHEDULE_COUNT, lastUpdateCount);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(Utils.TAG, "CAL save_to_file IOException");
+			}
+			editor.commit();
+		}
+		
+		private void loadFromFile(boolean loadOnlyCount) {
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			
+			if(loadOnlyCount)
+				lastUpdateCount = prefs.getInt(Utils.PREFS_KEY_SCHEDULE_COUNT, -1);
+			else {
+				try {
+					lastUpdateCount = prefs.getInt(Utils.PREFS_KEY_SCHEDULE_COUNT, -1);
+					lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
+					scheduleList = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			
+		}
 	}
 
 	class LoadingTask extends AsyncTask<String, Void, String> {

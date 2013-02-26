@@ -61,6 +61,7 @@ public class Utils {
 	public static final String PREFS_KEY_NEWS_DATE		= "newsDate";
 	public static final String PREFS_KEY_SCHEDULE		= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_DATE	= "scheduleDate";
+	public static final String PREFS_KEY_SCHEDULE_COUNT	= "scheduleCount";
 	public static final String PREFS_KEY_MAP			= "map";
 	public static final String PREFS_KEY_MAP_DATE		= "mapDate";
 
