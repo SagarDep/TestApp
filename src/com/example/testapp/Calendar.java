@@ -125,14 +125,17 @@ public class Calendar extends Activity {
 			} else { //Vi har inget alls inläst! Läs in in lastUpdateCount från fil om den finns
 				loadFromFile(true);
 				if(lastUpdateDate != null) {
+					
 					String updateDate = refreshNeeded();
-					if (updateDate != null) {
+					if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED || updateDate == REFRESH_MSG_CONNECTION_FAILURE)
+						msg = MSG_LOAD_FROM_FILE;
+					else {
 						this.array = updateScheduleInfo(updateDate);
 						if(this.array != null)
 							msg = MSG_REFRESH_FROM_DOWNLOAD;
-						else
-							msg = MSG_LOAD_FROM_FILE;
+						
 					}
+					
 				} else {
 					this.array = updateScheduleInfo(null);
 					if(this.array != null)
