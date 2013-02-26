@@ -42,25 +42,61 @@ public class News extends Activity {
 		newsList = (ListView) findViewById(R.id.news_list);
 		showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS);
 		
-		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
-		
-		if(postList != null && timeDiff < validTime) {
-			Log.i(Utils.TAG, "NEWS USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-			newsList.setAdapter(new NewsAdapter(News.this, postList));
-			showProgress.dismiss();
-		} else {
-			backupPostList = postList;
-			postList = new ArrayList<Post>();
-			new LoadingTask(getApplicationContext()).execute(rss_feed);
+	}
+	
+	class NewsTask extends AsyncTask<String, Void, Integer> {
+
+		private Activity activity;
+		private ProgressDialog showProgress;
+
+		public NewsTask(Activity a, ProgressDialog pd) {
+			this.activity = a;
+			this.showProgress = pd;
 		}
 		
-//		newsList.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(postList.get(position).getUrl()));
-//				startActivity(intent);
-//			}
-//		});
+		@Override
+		protected void onPreExecute() {
+			showProgress.show();
+
+			long timeDiff = System.currentTimeMillis() - lastUpdateTime;
+			
+			if(postList != null && timeDiff < validTime) {
+				Log.i(Utils.TAG, "NEWS USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+				newsList.setAdapter(new NewsAdapter(News.this, postList));
+				showProgress.dismiss();
+			} else {
+				backupPostList = postList;
+				postList = new ArrayList<Post>();
+				new LoadingTask(getApplicationContext()).execute(rss_feed);
+			}
+			
+		}
+		
+		@Override
+		protected Integer doInBackground(String... params) {
+			
+			/*
+			 Prio: Cache -> Fil -> Internet
+			 Första gången appen öppnas laddas alla nyheter ner
+			 Därefter laddas endast de saknade nyheterna ner och fyller på listan som sparas i fil
+			 */
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(final Integer msg) {
+			
+		}
+		
+		private void saveToFile() {
+			
+		}
+		
+		private void loadFromFile() {
+			
+		}
+		
 	}
 	
 	class LoadingTask extends AsyncTask<String, Void, String> {
