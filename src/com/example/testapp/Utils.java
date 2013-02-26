@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,14 +57,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class Utils {
 	public static final String TAG = "APP";
 
-	public static final String PREFS_FILE 				= "prefsFile";
-	public static final String PREFS_KEY_NEWS			= "news";
-	public static final String PREFS_KEY_NEWS_DATE		= "newsDate";
-	public static final String PREFS_KEY_SCHEDULE		= "schedule";
-	public static final String PREFS_KEY_SCHEDULE_DATE	= "scheduleDate";
-	public static final String PREFS_KEY_SCHEDULE_COUNT	= "scheduleCount";
-	public static final String PREFS_KEY_MAP			= "map";
-	public static final String PREFS_KEY_MAP_DATE		= "mapDate";
+	public static final String PREFS_FILE 					= "prefsFile";
+	public static final String PREFS_KEY_NEWS				= "news";
+	public static final String PREFS_KEY_NEWS_DATE			= "newsDate";
+	public static final String PREFS_KEY_SCHEDULE			= "schedule";
+	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
+	public static final String PREFS_KEY_SCHEDULE_UPDATE	= "scheduleUpdate";
+	public static final String PREFS_KEY_MAP				= "map";
+	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
 
 	public static final String DB_SCHEDULE_URL	= "http://nutty.rymdraket.net/android/schedule.php?mode=";
 	public static final String DB_MARKER_URL	= "http://nutty.rymdraket.net/android/markers.php";
@@ -152,6 +153,21 @@ public class Utils {
 		Toast.makeText(context, msg, duration).show();
 	}
 
+	public static int compareTime(String updateTime, String lastUpdateDate) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		try {
+			Date current	= df.parse(updateTime);
+			Date last		= df.parse(lastUpdateDate);
+			
+			return current.compareTo(last);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return -1;
+	}
+	
 	private static String translateMonth(String date, int monthIndex) {
 		String[] split = date.toLowerCase().split(" ");
 		split[monthIndex] = monthMap.get(split[monthIndex]);

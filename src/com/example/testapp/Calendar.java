@@ -36,14 +36,14 @@ import com.example.testapp.scheduleitem.ScheduleItem;
 
 public class Calendar extends Activity {
 
-	private final long validTime = 300000L; // 5 minuter
-
 	private static ArrayList<ScheduleItem> scheduleList = null;
 	private static long lastUpdateTime = -1L;
-	private static int lastUpdateCount = -1;
-
+	private static String lastUpdateDate = null;
 	private ProgressDialog showProgress;
 	private ListView newsList;
+	
+	private static final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
+	private static final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +53,43 @@ public class Calendar extends Activity {
 		newsList = (ListView) findViewById(R.id.cal_list);
 		showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE);
 
-		long timeDiff = System.currentTimeMillis() - lastUpdateTime;
-
-		if (scheduleList != null && timeDiff < validTime) {
-			Log.i(Utils.TAG, "CAL USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-			newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
-			showProgress.dismiss();
-		} else {
-			new CalendarTask(Calendar.this, showProgress).execute("");
+		new CalendarTask(Calendar.this, showProgress).execute("");
+	}
+	
+	protected String refreshNeeded() {
+		HttpClient client = new DefaultHttpClient();
+		HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_REFRESH);
+		try {
+			HttpResponse response = client.execute(request);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if(statusCode == 200) {
+				HttpEntity entity = response.getEntity();
+				InputStream content = entity.getContent();
+				BufferedReader br = new BufferedReader(new InputStreamReader(content));
+				String line = br.readLine();
+				br.close();
+				content.close();
+				JSONArray arr = new JSONArray(line);
+				String updateTime = arr.getJSONObject(0).getString("UPDATE_TIME");
+				if(lastUpdateDate != null)
+					return Utils.compareTime(updateTime, lastUpdateDate) > 0 ? updateTime : REFRESH_MSG_REFRESH_NOT_NEEDED;
+				else
+					return updateTime;
+			} else 
+				Log.e(Utils.TAG,"CAL  Failed to download JSON file");
+		} catch (ClientProtocolException e) {	e.printStackTrace();
+		} catch (IOException e) {				e.printStackTrace();
+		} catch (JSONException e) {				e.printStackTrace();
 		}
+		return REFRESH_MSG_CONNECTION_FAILURE;
 	}
 	
 	class CalendarTask extends AsyncTask<String, Void, Integer> {
-		private final int MSG_NO_REFRESH_NEEDED		= 0;
-		private final int MSG_REFRESH_FROM_DOWNLOAD	= 1;
-		private final int MSG_USE_CACHED_DATA		= 2;
-		private final int MSG_LOAD_FROM_FILE		= 3;
-		private final int MSG_ERROR_NO_DATA			= 4;
+		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
+		private final int MSG_USE_CACHED_DATA		= 1;
+		private final int MSG_LOAD_FROM_FILE		= 2;
+		private final int MSG_ERROR_NO_DATA			= 3;
+		private final int MSG_ERR_USE_CACHED_DATA	= 4;
 		
 		private Activity activity;
 		private ProgressDialog showProgress;
@@ -89,26 +109,32 @@ public class Calendar extends Activity {
 		@Override
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
-			if(lastUpdateCount != -1) { //Vi har information sen innan
-				if (refreshNeeded()) {
-					this.array = updateScheduleInfo();
+			if(lastUpdateDate != null) { //Vi har information sen innan
+				String updateDate = refreshNeeded();
+				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED)
+					msg = MSG_USE_CACHED_DATA;
+				else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE)
+					msg = MSG_ERR_USE_CACHED_DATA;
+				else {
+					this.array = updateScheduleInfo(updateDate);
 					if(this.array != null)
 						msg = MSG_REFRESH_FROM_DOWNLOAD;
 					else
-						msg = MSG_USE_CACHED_DATA;
+						msg = MSG_ERR_USE_CACHED_DATA;
 				}
 			} else { //Vi har inget alls inläst! Läs in in lastUpdateCount från fil om den finns
 				loadFromFile(true);
-				if(lastUpdateCount != -1) {
-					if (refreshNeeded()) {
-						this.array = updateScheduleInfo();
+				if(lastUpdateDate != null) {
+					String updateDate = refreshNeeded();
+					if (updateDate != null) {
+						this.array = updateScheduleInfo(updateDate);
 						if(this.array != null)
 							msg = MSG_REFRESH_FROM_DOWNLOAD;
 						else
 							msg = MSG_LOAD_FROM_FILE;
 					}
 				} else {
-					this.array = updateScheduleInfo();
+					this.array = updateScheduleInfo(null);
 					if(this.array != null)
 						msg = MSG_REFRESH_FROM_DOWNLOAD;
 					else
@@ -122,10 +148,6 @@ public class Calendar extends Activity {
 		protected void onPostExecute(final Integer msg) {
 			String errMsg;
 			switch(msg) {
-				case MSG_NO_REFRESH_NEEDED:
-					Log.i(Utils.TAG, "CAL NO REFRESH NEEDED");
-					showProgress.dismiss();
-					break;
 				case MSG_REFRESH_FROM_DOWNLOAD:
 					Log.i(Utils.TAG, "CAL USING FRESHLY DOWNLOADED");
 					initFromDownload();
@@ -134,12 +156,18 @@ public class Calendar extends Activity {
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
 					break;
-				case MSG_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
+				case MSG_ERR_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
 					Log.i(Utils.TAG, "CAL (no connection) USING CACHED VERSION");
 					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
+					break;
+				case MSG_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
+					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
+					Log.i(Utils.TAG, "CAL USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					showProgress.dismiss();
 					break;
 				case MSG_LOAD_FROM_FILE:
 					Log.i(Utils.TAG, "CAL (no connection) USING STORED VERSION");
@@ -157,31 +185,7 @@ public class Calendar extends Activity {
 			}
 		}
 		
-		private boolean refreshNeeded() {
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_REFRESH);
-			try {
-				HttpResponse response = client.execute(request);
-				int statusCode = response.getStatusLine().getStatusCode();
-				if(statusCode == 200) {
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader br = new BufferedReader(new InputStreamReader(content));
-					String line = br.readLine();
-					br.close();
-					content.close();
-					int count = new JSONObject(line).getInt("count");
-					return count > lastUpdateCount;
-				} else 
-					Log.e(Utils.TAG,"CAL  Failed to download JSON file");
-			} catch (ClientProtocolException e) {	e.printStackTrace();
-			} catch (IOException e) {				e.printStackTrace();
-			} catch (JSONException e) {				e.printStackTrace();
-			}
-			return true;
-		}
-
-		private JSONArray updateScheduleInfo() {
+		private JSONArray updateScheduleInfo(String updateDate) {
 			StringBuilder builder = new StringBuilder();
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_GET);
@@ -200,6 +204,12 @@ public class Calendar extends Activity {
 					
 					br.close();
 					content.close();
+					
+					if(updateDate != null)
+						lastUpdateDate = updateDate;
+					else
+						lastUpdateDate = refreshNeeded();
+					
 					return new JSONArray(builder.toString());
 				} else 
 					Log.e(Utils.TAG,"CAL  Failed to download JSON file");
@@ -234,8 +244,6 @@ public class Calendar extends Activity {
 					scheduleList.add(new CalDesc(type, counter, time, title, place));
 					counter++;
 				}
-				
-				lastUpdateCount = this.array.length();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -247,7 +255,7 @@ public class Calendar extends Activity {
 			try {
 				editor.putString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(scheduleList));
 				editor.putLong(Utils.PREFS_KEY_SCHEDULE_DATE, lastUpdateTime);
-				editor.putInt(Utils.PREFS_KEY_SCHEDULE_COUNT, lastUpdateCount);
+				editor.putString(Utils.PREFS_KEY_SCHEDULE_UPDATE, lastUpdateDate);
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e(Utils.TAG, "CAL save_to_file IOException");
@@ -260,10 +268,10 @@ public class Calendar extends Activity {
 			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 			
 			if(loadOnlyCount)
-				lastUpdateCount = prefs.getInt(Utils.PREFS_KEY_SCHEDULE_COUNT, -1);
+				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
 			else {
 				try {
-					lastUpdateCount = prefs.getInt(Utils.PREFS_KEY_SCHEDULE_COUNT, -1);
+					lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
 					lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
 					scheduleList = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
 				} catch (IOException e) {
