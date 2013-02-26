@@ -150,7 +150,8 @@ public class Calendar extends Activity {
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 					break;
 				default:
-					Log.e(Utils.TAG,"CAL  Failed to recieve data, nothing to show");
+					Log.i(Utils.TAG, "CAL (no connection) NO DATA TO SHOW");
+					Utils.showToast(activity, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
 					showProgress.dismiss();
 					break;
 			}
