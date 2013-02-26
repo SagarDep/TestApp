@@ -11,7 +11,7 @@ public class CalDate extends ScheduleItem {
 		this.date = date;
 	}
 
-	public String getTitle() {
+	public String getDay() {
 		return day;
 	}
 

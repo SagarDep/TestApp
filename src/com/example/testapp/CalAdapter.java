@@ -58,7 +58,7 @@ public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 				TextView title = (TextView) vi.findViewById(R.id.date_title);
 				TextView date = (TextView) vi.findViewById(R.id.date_date);
 				
-				title.setText(calDate.getTitle().toUpperCase());
+				title.setText(calDate.getDay().toUpperCase());
 				date.setText(calDate.getDate().toLowerCase());
 				
 			} else if(item.getType() == ScheduleItem.TYPE_CALDESC) {

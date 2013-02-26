@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -73,7 +74,7 @@ public class Calendar extends Activity {
 			showProgress.dismiss();
 		} else {
 			postList = new ArrayList<Post>();
-			new LoadingTask(getApplicationContext()).execute(rss_feed);
+			new CalendarTask(this, showProgress);
 		}
 	}
 	
@@ -82,6 +83,7 @@ public class Calendar extends Activity {
 		private final int MSG_REFRESH_FROM_DOWNLOAD	= 1;
 		private final int MSG_USE_CACHED_DATA		= 2;
 		private final int MSG_LOAD_FROM_FILE		= 3;
+		private final int MSG_ERROR_NO_DATA			= 4;
 		
 		private Activity activity;
 		private ProgressDialog showProgress;
@@ -90,6 +92,7 @@ public class Calendar extends Activity {
 		public CalendarTask(Activity a, ProgressDialog pd) {
 			this.activity = a;
 			this.showProgress = pd;
+			this.array = null;
 		}
 		
 		@Override
@@ -110,19 +113,59 @@ public class Calendar extends Activity {
 				}
 			} else { //Vi har inget alls inläst! Läs in in lastUpdateCount från fil om den finns
 				loadFromFile(true);
+				if(lastUpdateCount != -1) {
+					if (refreshNeeded()) {
+						this.array = updateScheduleInfo();
+						if(this.array != null)
+							msg = MSG_REFRESH_FROM_DOWNLOAD;
+						else
+							msg = MSG_LOAD_FROM_FILE;
+					}
+				} else {
+					this.array = updateScheduleInfo();
+					if(this.array != null)
+						msg = MSG_REFRESH_FROM_DOWNLOAD;
+					else
+						msg = MSG_ERROR_NO_DATA;
+				}
 			}
-			
-			return null;
+			return msg;
 		}
 		
 
 
 		@Override
 		protected void onPostExecute(final Integer msg) {
+			String errMsg;
 			switch(msg) {
 				case MSG_NO_REFRESH_NEEDED:
 					break;
-					
+				case MSG_REFRESH_FROM_DOWNLOAD:
+					Log.i(Utils.TAG, "CAL USING FRESHLY DOWNLOADED");
+					initFromDownload();
+					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					showProgress.dismiss();
+					lastUpdateTime = System.currentTimeMillis();
+					saveToFile();
+					break;
+				case MSG_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
+					Log.i(Utils.TAG, "CAL (no connection) USING CACHED VERSION");
+					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					showProgress.dismiss();
+					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
+					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
+					break;
+				case MSG_LOAD_FROM_FILE:
+					Log.i(Utils.TAG, "CAL (no connection) USING STORED VERSION");
+					loadFromFile(false);
+					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					showProgress.dismiss();
+					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
+					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
+					break;
+				default:
+					Log.e(Utils.TAG,"CAL  Failed to recieve data, nothing to show");
+					break;
 			}
 		}
 		
@@ -178,6 +221,35 @@ public class Calendar extends Activity {
 			}
 
 			return null;
+		}
+		
+		private void initFromDownload() {
+			HashMap<String,String> map = new HashMap<String, String>();
+			try {
+				int counter = 0;
+				for(int i = 0; i < this.array.length(); i++) {
+					JSONObject o = this.array.getJSONObject(i);
+					if(!map.containsKey(o.getString("scheduleDay"))) {
+						if(map.size() != 0) {
+							scheduleList.add(new CalSep(ScheduleItem.TYPE_CALSEP, counter));
+							counter++;
+						}
+						map.put(o.getString("scheduleDay"), null);
+						scheduleList.add(new CalDate(ScheduleItem.TYPE_CALDATE, counter, o.getString("scheduleDay"), o.getString("scheduleDate")));
+						counter++;
+					}
+					int type = ScheduleItem.TYPE_CALDESC;
+					String time = o.getString("scheduleFrom") + "-" + o.getString("scheduleTo");
+					String title = o.getString("scheduleTitle");
+					String place = o.getString("schedulePlace");
+					scheduleList.add(new CalDesc(type, counter, time, title, place));
+					counter++;
+				}
+				
+				lastUpdateCount = this.array.length();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		private void saveToFile() {
