@@ -58,32 +58,15 @@ public class NewsAdapter extends BaseAdapter {
 				TextView text = (TextView) vi.findViewById(R.id.details);
 				TextView date = (TextView) vi.findViewById(R.id.date);
 				
-				title.setText(post.getTitle());
+				title.setText(post.getTitle().toUpperCase());
 				text.setText(post.getText());
-				date.setText(post.getDate());
+				date.setText(Html.fromHtml(post.getDate()).toString().trim());
 				
 			} else {
 				vi = inflater.inflate(R.layout.row_news_sep, null);
 			}
 		
 		}
-		
-//		if(convertView == null) {
-//			vi = inflater.inflate(R.layout.row_news, null);
-//			holder = new ViewHolder();
-//			holder.title = (TextView) vi.findViewById(R.id.title);
-//			holder.desc = (TextView) vi.findViewById(R.id.details);
-//			holder.pubDate = (TextView) vi.findViewById(R.id.date);
-//			vi.setTag(holder);
-//		} else 
-//			holder = (ViewHolder) vi.getTag();
-//		
-//		String sweDate = Utils.translateDate(data.get(position).getPubDate());
-//
-//		holder.title.setText(data.get(position).getTitle().toUpperCase());
-//		holder.pubDate.setText(sweDate.toLowerCase());
-//		holder.desc.setText(Html.fromHtml(data.get(position).getDesc()).toString().trim());
-		
 		return vi;
 	}
 }
