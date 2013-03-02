@@ -36,7 +36,7 @@ public class News extends Activity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 	
-	private ArrayList<NewsItem> newsItems		= null;
+	private static ArrayList<NewsItem> newsItems		= null;
 	private static long lastUpdateTime			= -1L;
 	private static String lastUpdateDate		= null;
 	private ProgressDialog showProgress;

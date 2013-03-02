@@ -60,7 +60,7 @@ public class NewsAdapter extends BaseAdapter {
 				
 				title.setText(post.getTitle().toUpperCase());
 				text.setText(post.getText());
-				date.setText(Html.fromHtml(post.getDate()).toString().trim());
+				date.setText(Html.fromHtml(post.getDate()));
 				
 			} else {
 				vi = inflater.inflate(R.layout.row_news_sep, null);
