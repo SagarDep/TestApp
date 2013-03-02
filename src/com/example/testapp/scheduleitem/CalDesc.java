@@ -6,8 +6,8 @@ public class CalDesc extends ScheduleItem {
 	private String title;
 	private String place;
 	
-	public CalDesc(int type, int id, String time, String title, String place) {
-		super(type, id);
+	public CalDesc(int type, String time, String title, String place) {
+		super(type);
 		this.time = time;
 		this.title = title;
 		this.place = place;

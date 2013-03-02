@@ -226,24 +226,20 @@ public class Calendar extends Activity {
 			HashMap<String,String> map = new HashMap<String, String>();
 			scheduleList = new ArrayList<ScheduleItem>();
 			try {
-				int counter = 0;
 				for(int i = 0; i < this.array.length(); i++) {
 					JSONObject o = this.array.getJSONObject(i);
 					if(!map.containsKey(o.getString("scheduleDay"))) {
 						if(map.size() != 0) {
-							scheduleList.add(new CalSep(ScheduleItem.TYPE_CALSEP, counter));
-							counter++;
+							scheduleList.add(new CalSep(ScheduleItem.TYPE_CALSEP));
 						}
 						map.put(o.getString("scheduleDay"), null);
-						scheduleList.add(new CalDate(ScheduleItem.TYPE_CALDATE, counter, o.getString("scheduleDay"), o.getString("scheduleDate")));
-						counter++;
+						scheduleList.add(new CalDate(ScheduleItem.TYPE_CALDATE, o.getString("scheduleDay"), o.getString("scheduleDate")));
 					}
 					int type = ScheduleItem.TYPE_CALDESC;
 					String time = o.getString("scheduleFrom") + "-" + o.getString("scheduleTo");
 					String title = o.getString("scheduleTitle");
 					String place = o.getString("schedulePlace");
-					scheduleList.add(new CalDesc(type, counter, time, title, place));
-					counter++;
+					scheduleList.add(new CalDesc(type, time, title, place));
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

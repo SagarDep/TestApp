@@ -5,8 +5,8 @@ public class CalDate extends ScheduleItem {
 	private String day;
 	private String date;
 	
-	public CalDate(int type, int id, String day, String date) {
-		super(type, id);
+	public CalDate(int type, String day, String date) {
+		super(type);
 		this.day = day;
 		this.date = date;
 	}
