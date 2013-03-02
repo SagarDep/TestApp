@@ -35,8 +35,8 @@ import com.example.testapp.scheduleitem.CalSep;
 import com.example.testapp.scheduleitem.ScheduleItem;
 
 public class Calendar extends Activity {
-	private static final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
-	private static final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
+	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
+	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
 	private static ArrayList<ScheduleItem> scheduleList = null;
 	private static long lastUpdateTime = -1L;

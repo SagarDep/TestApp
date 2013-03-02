@@ -5,13 +5,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import org.json.JSONArray;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,17 +24,22 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class News extends Activity {
+	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
+	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
+	
 	private final String rss_feed				= "http://paggebella.tumblr.com/rss";
 	private final long validTime				= 300000L;
 	
 	private static ArrayList<Post> postList		= null;
-	private static long lastUpdateTime			= -1L;
 	
 	private ArrayList<Post> backupPostList		= null;
+	
+	private static long lastUpdateTime			= -1L;
+	private static String lastUpdateDate		= null;
 	private ProgressDialog showProgress;
 	private ListView newsList;
 	
@@ -42,16 +51,24 @@ public class News extends Activity {
 		newsList = (ListView) findViewById(R.id.news_list);
 		showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS);
 		
+		new NewsTask(News.this, showProgress).execute("");
 	}
 	
 	class NewsTask extends AsyncTask<String, Void, Integer> {
-
+		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
+		private final int MSG_USE_CACHED_DATA		= 1;
+		private final int MSG_LOAD_FROM_FILE		= 2;
+		private final int MSG_ERROR_NO_DATA			= 3;
+		private final int MSG_ERR_USE_CACHED_DATA	= 4;
+		
 		private Activity activity;
 		private ProgressDialog showProgress;
+		private JSONArray array;
 
 		public NewsTask(Activity a, ProgressDialog pd) {
 			this.activity = a;
 			this.showProgress = pd;
+			this.array = null;
 		}
 		
 		@Override
@@ -74,18 +91,81 @@ public class News extends Activity {
 		
 		@Override
 		protected Integer doInBackground(String... params) {
-			
+			int msg = -1;
 			/*
 			 Prio: Cache -> Fil -> Internet
 			 Första gången appen öppnas laddas alla nyheter ner
 			 Därefter laddas endast de saknade nyheterna ner och fyller på listan som sparas i fil
 			 */
-			
-			return null;
+			if(lastUpdateDate != null) { // CACHE AVAILABLE
+				String updateDate = refreshNeeded();
+				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED) {
+					msg = MSG_USE_CACHED_DATA;
+				} else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE) {
+					msg = MSG_ERR_USE_CACHED_DATA;
+				} else {
+					this.array = updateNewsInfo(updateDate);
+					if(this.array != null)
+						msg = MSG_REFRESH_FROM_DOWNLOAD;
+					else
+						msg = MSG_ERR_USE_CACHED_DATA;
+				}
+			} else { // CACHE EMPTY
+				loadFromFile(true);
+				if(lastUpdateDate != null) {
+					String updateDate = refreshNeeded();
+					if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED || updateDate == REFRESH_MSG_CONNECTION_FAILURE)
+						msg = MSG_LOAD_FROM_FILE;
+					else {
+						this.array = updateNewsInfo(updateDate);
+						if(this.array != null)
+							msg = MSG_REFRESH_FROM_DOWNLOAD;
+						else
+							msg = MSG_LOAD_FROM_FILE;
+					}
+				} else {
+					this.array = updateNewsInfo(null);
+					if(this.array != null)
+						msg = MSG_REFRESH_FROM_DOWNLOAD;
+					else 
+						msg = MSG_ERROR_NO_DATA;
+				}
+			}
+			return msg;
 		}
 		
 		@Override
 		protected void onPostExecute(final Integer msg) {
+			String errMsg;
+			switch(msg) {
+				case MSG_REFRESH_FROM_DOWNLOAD:
+					Log.i(Utils.TAG, "NEWS USING FRESHLY DOWNLOADED");
+					initFromDownload();
+					//FIXME
+					break;
+				case MSG_ERR_USE_CACHED_DATA:
+					break;
+				case MSG_USE_CACHED_DATA:
+					break;
+				case MSG_LOAD_FROM_FILE:
+					break;
+				default:
+					break;
+			}
+		}
+
+		private String refreshNeeded() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		private JSONArray updateNewsInfo(String updateDate) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		private void initFromDownload() {
+			// TODO Auto-generated method stub
 			
 		}
 		
@@ -93,7 +173,7 @@ public class News extends Activity {
 			
 		}
 		
-		private void loadFromFile() {
+		private void loadFromFile(boolean b) {
 			
 		}
 		
