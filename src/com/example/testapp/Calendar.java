@@ -60,8 +60,9 @@ public class Calendar extends Activity {
 		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
 		private final int MSG_USE_CACHED_DATA		= 1;
 		private final int MSG_LOAD_FROM_FILE		= 2;
-		private final int MSG_ERROR_NO_DATA			= 3;
-		private final int MSG_ERR_USE_CACHED_DATA	= 4;
+		private final int MSG_ERR_LOAD_FROM_FILE	= 3;
+		private final int MSG_ERROR_NO_DATA			= 4;
+		private final int MSG_ERR_USE_CACHED_DATA	= 5;
 		
 		private Activity activity;
 		private ProgressDialog showProgress;
@@ -105,7 +106,7 @@ public class Calendar extends Activity {
 						if(this.array != null)
 							msg = MSG_REFRESH_FROM_DOWNLOAD;
 						else
-							msg = MSG_LOAD_FROM_FILE;
+							msg = MSG_ERR_LOAD_FROM_FILE;
 					}
 				} else {
 					this.array = updateScheduleInfo(null);
@@ -143,13 +144,19 @@ public class Calendar extends Activity {
 					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					break;
-				case MSG_LOAD_FROM_FILE:
+				case MSG_ERR_LOAD_FROM_FILE:
 					Log.i(Utils.TAG, "CAL (no connection) USING STORED VERSION");
 					loadFromFile(false);
 					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
+					break;
+				case MSG_LOAD_FROM_FILE:
+					Log.i(Utils.TAG, "CAL REFRESH NOT NEEDED, USING STORED VERSION");
+					loadFromFile(false);
+					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					showProgress.dismiss();
 					break;
 				default:
 					Log.i(Utils.TAG, "CAL (no connection) NO DATA TO SHOW");
