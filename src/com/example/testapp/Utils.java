@@ -60,6 +60,7 @@ public class Utils {
 	public static final String PREFS_FILE 					= "prefsFile";
 	public static final String PREFS_KEY_NEWS				= "news";
 	public static final String PREFS_KEY_NEWS_DATE			= "newsDate";
+	public static final String PREFS_KEY_NEWS_UPDATE		= "newsUpdate";
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
 	public static final String PREFS_KEY_SCHEDULE_UPDATE	= "scheduleUpdate";

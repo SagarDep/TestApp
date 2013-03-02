@@ -179,11 +179,11 @@ public class Calendar extends Activity {
 					br.close();
 					content.close();
 					JSONArray arr = new JSONArray(line);
-					String updateTime = arr.getJSONObject(0).getString("UPDATE_TIME");
+					String updateDate = arr.getJSONObject(0).getString("UPDATE_TIME");
 					if(lastUpdateDate != null)
-						return Utils.compareTime(updateTime, lastUpdateDate) > 0 ? updateTime : REFRESH_MSG_REFRESH_NOT_NEEDED;
+						return Utils.compareTime(updateDate, lastUpdateDate) > 0 ? updateDate : REFRESH_MSG_REFRESH_NOT_NEEDED;
 					else
-						return updateTime;
+						return updateDate;
 				} else 
 					Log.e(Utils.TAG,"CAL  Failed to download JSON file");
 			} catch (ClientProtocolException e) {	e.printStackTrace();
@@ -237,16 +237,15 @@ public class Calendar extends Activity {
 					JSONObject o = this.array.getJSONObject(i);
 					if(!map.containsKey(o.getString("scheduleDay"))) {
 						if(map.size() != 0) {
-							scheduleList.add(new CalSep(ScheduleItem.TYPE_CALSEP));
+							scheduleList.add(new CalSep());
 						}
 						map.put(o.getString("scheduleDay"), null);
-						scheduleList.add(new CalDate(ScheduleItem.TYPE_CALDATE, o.getString("scheduleDay"), o.getString("scheduleDate")));
+						scheduleList.add(new CalDate(o.getString("scheduleDay"), o.getString("scheduleDate")));
 					}
-					int type = ScheduleItem.TYPE_CALDESC;
 					String time = o.getString("scheduleFrom") + "-" + o.getString("scheduleTo");
 					String title = o.getString("scheduleTitle");
 					String place = o.getString("schedulePlace");
-					scheduleList.add(new CalDesc(type, time, title, place));
+					scheduleList.add(new CalDesc(time, title, place));
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
