@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -38,7 +39,6 @@ public class News extends Activity {
 	private static ArrayList<NewsItem> newsItems		= null;
 	private static long lastUpdateTime			= -1L;
 	private static String lastUpdateDate		= null;
-	private ProgressDialog showProgress;
 	private ListView newsList;
 	
 	@Override
@@ -47,10 +47,7 @@ public class News extends Activity {
 		setContentView(R.layout.activity_news);
 		
 		newsList = (ListView) findViewById(R.id.news_list);
-		showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS);
-		showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);	
-		
-		new NewsTask(News.this, showProgress).execute("");
+		new NewsTask(News.this).execute("");
 	}
 	
 	class NewsTask extends AsyncTask<String, Void, Integer> {
@@ -67,15 +64,23 @@ public class News extends Activity {
 		
 		private long before;
 
-		public NewsTask(Activity a, ProgressDialog pd) {
+		public NewsTask(Activity a) {
 			this.activity = a;
-			this.showProgress = pd;
 			this.array = null;
 		}
 		
 		@Override
 		protected void onPreExecute() {
-			showProgress.show();
+			showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS, true, true, new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					NewsTask.this.cancel(true);
+					if(newsItems == null)
+						lastUpdateDate = null;
+					finish();
+				}
+			});
+			showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);	
 		}
 		
 		@Override

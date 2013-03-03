@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -40,7 +41,6 @@ public class Calendar extends Activity {
 	private static ArrayList<ScheduleItem> scheduleList = null;
 	private static long lastUpdateTime = -1L;
 	private static String lastUpdateDate = null;
-	private ProgressDialog showProgress;
 	private ListView newsList;
 	
 	@Override
@@ -49,10 +49,7 @@ public class Calendar extends Activity {
 		setContentView(R.layout.activity_cal);
 
 		newsList = (ListView) findViewById(R.id.cal_list);
-		showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE);
-		showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-		new CalendarTask(Calendar.this, showProgress).execute("");
+		new CalendarTask(Calendar.this).execute("");
 	}
 	
 	class CalendarTask extends AsyncTask<String, Void, Integer> {
@@ -67,15 +64,23 @@ public class Calendar extends Activity {
 		private ProgressDialog showProgress;
 		private JSONArray array;
 
-		public CalendarTask(Activity a, ProgressDialog pd) {
+		public CalendarTask(Activity a) {
 			this.activity = a;
-			this.showProgress = pd;
 			this.array = null;
 		}
 		
 		@Override
 		protected void onPreExecute() {
-			showProgress.show();
+			showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE, true, true, new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					CalendarTask.this.cancel(true);
+					if(scheduleList == null)
+						lastUpdateDate = null;
+					finish();
+				}
+			});
+			showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		}
 		
 		@Override
