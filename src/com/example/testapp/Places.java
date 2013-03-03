@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ListView;
 
 public class Places extends Activity {
@@ -20,6 +21,7 @@ public class Places extends Activity {
 		
 		newsList = (ListView) findViewById(R.id.places_list);
 		showProgress = ProgressDialog.show(Places.this, "", Utils.MSG_LOADING_PLACES);
+		showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		
 		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
 		

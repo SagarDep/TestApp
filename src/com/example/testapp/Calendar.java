@@ -2,13 +2,11 @@ package com.example.testapp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -26,6 +24,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,6 +50,7 @@ public class Calendar extends Activity {
 
 		newsList = (ListView) findViewById(R.id.cal_list);
 		showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE);
+		showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
 		new CalendarTask(Calendar.this, showProgress).execute("");
 	}
@@ -168,16 +168,13 @@ public class Calendar extends Activity {
 		private String refreshNeeded() {
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_REFRESH);
+			BufferedReader br = null;
 			try {
 				HttpResponse response = client.execute(request);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if(statusCode == 200) {
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader br = new BufferedReader(new InputStreamReader(content));
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 					String line = br.readLine();
-					br.close();
-					content.close();
 					JSONArray arr = new JSONArray(line);
 					String updateDate = arr.getJSONObject(0).getString("UPDATE_TIME");
 					if(lastUpdateDate != null)
@@ -189,6 +186,10 @@ public class Calendar extends Activity {
 			} catch (ClientProtocolException e) {	e.printStackTrace();
 			} catch (IOException e) {				e.printStackTrace();
 			} catch (JSONException e) {				e.printStackTrace();
+			} finally {
+				try {
+					if(br != null)	br.close();
+				} catch (IOException e) {	e.printStackTrace();	}
 			}
 			return REFRESH_MSG_CONNECTION_FAILURE;
 		}
@@ -197,21 +198,16 @@ public class Calendar extends Activity {
 			StringBuilder builder = new StringBuilder();
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_GET);
-			
+			BufferedReader br = null;
 			try {
 				HttpResponse response = client.execute(request);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if(statusCode == 200) {
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader br = new BufferedReader(new InputStreamReader(content));
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 					String line;
 					
 					while((line = br.readLine()) != null)
 						builder.append(line);
-					
-					br.close();
-					content.close();
 					
 					if(updateDate != null)
 						lastUpdateDate = updateDate;
@@ -224,6 +220,10 @@ public class Calendar extends Activity {
 			} catch (ClientProtocolException e) {	e.printStackTrace();
 			} catch (IOException e) {				e.printStackTrace();
 			} catch (JSONException e) {				e.printStackTrace();
+			} finally {
+				try {
+					if(br != null)	br.close();
+				} catch (IOException e) {	e.printStackTrace();	}
 			}
 
 			return null;
