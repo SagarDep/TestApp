@@ -62,8 +62,6 @@ public class News extends Activity {
 		private ProgressDialog showProgress;
 		private JSONArray array;
 		
-		private long before;
-
 		public NewsTask(Activity a) {
 			this.activity = a;
 			this.array = null;
@@ -87,10 +85,7 @@ public class News extends Activity {
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
 			if(lastUpdateDate != null) { // CACHE AVAILABLE
-				before = System.currentTimeMillis();
 				String updateDate = refreshNeeded();
-				long timeDiff = System.currentTimeMillis() - before;
-				Log.i(Utils.TAG, "REFRESH NEEDED " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED) {
 					msg = MSG_USE_CACHED_DATA;
 				} else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE) {
@@ -105,10 +100,7 @@ public class News extends Activity {
 			} else { // CACHE EMPTY
 				loadFromFile(true);
 				if(lastUpdateDate != null) {
-					before = System.currentTimeMillis();
 					String updateDate = refreshNeeded();
-					long timeDiff = System.currentTimeMillis() - before;
-					Log.i(Utils.TAG, "REFRESH NEEDED " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 					if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED || updateDate == REFRESH_MSG_CONNECTION_FAILURE)
 						msg = MSG_LOAD_FROM_FILE;
 					else {
@@ -151,10 +143,7 @@ public class News extends Activity {
 				case MSG_USE_CACHED_DATA:
 					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 					Log.i(Utils.TAG, "NEWS USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-					before = System.currentTimeMillis();
 					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
-					long timeDiff2 = System.currentTimeMillis() - before;
-					Log.i(Utils.TAG, "GUI " + "timeDiff =" + timeDiff2 + " (" + ((timeDiff2 / 1000.0) / 60.0) + " min)");
 					showProgress.dismiss();
 					break;
 				case MSG_ERR_LOAD_FROM_FILE:
@@ -189,9 +178,9 @@ public class News extends Activity {
 				if(statusCode == 200) {
 					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 					String line = br.readLine();
-					JSONArray arr = new JSONArray(line);
-					String updateDate = arr.getJSONObject(0).getString("UPDATE_TIME");
-					if(lastUpdateDate != null) 
+					JSONObject o = new JSONObject(line.substring(1, line.length()-1));
+					String updateDate = o.getString("UPDATE_TIME");
+					if(lastUpdateDate != null)
 						return Utils.compareTime(updateDate, lastUpdateDate) > 0 ? updateDate : REFRESH_MSG_REFRESH_NOT_NEEDED;
 					else
 						return updateDate;
