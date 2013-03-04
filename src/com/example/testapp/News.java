@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 
-import newsitem.NewsItem;
-import newsitem.NewsPost;
-import newsitem.NewsSep;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -19,6 +16,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.example.testapp.newsitem.NewsItem;
+import com.example.testapp.newsitem.NewsPost;
+import com.example.testapp.newsitem.NewsSep;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.MapsInitializer;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,14 +37,18 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class News extends Activity {
+public class News extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
+	
+	private final Handler handler = new Handler();
 	
 	private static ArrayList<NewsItem> newsItems		= null;
 	private static long lastUpdateTime			= -1L;
@@ -44,11 +58,90 @@ public class News extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setTheme(R.style.Theme_Sherlock_Light);
+
 		setContentView(R.layout.activity_news);
+		
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayShowTitleEnabled(false);
+		ab.setHomeButtonEnabled(true);
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		ab.setListNavigationCallbacks(ArrayAdapter.createFromResource(this, R.array.sections, R.layout.sherlock_spinner_dropdown_item), new OnNavigationListener() {
+
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		});
 		
 		newsList = (ListView) findViewById(R.id.news_list);
 		new NewsTask(News.this).execute("");
 	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+
+        // set up a listener for the refresh item
+        final MenuItem refresh = (MenuItem) menu.findItem(R.id.menu_refresh);
+        refresh.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            // on selecting show progress spinner for 1s
+            public boolean onMenuItemClick(MenuItem item) {
+                // item.setActionView(R.layout.progress_action);
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        refresh.setActionView(null);
+                    }
+                }, 1000);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+	
+	/*
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		setTheme(R.style.Theme_Sherlock);
+		
+		setContentView(R.layout.activity_main);
+		
+		ActionBar ab = getSupportActionBar();
+		ab.setTitle("TitleMofo");
+//		ab.setDisplayShowTitleEnabled(false);
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		ab.setDisplayShowHomeEnabled(false);
+		
+		ab.setListNavigationCallbacks(ArrayAdapter.createFromResource(this, R.array.sections, R.layout.sherlock_spinner_dropdown_item), new OnNavigationListener() {
+
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		});
+		
+		ab.setDisplayShowTitleEnabled(false);
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		
+		try {
+			MapsInitializer.initialize(Main.this);
+		} catch (GooglePlayServicesNotAvailableException e) {
+			Log.e(Utils.TAG, "MAIN  MapsInitializer Failed!");
+			e.printStackTrace();
+		}
+		
+		Utils.initMarkerIcons(this);
+		
+		initButtons();
+	}
+	*/
 	
 	class NewsTask extends AsyncTask<String, Void, Integer> {
 		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
