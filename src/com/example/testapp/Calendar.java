@@ -41,6 +41,8 @@ import com.example.testapp.scheduleitem.CalSep;
 import com.example.testapp.scheduleitem.ScheduleItem;
 
 public class Calendar extends SherlockActivity {
+	private final long TIME_ONE_MINUTE = 60000;
+	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
@@ -134,7 +136,7 @@ public class Calendar extends SherlockActivity {
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
 			if(lastUpdateDate != null) { //Vi har information sen innan
-				String updateDate = refreshNeeded();
+				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED)
 					msg = MSG_USE_CACHED_DATA;
 				else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE)
@@ -182,17 +184,18 @@ public class Calendar extends SherlockActivity {
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
 					break;
-				case MSG_ERR_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
+				case MSG_ERR_USE_CACHED_DATA:
 					Log.i(Utils.TAG, "CAL (no connection) USING CACHED VERSION");
 					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 					break;
-				case MSG_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
+				case MSG_USE_CACHED_DATA:
 					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 					Log.i(Utils.TAG, "CAL USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					lastUpdateTime = System.currentTimeMillis();
 					showProgress.dismiss();
 					break;
 				case MSG_ERR_LOAD_FROM_FILE:
@@ -207,6 +210,7 @@ public class Calendar extends SherlockActivity {
 					Log.i(Utils.TAG, "CAL REFRESH NOT NEEDED, USING STORED VERSION");
 					loadFromFile(false);
 					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					lastUpdateTime = System.currentTimeMillis();
 					showProgress.dismiss();
 					break;
 				default:

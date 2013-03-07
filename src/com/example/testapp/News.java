@@ -39,14 +39,16 @@ import com.example.testapp.newsitem.NewsPost;
 import com.example.testapp.newsitem.NewsSep;
 
 public class News extends SherlockActivity {
+	private final long TIME_ONE_MINUTE = 60000;
+	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 	
 	private final Handler handler = new Handler();
 	
 	private static ArrayList<NewsItem> newsItems		= null;
-	private static long lastUpdateTime			= -1L;
-	private static String lastUpdateDate		= null;
+	private static long lastUpdateTime					= -1L;
+	private static String lastUpdateDate				= null;
 	private ListView newsList;
 	
 	@Override
@@ -68,18 +70,13 @@ public class News extends SherlockActivity {
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.main_menu, menu);
-
-        // set up a listener for the refresh item
         final MenuItem refresh = (MenuItem) menu.findItem(R.id.menu_refresh);
         refresh.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            // on selecting show progress spinner for 1s
             public boolean onMenuItemClick(MenuItem item) {
-                // item.setActionView(R.layout.progress_action);
             	Log.i(Utils.TAG, "NEWS PRESSED REFRESH BUTTON");
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         refresh.setActionView(null);
-                        
                     }
                 }, 1000);
                 return false;
@@ -132,7 +129,7 @@ public class News extends SherlockActivity {
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
 			if(lastUpdateDate != null) { // CACHE AVAILABLE
-				String updateDate = refreshNeeded();
+				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED) {
 					msg = MSG_USE_CACHED_DATA;
 				} else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE) {
@@ -189,8 +186,9 @@ public class News extends SherlockActivity {
 					break;
 				case MSG_USE_CACHED_DATA:
 					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
-					Log.i(Utils.TAG, "NEWS USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
+					Log.i(Utils.TAG, "NEWS REFRESH NOT NEEDED, USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
+					lastUpdateTime = System.currentTimeMillis();
 					showProgress.dismiss();
 					break;
 				case MSG_ERR_LOAD_FROM_FILE:
@@ -205,6 +203,7 @@ public class News extends SherlockActivity {
 					Log.i(Utils.TAG, "NEWS REFRESH NOT NEEDED, USING STORED VERSION");
 					loadFromFile(false);
 					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
+					lastUpdateTime = System.currentTimeMillis();
 					showProgress.dismiss();
 					break;
 				default:

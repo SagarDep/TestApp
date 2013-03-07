@@ -1,18 +1,17 @@
 package com.example.testapp;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 public class Places extends SherlockActivity {
 
@@ -60,7 +59,7 @@ public class Places extends SherlockActivity {
             // on selecting show progress spinner for 1s
             public boolean onMenuItemClick(MenuItem item) {
                 // item.setActionView(R.layout.progress_action);
-            	Log.i(Utils.TAG, "NEWS PRESSED REFRESH BUTTON");
+            	Log.i(Utils.TAG, "PLACES PRESSED REFRESH BUTTON");
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         refresh.setActionView(null);
