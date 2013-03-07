@@ -59,7 +59,7 @@ public class News extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setTheme(R.style.Theme_Sherlock_Light);
+		setTheme(R.style.Theme_MyTheme);
 
 		setContentView(R.layout.activity_news);
 		
@@ -269,7 +269,7 @@ public class News extends SherlockActivity {
 				HttpResponse response = client.execute(request);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if(statusCode == 200) {
-					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 8192);
 					String line = br.readLine();
 					JSONObject o = new JSONObject(line.substring(1, line.length()-1));
 					String updateDate = o.getString("UPDATE_TIME");
@@ -299,7 +299,7 @@ public class News extends SherlockActivity {
 				HttpResponse response = client.execute(request);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if(statusCode == 200) {
-					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 8192);
 					String line;
 					
 					while((line = br.readLine()) != null) 
