@@ -59,10 +59,8 @@ public class Utils {
 
 	public static final String PREFS_FILE 					= "prefsFile";
 	public static final String PREFS_KEY_NEWS				= "news";
-	public static final String PREFS_KEY_NEWS_DATE			= "newsDate";
 	public static final String PREFS_KEY_NEWS_UPDATE		= "newsUpdate";
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
-	public static final String PREFS_KEY_SCHEDULE_DATE		= "scheduleDate";
 	public static final String PREFS_KEY_SCHEDULE_UPDATE	= "scheduleUpdate";
 	public static final String PREFS_KEY_MAP				= "map";
 	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
@@ -477,7 +475,7 @@ public class Utils {
 							markList = list;
 							initImgArray(activity);
 							newsList.setAdapter(new PlaceAdapter(activity, placeList));
-							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
+							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_MAP_DATE, -1L);
 						}
 					} catch (IOException e) {
 						Log.e(Utils.TAG, mode + " retrieve_from_file IOException");

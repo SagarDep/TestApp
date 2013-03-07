@@ -301,7 +301,6 @@ public class News extends SherlockActivity {
 			Editor editor = prefs.edit();
 			try {
 				editor.putString(Utils.PREFS_KEY_NEWS, ObjectSerializer.serialize(newsItems));
-				editor.putLong(Utils.PREFS_KEY_NEWS_DATE, lastUpdateTime);
 				editor.putString(Utils.PREFS_KEY_NEWS_UPDATE, lastUpdateDate);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -318,9 +317,8 @@ public class News extends SherlockActivity {
 				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_NEWS_UPDATE, null);
 			else {
 				try {
-					lastUpdateDate = prefs.getString(Utils.PREFS_KEY_NEWS_UPDATE, null);
-					lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_NEWS_DATE, -1L);
 					newsItems = (ArrayList<NewsItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_NEWS, null));
+					lastUpdateDate = prefs.getString(Utils.PREFS_KEY_NEWS_UPDATE, null);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

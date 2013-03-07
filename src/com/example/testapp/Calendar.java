@@ -313,7 +313,6 @@ public class Calendar extends SherlockActivity {
 			Editor editor = prefs.edit();
 			try {
 				editor.putString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(scheduleList));
-				editor.putLong(Utils.PREFS_KEY_SCHEDULE_DATE, lastUpdateTime);
 				editor.putString(Utils.PREFS_KEY_SCHEDULE_UPDATE, lastUpdateDate);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -330,9 +329,8 @@ public class Calendar extends SherlockActivity {
 				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
 			else {
 				try {
-					lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
-					lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_DATE, -1L);
 					scheduleList = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
+					lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
