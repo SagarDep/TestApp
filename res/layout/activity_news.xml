@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
+    android:background="@drawable/bg_tiled"
     tools:context=".News" >
 	    
 	    <ListView
@@ -22,6 +22,7 @@
 			android:cacheColorHint="#00000000"
 			android:fadingEdge="none"
 	        android:paddingLeft="30dp"
+	        android:background="@null"
 	        />
 	    
 </RelativeLayout>

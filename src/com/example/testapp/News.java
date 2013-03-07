@@ -59,24 +59,14 @@ public class News extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setTheme(R.style.Theme_MyTheme);
+		setTheme(R.style.Theme_Mytheme);
 
 		setContentView(R.layout.activity_news);
 		
 		ActionBar ab = getSupportActionBar();
-		ab.setDisplayShowTitleEnabled(false);
-		ab.setHomeButtonEnabled(true);
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ab.setListNavigationCallbacks(ArrayAdapter.createFromResource(this, R.array.sections, R.layout.sherlock_spinner_dropdown_item), new OnNavigationListener() {
-
-			@Override
-			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-		});
-		
+		ab.setTitle("Nyheter");
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		newsList = (ListView) findViewById(R.id.news_list);
 		new NewsTask(News.this).execute("");
 	}
@@ -101,6 +91,15 @@ public class News extends SherlockActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    if (item.getItemId() == android.R.id.home) {
+	        finish();
+	        return true;
+	    }
+	    return super.onOptionsItemSelected(item);
+	}
 	
 	/*
 	protected void onCreate(Bundle savedInstanceState) {
