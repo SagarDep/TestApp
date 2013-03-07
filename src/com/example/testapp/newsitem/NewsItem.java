@@ -1,4 +1,4 @@
-package newsitem;
+package com.example.testapp.newsitem;
 
 import java.io.Serializable;
 

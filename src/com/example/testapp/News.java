@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 
-import newsitem.NewsItem;
-import newsitem.NewsPost;
-import newsitem.NewsSep;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -18,6 +15,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.example.testapp.newsitem.NewsItem;
+import com.example.testapp.newsitem.NewsPost;
+import com.example.testapp.newsitem.NewsSep;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

@@ -1,4 +1,4 @@
-package newsitem;
+package com.example.testapp.newsitem;
 
 public class NewsPost extends NewsItem {
 	private static final long serialVersionUID = 7037835271931804852L;

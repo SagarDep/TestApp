@@ -2,8 +2,9 @@ package com.example.testapp;
 
 import java.util.ArrayList;
 
-import newsitem.NewsItem;
-import newsitem.NewsPost;
+import com.example.testapp.newsitem.NewsItem;
+import com.example.testapp.newsitem.NewsPost;
+
 
 import android.app.Activity;
 import android.content.Context;
