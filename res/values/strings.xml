@@ -38,8 +38,5 @@
     <string name="title_activity_map">Map</string>
     <string name="title_activity_places">Places</string>
 
-     <string name="application_name">ActionBarSherlock Styled</string>
-    <string name="activity_name">ABS: Styled</string>
-
     <string name="action_label_refresh">Refresh</string>
 </resources>

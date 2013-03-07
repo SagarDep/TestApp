@@ -24,32 +24,79 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.example.testapp.scheduleitem.CalDate;
 import com.example.testapp.scheduleitem.CalDesc;
 import com.example.testapp.scheduleitem.CalSep;
 import com.example.testapp.scheduleitem.ScheduleItem;
 
-public class Calendar extends Activity {
+public class Calendar extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
+	private final Handler handler = new Handler();
+	
 	private static ArrayList<ScheduleItem> scheduleList = null;
 	private static long lastUpdateTime = -1L;
 	private static String lastUpdateDate = null;
-	private ListView newsList;
+	private ListView calendarList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTheme(R.style.Theme_Mytheme);
+		
 		setContentView(R.layout.activity_cal);
 
-		newsList = (ListView) findViewById(R.id.cal_list);
+		ActionBar ab = getSupportActionBar();
+		ab.setTitle("Schema");
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		
+		calendarList = (ListView) findViewById(R.id.cal_list);
 		new CalendarTask(Calendar.this).execute("");
+	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+
+        // set up a listener for the refresh item
+        final MenuItem refresh = (MenuItem) menu.findItem(R.id.menu_refresh);
+        refresh.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            // on selecting show progress spinner for 1s
+            public boolean onMenuItemClick(MenuItem item) {
+                // item.setActionView(R.layout.progress_action);
+            	Log.i(Utils.TAG, "CAL PRESSED REFRESH BUTTON");
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        refresh.setActionView(null);
+                        
+                    }
+                }, 1000);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    if (item.getItemId() == android.R.id.home) {
+	        finish();
+	        return true;
+	    }
+	    return super.onOptionsItemSelected(item);
 	}
 	
 	class CalendarTask extends AsyncTask<String, Void, Integer> {
@@ -130,14 +177,14 @@ public class Calendar extends Activity {
 				case MSG_REFRESH_FROM_DOWNLOAD:
 					Log.i(Utils.TAG, "CAL USING FRESHLY DOWNLOADED");
 					initFromDownload();
-					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
 					break;
 				case MSG_ERR_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
 					Log.i(Utils.TAG, "CAL (no connection) USING CACHED VERSION");
-					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
@@ -145,13 +192,13 @@ public class Calendar extends Activity {
 				case MSG_USE_CACHED_DATA: //CACHED OLD BUT NO CONNECTION
 					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 					Log.i(Utils.TAG, "CAL USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					break;
 				case MSG_ERR_LOAD_FROM_FILE:
 					Log.i(Utils.TAG, "CAL (no connection) USING STORED VERSION");
 					loadFromFile(false);
-					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
@@ -159,7 +206,7 @@ public class Calendar extends Activity {
 				case MSG_LOAD_FROM_FILE:
 					Log.i(Utils.TAG, "CAL REFRESH NOT NEEDED, USING STORED VERSION");
 					loadFromFile(false);
-					newsList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
+					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					showProgress.dismiss();
 					break;
 				default:

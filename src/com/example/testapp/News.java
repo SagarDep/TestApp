@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -15,19 +14,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.example.testapp.newsitem.NewsItem;
-import com.example.testapp.newsitem.NewsPost;
-import com.example.testapp.newsitem.NewsSep;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.MapsInitializer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -40,9 +26,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.example.testapp.newsitem.NewsItem;
+import com.example.testapp.newsitem.NewsPost;
+import com.example.testapp.newsitem.NewsSep;
 
 public class News extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
@@ -58,7 +52,6 @@ public class News extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setTheme(R.style.Theme_Mytheme);
 
 		setContentView(R.layout.activity_news);
@@ -67,6 +60,7 @@ public class News extends SherlockActivity {
 		ab.setTitle("Nyheter");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		
 		newsList = (ListView) findViewById(R.id.news_list);
 		new NewsTask(News.this).execute("");
 	}
@@ -81,9 +75,11 @@ public class News extends SherlockActivity {
             // on selecting show progress spinner for 1s
             public boolean onMenuItemClick(MenuItem item) {
                 // item.setActionView(R.layout.progress_action);
+            	Log.i(Utils.TAG, "NEWS PRESSED REFRESH BUTTON");
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         refresh.setActionView(null);
+                        
                     }
                 }, 1000);
                 return false;
@@ -100,47 +96,6 @@ public class News extends SherlockActivity {
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
-	
-	/*
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setTheme(R.style.Theme_Sherlock);
-		
-		setContentView(R.layout.activity_main);
-		
-		ActionBar ab = getSupportActionBar();
-		ab.setTitle("TitleMofo");
-//		ab.setDisplayShowTitleEnabled(false);
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		ab.setDisplayShowHomeEnabled(false);
-		
-		ab.setListNavigationCallbacks(ArrayAdapter.createFromResource(this, R.array.sections, R.layout.sherlock_spinner_dropdown_item), new OnNavigationListener() {
-
-			@Override
-			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-		});
-		
-		ab.setDisplayShowTitleEnabled(false);
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		
-		
-		try {
-			MapsInitializer.initialize(Main.this);
-		} catch (GooglePlayServicesNotAvailableException e) {
-			Log.e(Utils.TAG, "MAIN  MapsInitializer Failed!");
-			e.printStackTrace();
-		}
-		
-		Utils.initMarkerIcons(this);
-		
-		initButtons();
-	}
-	*/
 	
 	class NewsTask extends AsyncTask<String, Void, Integer> {
 		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
