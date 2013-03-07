@@ -8,5 +8,6 @@
 	<dimen name="main_sponsor_bottom_margin">6dp</dimen>
 	<dimen name="top_bar_title_marginTop">17dp</dimen>
 	<dimen name="top_bar_update_marginTop">19dp</dimen>
-	
+	<dimen name="frag_rounding_radius">20dp</dimen>
+    <dimen name="progress_action_padding">8dp</dimen>
 </resources>
