@@ -97,8 +97,6 @@ public class News extends SherlockActivity {
 	class NewsTask extends AsyncTask<String, Void, Integer> {
 		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
 		private final int MSG_USE_CACHED_DATA		= 1;
-		private final int MSG_LOAD_FROM_FILE		= 2;
-		private final int MSG_ERR_LOAD_FROM_FILE	= 3;
 		private final int MSG_ERROR_NO_DATA			= 4;
 		private final int MSG_ERR_USE_CACHED_DATA	= 5;
 		
@@ -113,16 +111,21 @@ public class News extends SherlockActivity {
 		
 		@Override
 		protected void onPreExecute() {
-			showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS, true, true, new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					NewsTask.this.cancel(true);
-					if(newsItems == null)
-						lastUpdateDate = null;
-					finish();
-				}
-			});
-			showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);	
+			if(newsItems == null)	loadFromFile();
+			if(newsItems != null)
+				newsList.setAdapter(new NewsAdapter(News.this, newsItems));
+			else {
+				showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS, true, true, new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						NewsTask.this.cancel(true);
+						if(newsItems == null)
+							lastUpdateDate = null;
+						finish();
+					}
+				});
+				showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			}
 		}
 		
 		@Override
@@ -142,25 +145,11 @@ public class News extends SherlockActivity {
 						msg = MSG_ERR_USE_CACHED_DATA;
 				}
 			} else { // CACHE EMPTY
-				loadFromFile(true);
-				if(lastUpdateDate != null) {
-					String updateDate = refreshNeeded();
-					if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED || updateDate == REFRESH_MSG_CONNECTION_FAILURE)
-						msg = MSG_LOAD_FROM_FILE;
-					else {
-						this.array = updateNewsInfo(updateDate);
-						if(this.array != null)
-							msg = MSG_REFRESH_FROM_DOWNLOAD;
-						else
-							msg = MSG_LOAD_FROM_FILE;
-					}
-				} else {
-					this.array = updateNewsInfo(null);
-					if(this.array != null)
-						msg = MSG_REFRESH_FROM_DOWNLOAD;
-					else 
-						msg = MSG_ERROR_NO_DATA;
-				}
+				this.array = updateNewsInfo(null);
+				if(this.array != null)
+					msg = MSG_REFRESH_FROM_DOWNLOAD;
+				else 
+					msg = MSG_ERROR_NO_DATA;
 			}
 			return msg;
 		}
@@ -172,44 +161,31 @@ public class News extends SherlockActivity {
 				case MSG_REFRESH_FROM_DOWNLOAD:
 					Log.i(Utils.TAG, "NEWS USING FRESHLY DOWNLOADED");
 					initFromDownload();
-					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
-					showProgress.dismiss();
+					
+					if(newsList.getAdapter() == null)
+						newsList.setAdapter(new NewsAdapter(News.this, newsItems));
+					else
+						Utils.showToast(activity, "Ny data tillgänglig\ntryck på Uppdatera knappen", Toast.LENGTH_LONG);
+					
+					if(showProgress != null) showProgress.dismiss();
+
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
 					break;
 				case MSG_ERR_USE_CACHED_DATA:
 					Log.i(Utils.TAG, "NEWS (no connection) USING CACHED VERSION");
-					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
-					showProgress.dismiss();
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 					break;
 				case MSG_USE_CACHED_DATA:
 					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 					Log.i(Utils.TAG, "NEWS REFRESH NOT NEEDED, USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
 					lastUpdateTime = System.currentTimeMillis();
-					showProgress.dismiss();
-					break;
-				case MSG_ERR_LOAD_FROM_FILE:
-					Log.i(Utils.TAG, "NEWS (no connection) USING STORED VERSION");
-					loadFromFile(false);
-					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
-					showProgress.dismiss();
-					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
-					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
-					break;
-				case MSG_LOAD_FROM_FILE:
-					Log.i(Utils.TAG, "NEWS REFRESH NOT NEEDED, USING STORED VERSION");
-					loadFromFile(false);
-					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
-					lastUpdateTime = System.currentTimeMillis();
-					showProgress.dismiss();
 					break;
 				default:
 					Log.i(Utils.TAG, "NEWS (no connection) NO DATA TO SHOW");
 					Utils.showToast(activity, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
-					showProgress.dismiss();
+					if(showProgress != null) showProgress.dismiss();
 					break;
 			}
 		}
@@ -296,33 +272,29 @@ public class News extends SherlockActivity {
 			}
 		}
 		
-		private void saveToFile() {
-			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
-			Editor editor = prefs.edit();
-			try {
-				editor.putString(Utils.PREFS_KEY_NEWS, ObjectSerializer.serialize(newsItems));
-				editor.putString(Utils.PREFS_KEY_NEWS_UPDATE, lastUpdateDate);
-			} catch (IOException e) {
-				e.printStackTrace();
-				Log.e(Utils.TAG, "NEWS save_to_file IOException");
-			}
-			editor.commit();
+	}
+	
+	private void saveToFile() {
+		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		try {
+			editor.putString(Utils.PREFS_KEY_NEWS, ObjectSerializer.serialize(newsItems));
+			editor.putString(Utils.PREFS_KEY_NEWS_UPDATE, lastUpdateDate);
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.e(Utils.TAG, "NEWS save_to_file IOException");
 		}
-		
-		@SuppressWarnings("unchecked")
-		private void loadFromFile(boolean loadOnlyUpdateDate) {
-			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
-			
-			if(loadOnlyUpdateDate)
-				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_NEWS_UPDATE, null);
-			else {
-				try {
-					newsItems = (ArrayList<NewsItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_NEWS, null));
-					lastUpdateDate = prefs.getString(Utils.PREFS_KEY_NEWS_UPDATE, null);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		editor.commit();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void loadFromFile() {
+		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+		try {
+			newsItems = (ArrayList<NewsItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_NEWS, null));
+			lastUpdateDate = prefs.getString(Utils.PREFS_KEY_NEWS_UPDATE, null);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
