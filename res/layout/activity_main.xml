@@ -74,7 +74,6 @@
 	    </LinearLayout>
 	    
  		<LinearLayout
-	        android:id="@+id/main_btn_green" 
 	        android:orientation="horizontal"
 	        android:layout_width="match_parent"
 	  		android:layout_height="wrap_content"
@@ -82,12 +81,14 @@
 	  		>
 	    	
 	        <ImageButton
+		        android:id="@+id/main_btn_green" 
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_green"
 	       		android:contentDescription="@string/btn_green" />
 	        
 	        <ImageButton
+		        android:id="@+id/main_btn_light_green" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_green"
@@ -95,7 +96,6 @@
 	    </LinearLayout>
 	    
  		<LinearLayout
-	        android:id="@+id/main_btn_yellow" 
 	        android:orientation="horizontal"
 	        android:layout_width="match_parent"
 	  		android:layout_height="wrap_content"
@@ -103,12 +103,14 @@
 	  		>
 	    	
 	        <ImageButton
+		        android:id="@+id/main_btn_yellow" 
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_yellow"
 	       		android:contentDescription="@string/btn_yellow"/>
 	        
 	        <ImageButton
+		        android:id="@+id/main_btn_light_yellow" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_yellow"
@@ -116,7 +118,6 @@
 	    </LinearLayout>
  		
  		<LinearLayout
-	        android:id="@+id/main_btn_purple" 
 	        android:orientation="horizontal"
 	        android:layout_width="match_parent"
 	  		android:layout_height="wrap_content"
@@ -124,12 +125,14 @@
 	  		>
 	    	
 	        <ImageButton
+		        android:id="@+id/main_btn_purple" 
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_purple"
 	       		android:contentDescription="@string/btn_purple" />
 	        
 	        <ImageButton
+		        android:id="@+id/main_btn_light_purple" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_purple"
@@ -155,7 +158,7 @@
 	  		android:layout_height="wrap_content"
 	  		android:layout_above="@id/main_line_bottom"
 	  		android:layout_centerHorizontal="true"
-	  		
+	  		android:layout_marginBottom="5dp"
 	  		>
 	    	
 	        <TextView

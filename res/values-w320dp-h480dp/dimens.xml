@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Screen size 320x480 -->
-<resources>
-    <dimen name="main_button_size">50dp</dimen>
-	<dimen name="top_bar_title_marginTop">15dp</dimen>
-	<dimen name="top_bar_update_marginTop">15dp</dimen>
-</resources>

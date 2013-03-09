@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 3.2" Nexus One/S -->
 <resources>
-	<dimen name="main_button_size">60dp</dimen>
+	<dimen name="main_button_size">50dp</dimen>
 	<dimen name="top_bar_title_marginTop">17dp</dimen>
 	<dimen name="top_bar_update_marginTop">19dp</dimen>
 	
