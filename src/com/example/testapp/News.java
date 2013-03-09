@@ -161,14 +161,11 @@ public class News extends SherlockActivity {
 				case MSG_REFRESH_FROM_DOWNLOAD:
 					Log.i(Utils.TAG, "NEWS USING FRESHLY DOWNLOADED");
 					initFromDownload();
-					
 					if(newsList.getAdapter() == null)
 						newsList.setAdapter(new NewsAdapter(News.this, newsItems));
 					else
-						Utils.showToast(activity, "Ny data tillgänglig\ntryck på Uppdatera knappen", Toast.LENGTH_LONG);
-					
+						Utils.showToast(activity, "Fler nyheter tillgängliga\nTryck Uppdatera för att visa dem", Toast.LENGTH_LONG);
 					if(showProgress != null) showProgress.dismiss();
-
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
 					break;
