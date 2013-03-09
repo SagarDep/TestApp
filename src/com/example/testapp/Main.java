@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -29,54 +31,36 @@ public class Main extends Activity {
 		
 		Utils.initMarkerIcons(this);
 		
-//		initButtons();
+		initButtons();
 	}
-//	
-//	private void initButtons() {
-//		Button news = (Button) findViewById(R.id.button1);
-//		news.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent myIntent = new Intent(v.getContext(), News.class);
-//				startActivityForResult(myIntent, 0);
-//			}
-//		});
-//		
-//		Button cal = (Button) findViewById(R.id.button2);
-//		cal.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent myIntent = new Intent(v.getContext(), Calendar.class);
-//				startActivityForResult(myIntent, 0);
-//			}
-//		});
-//		
-//		Button places = (Button) findViewById(R.id.button3);
-//		places.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent myIntent = new Intent(v.getContext(), Map.class);
-//				startActivityForResult(myIntent, 0);
-//			}
-//		});
-//
-//		Button map = (Button) findViewById(R.id.button4);
-//		map.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent myIntent = new Intent(v.getContext(), Places.class);
-//				startActivityForResult(myIntent, 0);
-//			}
-//		});
-//		
-//		ImageButton sponsor1 = (ImageButton) findViewById(R.id.sponsor_just_nu);
-//		sponsor1.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sponsor_just_nu));
-//				startActivity(myIntent);
-//			}
-//		});
-//	}
 	
+	private void initButtons() {
+		OnTouchListener listener = getOnTouchListener(R.id.main_btn_light_blue, R.id.main_btn_blue, R.id.main_btn_light_blue);
+		Button small = (Button) findViewById(R.id.main_btn_blue);
+		Button big = (Button) findViewById(R.id.main_btn_light_blue);
+		small.setOnTouchListener(listener);
+		big.setOnTouchListener(listener);
+	}
+	
+	
+	
+	private OnTouchListener getOnTouchListener(final int resButton, final int resOnPress, final int resOnRelease) {
+		return new OnTouchListener(){
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				ImageButton button = (ImageButton) findViewById(resButton);
+				switch(event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					button.setBackgroundColor(getResources().getColor(resOnPress));
+					break;
+				case MotionEvent.ACTION_UP:
+					button.setBackgroundColor(getResources().getColor(resOnRelease));
+					break;
+				default:
+					break;
+				}
+				return false;
+			}
+		};
+	}
 }

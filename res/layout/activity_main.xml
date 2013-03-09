@@ -24,26 +24,27 @@
         android:contentDescription="@string/desc_logo"/>
     
     <LinearLayout android:orientation="vertical"
-	        android:id="@+id/main_btns" 
+	    android:id="@+id/main_btns" 
         android:layout_width="match_parent"
   		android:layout_height="match_parent"
   		android:layout_below="@id/main_logo"
   		android:layout_marginTop="5dp">
 	  
  		<LinearLayout
-	        android:id="@+id/main_btn_blue" 
 	        android:orientation="horizontal"
 	        android:layout_width="match_parent"
 	  		android:layout_height="wrap_content"
 	  		>
 	    	
 	        <ImageButton
+		        android:id="@+id/main_btn_blue" 
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_blue"
 	       		android:contentDescription="@string/btn_blue" />
 	        
 	        <ImageButton
+		        android:id="@+id/main_btn_light_blue" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_blue"
@@ -51,7 +52,6 @@
 	    </LinearLayout>
 	    
  		<LinearLayout
-	        android:id="@+id/main_btn_red" 
 	        android:orientation="horizontal"
 	        android:layout_width="match_parent"
 	  		android:layout_height="wrap_content"
@@ -59,12 +59,14 @@
 	  		>
 	    	
 	        <ImageButton
+		        android:id="@+id/main_btn_red" 
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_red"
 	       		android:contentDescription="@string/btn_red"/>
 	        
 	        <ImageButton
+		        android:id="@+id/main_btn_light_red" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_red"
