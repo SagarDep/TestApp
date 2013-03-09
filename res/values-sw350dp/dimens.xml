@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Nexus Galaxy -->
 <resources>
-    <dimen name="main_logo_marginTop">30dp</dimen>
-    <dimen name="main_buttons_marginTop">0dp</dimen>
-    <dimen name="main_buttons_spacing">20dp</dimen>
-	<dimen name="main_square_button_size">135dp</dimen>
-	<dimen name="main_sponsor_bottom_margin">10dp</dimen>
+    
+    <dimen name="main_button_size">80dp</dimen>
 	<dimen name="top_bar_title_marginTop">20dp</dimen>
 	<dimen name="top_bar_update_marginTop">18dp</dimen>
 	

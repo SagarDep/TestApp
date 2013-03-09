@@ -29,54 +29,54 @@ public class Main extends Activity {
 		
 		Utils.initMarkerIcons(this);
 		
-		initButtons();
+//		initButtons();
 	}
-	
-	private void initButtons() {
-		Button news = (Button) findViewById(R.id.button1);
-		news.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), News.class);
-				startActivityForResult(myIntent, 0);
-			}
-		});
-		
-		Button cal = (Button) findViewById(R.id.button2);
-		cal.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), Calendar.class);
-				startActivityForResult(myIntent, 0);
-			}
-		});
-		
-		Button places = (Button) findViewById(R.id.button3);
-		places.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), Map.class);
-				startActivityForResult(myIntent, 0);
-			}
-		});
-
-		Button map = (Button) findViewById(R.id.button4);
-		map.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), Places.class);
-				startActivityForResult(myIntent, 0);
-			}
-		});
-		
-		ImageButton sponsor1 = (ImageButton) findViewById(R.id.sponsor_just_nu);
-		sponsor1.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sponsor_just_nu));
-				startActivity(myIntent);
-			}
-		});
-	}
+//	
+//	private void initButtons() {
+//		Button news = (Button) findViewById(R.id.button1);
+//		news.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent myIntent = new Intent(v.getContext(), News.class);
+//				startActivityForResult(myIntent, 0);
+//			}
+//		});
+//		
+//		Button cal = (Button) findViewById(R.id.button2);
+//		cal.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent myIntent = new Intent(v.getContext(), Calendar.class);
+//				startActivityForResult(myIntent, 0);
+//			}
+//		});
+//		
+//		Button places = (Button) findViewById(R.id.button3);
+//		places.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent myIntent = new Intent(v.getContext(), Map.class);
+//				startActivityForResult(myIntent, 0);
+//			}
+//		});
+//
+//		Button map = (Button) findViewById(R.id.button4);
+//		map.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent myIntent = new Intent(v.getContext(), Places.class);
+//				startActivityForResult(myIntent, 0);
+//			}
+//		});
+//		
+//		ImageButton sponsor1 = (ImageButton) findViewById(R.id.sponsor_just_nu);
+//		sponsor1.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sponsor_just_nu));
+//				startActivity(myIntent);
+//			}
+//		});
+//	}
 	
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_blue">#FF14a9c6</color>
+    <color name="main_light_blue">#FFe7f6f9</color>
+    <color name="main_red">#FFda6262</color>
+    <color name="main_light_red">#FFfbefef</color>
+    <color name="main_green">#FF63a751</color>
+    <color name="main_light_green">#FFeff6ed</color>
+    <color name="main_yellow">#FFffb55c</color>
+    <color name="main_light_yellow">#FFfff7ee</color>
+    <color name="main_purple">#FFbf68e7</color>
+    <color name="main_light_purple">#FFf8f0fd</color>
+</resources>
