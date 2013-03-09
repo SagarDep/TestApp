@@ -20,15 +20,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/logo"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/desc_logo"/>
     
-    <LinearLayout android:orientation="vertical"
+    <LinearLayout
+        android:orientation="vertical"
 	    android:id="@+id/main_btns" 
         android:layout_width="match_parent"
   		android:layout_height="match_parent"
   		android:layout_below="@id/main_logo"
-  		android:layout_marginTop="5dp">
+  		android:layout_marginTop="8dp">
 	  
  		<LinearLayout
 	        android:orientation="horizontal"
@@ -43,12 +44,38 @@
 	       		android:background="@color/main_blue"
 	       		android:contentDescription="@string/btn_blue" />
 	        
+	        <RelativeLayout 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            >
 	        <ImageButton
 		        android:id="@+id/main_btn_light_blue" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_blue"
 	       		android:contentDescription="@string/btn_blue"/>
+	        <TextView
+	            android:id="@+id/main_title_blue" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="15dp"
+	            android:layout_marginLeft="2dp"
+	            android:textColor="@color/main_text_title"
+	            android:textSize="18sp"
+	           	android:text="NYHETER"
+	            />
+	        <TextView
+	            android:id="@+id/main_desc_blue" 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_marginLeft="2dp"
+	           	android:layout_below="@id/main_title_blue"
+	            android:textColor="@color/main_text_desc"
+	           	android:text="Det senaste av det senaste..."
+	            />
+	        
+	    	</RelativeLayout>
+	    	
 	    </LinearLayout>
 	    
  		<LinearLayout
@@ -65,12 +92,40 @@
 	       		android:background="@color/main_red"
 	       		android:contentDescription="@string/btn_red"/>
 	        
+	        <RelativeLayout 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            >
+
 	        <ImageButton
 		        android:id="@+id/main_btn_light_red" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_red"
 	       		android:contentDescription="@string/btn_red" />
+	            
+	        <TextView
+	            android:id="@+id/main_title_red" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="15dp"
+	            android:layout_marginLeft="2dp"
+	            android:textColor="@color/main_text_title"
+	            android:textSize="18sp"
+	           	android:text="SCHEMA"
+	            />
+	        <TextView
+	            android:id="@+id/main_desc_red" 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_marginLeft="2dp"
+	           	android:layout_below="@id/main_title_red"
+	            android:textColor="@color/main_text_desc"
+	           	android:text="När och vart dent senaste händer"
+	            />
+	        
+	    	</RelativeLayout>
+	        
 	    </LinearLayout>
 	    
  		<LinearLayout
@@ -86,13 +141,39 @@
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_green"
 	       		android:contentDescription="@string/btn_green" />
-	        
+	        <RelativeLayout 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            >
+
 	        <ImageButton
 		        android:id="@+id/main_btn_light_green" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_green"
 	       		android:contentDescription="@string/btn_green"/>
+	            
+	        <TextView
+	            android:id="@+id/main_title_green" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="15dp"
+	            android:layout_marginLeft="2dp"
+	            android:textColor="@color/main_text_title"
+	            android:textSize="18sp"
+	           	android:text="PLATSER"
+	            />
+	        <TextView
+	            android:id="@+id/main_desc_green" 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_marginLeft="2dp"
+	           	android:layout_below="@id/main_title_green"
+	            android:textColor="@color/main_text_desc"
+	           	android:text="Vart fan ska vi va?"
+	            />
+	        
+	    	</RelativeLayout>
 	    </LinearLayout>
 	    
  		<LinearLayout
@@ -108,13 +189,38 @@
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_yellow"
 	       		android:contentDescription="@string/btn_yellow"/>
-	        
+	        <RelativeLayout 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            >
+
 	        <ImageButton
 		        android:id="@+id/main_btn_light_yellow" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_yellow"
 	       		android:contentDescription="@string/btn_yellow"/>
+	            
+	        <TextView
+	            android:id="@+id/main_title_yellow" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="15dp"
+	            android:layout_marginLeft="2dp"
+	            android:textColor="@color/main_text_title"
+	            android:textSize="18sp"
+	           	android:text="KARTA"
+	            />
+	        <TextView
+	            android:id="@+id/main_desc_yellow" 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	           	android:layout_below="@id/main_title_yellow"
+	            android:textColor="@color/main_text_desc"
+	           	android:text="Var e jag?"
+	            />
+	        
+	    	</RelativeLayout>
 	    </LinearLayout>
  		
  		<LinearLayout
@@ -130,13 +236,39 @@
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_purple"
 	       		android:contentDescription="@string/btn_purple" />
-	        
+	        <RelativeLayout 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            >
+
 	        <ImageButton
 		        android:id="@+id/main_btn_light_purple" 
 	            android:layout_width="match_parent"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_purple"
 	       		android:contentDescription="@string/btn_purple" />
+	            
+	        <TextView
+	            android:id="@+id/main_title_purple" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="15dp"
+	            android:layout_marginLeft="2dp"
+	            android:textColor="@color/main_text_title"
+	            android:textSize="18sp"
+	           	android:text="KONTAKT"
+	            />
+	        <TextView
+	            android:id="@+id/main_desc_purple" 
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_marginLeft="2dp"
+	           	android:layout_below="@id/main_title_purple"
+	            android:textColor="@color/main_text_desc"
+	           	android:text="Who you gonna call?"
+	            />
+	        
+	    	</RelativeLayout>
 	    </LinearLayout>
 
  	</LinearLayout>

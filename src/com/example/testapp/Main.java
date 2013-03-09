@@ -3,6 +3,7 @@ package com.example.testapp;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapsInitializer;
 
+import android.R.color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class Main extends Activity {
 	private static final String sponsor_just_nu = "http://www.justnu.se/";
@@ -106,14 +108,20 @@ public class Main extends Activity {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				ImageButton button = (ImageButton) findViewById(resButton);
+				TextView text = (TextView) findViewById(R.id.main_title_blue);
+				TextView text2 = (TextView) findViewById(R.id.main_desc_blue);
 				switch(event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					Log.v(Utils.TAG, "MSG FROM MAIN onTouch DOWN");
 					button.setBackgroundColor(getResources().getColor(resOnPress));
+					text.setTextColor(getResources().getColor(R.color.white));
+					text2.setTextColor(getResources().getColor(R.color.white));
 					break;
 				case MotionEvent.ACTION_UP:
 					Log.v(Utils.TAG, "MSG FROM MAIN onTouch UP");
 					button.setBackgroundColor(getResources().getColor(resOnRelease));
+					text.setTextColor(getResources().getColor(R.color.main_text_title));
+					text2.setTextColor(getResources().getColor(R.color.main_text_title));
 					break;
 				default:
 					break;

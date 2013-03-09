@@ -10,4 +10,9 @@
     <color name="main_light_yellow">#FFfff7ee</color>
     <color name="main_purple">#FFbf68e7</color>
     <color name="main_light_purple">#FFf8f0fd</color>
+    
+    <color name="main_text_title">#FF575656</color>
+    <color name="main_text_desc">#FF696969</color>
+
+    <color name="white">#FFFFFFFF</color>
 </resources>
