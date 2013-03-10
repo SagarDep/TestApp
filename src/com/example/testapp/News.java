@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.example.testapp.newsitem.NewsItem;
@@ -54,7 +55,7 @@ public class News extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+		setTheme(R.style.BlueTheme);
 
 		setContentView(R.layout.activity_news);
 		
@@ -65,6 +66,16 @@ public class News extends SherlockActivity {
 		
 		newsList = (ListView) findViewById(R.id.news_list);
 		new NewsTask(News.this).execute("");
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+//		MenuInflater inflater = getSupportMenuInflater();
+//		inflater.inflate(R.menu.menu_items, menu);
+		super.onCreateOptionsMenu(menu);
+		MenuItem item = menu.add(0, 0, 0, "Refresh");
+		item.setIcon(R.drawable.refresh);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	    return true;
 	}
 	
 	@Override

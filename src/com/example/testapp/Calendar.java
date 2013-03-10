@@ -56,7 +56,7 @@ public class Calendar extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+		setTheme(R.style.RedTheme);
 		
 		setContentView(R.layout.activity_cal);
 
@@ -67,6 +67,13 @@ public class Calendar extends SherlockActivity {
 		
 		calendarList = (ListView) findViewById(R.id.cal_list);
 		new CalendarTask(Calendar.this).execute("");
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    menu.add("Refresh")
+	        .setIcon(R.drawable.refresh)
+	        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+	    return true;
 	}
 	
 	@Override

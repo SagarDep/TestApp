@@ -25,7 +25,7 @@ public class Places extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+		setTheme(R.style.GreenTheme);
 		
 		setContentView(R.layout.activity_places);
 		
@@ -47,6 +47,13 @@ public class Places extends SherlockActivity {
 		} else {
 			Utils.initFromDB(this, showProgress, null, newsList);
 		}
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    menu.add("Refresh")
+	        .setIcon(R.drawable.refresh)
+	        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+	    return true;
 	}
 	
 	@Override

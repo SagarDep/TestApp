@@ -1,4 +1,62 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <style name="BlueTheme" parent="@style/Theme.Sherlock">
+        <item name="actionBarStyle">@style/BlueTheme.ActionBar</item>
+        <item name="android:actionBarStyle">@style/BlueTheme.ActionBar</item>
+    </style>
+ 
+    <style name="BlueTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
+	    <item name="android:background">@color/main_blue</item>
+	    <item name="background">@color/main_blue</item>
+        <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+	</style>
+	
+    
+
+    
+    
+    <style name="RedTheme" parent="@style/Theme.Sherlock">
+        <item name="actionBarStyle">@style/RedTheme.ActionBar</item>
+        <item name="android:actionBarStyle">@style/RedTheme.ActionBar</item>
+    </style>
+ 
+    <style name="RedTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
+	    <item name="background">@color/main_red</item>
+	    <item name="android:background">@color/main_red</item>
+        <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+	</style>
+	
+    
+    
+    
+    
+    <style name="GreenTheme" parent="@style/Theme.Sherlock">
+        <item name="actionBarStyle">@style/GreenTheme.ActionBar</item>
+        <item name="android:actionBarStyle">@style/GreenTheme.ActionBar</item>
+    </style>
+ 
+    <style name="GreenTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
+	    <item name="background">@color/main_green</item>
+	    <item name="android:background">@color/main_green</item>
+        <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+	</style>
+    
+    
+    
+    
+    
+    <style name="MyThemes.TitleStyle" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+ 
+</resources>
+
+<!-- <resources>
    <style name="Theme.MyTheme2" parent="Theme.Sherlock.Light">
 	    <item name="actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
 	    <item name="android:actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
@@ -9,4 +67,7 @@
 	    <item name="background">#ffaed841</item>
 	</style>
 
+	
+	
 </resources>
+ -->
