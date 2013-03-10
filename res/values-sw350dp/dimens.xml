@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Nexus Galaxy -->
 <resources>
-    
     <dimen name="main_button_size">70dp</dimen>
+    
+    <dimen name="main_text_title_size">18sp</dimen>
+	<dimen name="main_text_desc_size">12sp</dimen>
+    
 	<dimen name="top_bar_title_marginTop">20dp</dimen>
 	<dimen name="top_bar_update_marginTop">18dp</dimen>
 	

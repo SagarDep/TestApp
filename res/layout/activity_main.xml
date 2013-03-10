@@ -42,6 +42,7 @@
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_blue"
+	       		android:src="@drawable/icon_news"
 	       		android:contentDescription="@string/btn_blue" />
 	        
 	        <RelativeLayout 
@@ -54,26 +55,30 @@
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_blue"
 	       		android:contentDescription="@string/btn_blue"/>
+	        <LinearLayout 
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:orientation="vertical"
+		            android:layout_centerInParent="true"> 
 	        <TextView
 	            android:id="@+id/main_title_blue" 
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_marginTop="15dp"
-	            android:layout_marginLeft="2dp"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_title"
-	            android:textSize="18sp"
-	           	android:text="NYHETER"
+	            android:textSize="@dimen/main_text_title_size"
+	           	android:text="@string/btn_blue"
 	            />
 	        <TextView
 	            android:id="@+id/main_desc_blue" 
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
-	            android:layout_marginLeft="2dp"
-	           	android:layout_below="@id/main_title_blue"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_desc"
-	           	android:text="Det senaste av det senaste..."
+	            android:textSize="@dimen/main_text_desc_size"
+	           	android:text="@string/btn_blue_desc"
 	            />
-	        
+	        </LinearLayout>
 	    	</RelativeLayout>
 	    	
 	    </LinearLayout>
@@ -90,6 +95,7 @@
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_red"
+	       		android:src="@drawable/icon_calendar"
 	       		android:contentDescription="@string/btn_red"/>
 	        
 	        <RelativeLayout 
@@ -103,27 +109,30 @@
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_red"
 	       		android:contentDescription="@string/btn_red" />
-	            
+	        <LinearLayout 
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:orientation="vertical"
+		            android:layout_centerInParent="true">     
 	        <TextView
 	            android:id="@+id/main_title_red" 
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_marginTop="15dp"
-	            android:layout_marginLeft="2dp"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_title"
-	            android:textSize="18sp"
-	           	android:text="SCHEMA"
+	            android:textSize="@dimen/main_text_title_size"
+	           	android:text="@string/btn_red"
 	            />
 	        <TextView
 	            android:id="@+id/main_desc_red" 
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
-	            android:layout_marginLeft="2dp"
-	           	android:layout_below="@id/main_title_red"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_desc"
-	           	android:text="När och vart dent senaste händer"
+	            android:textSize="@dimen/main_text_desc_size"
+	           	android:text="@string/btn_red_desc"
 	            />
-	        
+	        </LinearLayout>
 	    	</RelativeLayout>
 	        
 	    </LinearLayout>
@@ -140,6 +149,7 @@
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_green"
+	       		android:src="@drawable/icon_places"
 	       		android:contentDescription="@string/btn_green" />
 	        <RelativeLayout 
 	            android:layout_width="match_parent"
@@ -152,27 +162,30 @@
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_green"
 	       		android:contentDescription="@string/btn_green"/>
-	            
+	        <LinearLayout 
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:orientation="vertical"
+		            android:layout_centerInParent="true"> 
 	        <TextView
 	            android:id="@+id/main_title_green" 
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_marginTop="15dp"
-	            android:layout_marginLeft="2dp"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_title"
-	            android:textSize="18sp"
-	           	android:text="PLATSER"
+	            android:textSize="@dimen/main_text_title_size"
+	           	android:text="@string/btn_green"
 	            />
 	        <TextView
 	            android:id="@+id/main_desc_green" 
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
-	            android:layout_marginLeft="2dp"
-	           	android:layout_below="@id/main_title_green"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_desc"
-	           	android:text="Vart fan ska vi va?"
+	            android:textSize="@dimen/main_text_desc_size"
+	           	android:text="@string/btn_green_desc"
 	            />
-	        
+	        </LinearLayout>
 	    	</RelativeLayout>
 	    </LinearLayout>
 	    
@@ -188,6 +201,7 @@
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_yellow"
+	       		android:src="@drawable/icon_map"
 	       		android:contentDescription="@string/btn_yellow"/>
 	        <RelativeLayout 
 	            android:layout_width="match_parent"
@@ -200,26 +214,30 @@
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_light_yellow"
 	       		android:contentDescription="@string/btn_yellow"/>
-	            
+            <LinearLayout 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:layout_centerInParent="true"> 
 	        <TextView
 	            android:id="@+id/main_title_yellow" 
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_marginTop="15dp"
-	            android:layout_marginLeft="2dp"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_title"
-	            android:textSize="18sp"
-	           	android:text="KARTA"
+	            android:textSize="@dimen/main_text_title_size"
+	           	android:text="@string/btn_yellow"
 	            />
 	        <TextView
 	            android:id="@+id/main_desc_yellow" 
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
-	           	android:layout_below="@id/main_title_yellow"
+	            android:layout_marginLeft="@dimen/main_text_left_margin"
 	            android:textColor="@color/main_text_desc"
-	           	android:text="Var e jag?"
+	            android:textSize="@dimen/main_text_desc_size"
+	           	android:text="@string/btn_yellow_desc"
 	            />
-	        
+	        </LinearLayout>
 	    	</RelativeLayout>
 	    </LinearLayout>
  		
@@ -235,39 +253,42 @@
 	            android:layout_width="@dimen/main_button_size"
 	       		android:layout_height="@dimen/main_button_size"
 	       		android:background="@color/main_purple"
+	       		android:src="@drawable/icon_contact"
 	       		android:contentDescription="@string/btn_purple" />
 	        <RelativeLayout 
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
 	            >
-
-	        <ImageButton
-		        android:id="@+id/main_btn_light_purple" 
-	            android:layout_width="match_parent"
-	       		android:layout_height="@dimen/main_button_size"
-	       		android:background="@color/main_light_purple"
-	       		android:contentDescription="@string/btn_purple" />
-	            
-	        <TextView
-	            android:id="@+id/main_title_purple" 
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_marginTop="15dp"
-	            android:layout_marginLeft="2dp"
-	            android:textColor="@color/main_text_title"
-	            android:textSize="18sp"
-	           	android:text="KONTAKT"
-	            />
-	        <TextView
-	            android:id="@+id/main_desc_purple" 
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:layout_marginLeft="2dp"
-	           	android:layout_below="@id/main_title_purple"
-	            android:textColor="@color/main_text_desc"
-	           	android:text="Who you gonna call?"
-	            />
-	        
+		        <ImageButton
+			        android:id="@+id/main_btn_light_purple" 
+		            android:layout_width="match_parent"
+		       		android:layout_height="@dimen/main_button_size"
+		       		android:background="@color/main_light_purple"
+		       		android:contentDescription="@string/btn_purple" />
+		        <LinearLayout 
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:orientation="vertical"
+		            android:layout_centerInParent="true">    
+			        <TextView
+			            android:id="@+id/main_title_purple" 
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:layout_marginLeft="@dimen/main_text_left_margin"
+			            android:textColor="@color/main_text_title"
+			            android:textSize="@dimen/main_text_title_size"
+			           	android:text="@string/btn_purple"
+			            />
+			        <TextView
+			            android:id="@+id/main_desc_purple" 
+			            android:layout_width="match_parent"
+			            android:layout_height="match_parent"
+			            android:layout_marginLeft="@dimen/main_text_left_margin"
+			            android:textColor="@color/main_text_desc"
+			            android:textSize="@dimen/main_text_desc_size"
+			           	android:text="@string/btn_purple_desc"
+			            />
+		        </LinearLayout>
 	    	</RelativeLayout>
 	    </LinearLayout>
 
