@@ -18,6 +18,8 @@ public class TODO {
 	 	TODO: Lägg in skugga under top_bar
 	 	FIXME: Se om det går att specialbehandla den sista nyhets rown så att den får lite längre avstånd när man scrollat ända ner.
 	 	
+	 	FIXME: VIKTIG! Om man startar tex schema och den börjar ladda men trycker Home innan den är klar kan appen krasha när du försöker gå in igen
+	 	
 	 	TODO: Fixa ett post program på samma sätt som jag gör andra databas anrop, genom PHP fil, borde funka
 	 	
 	 	TODO: Testa Schema mer nogrant efter refaktoriseringen
