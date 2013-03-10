@@ -54,7 +54,7 @@ public class News extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.Theme_Mytheme);
+		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 
 		setContentView(R.layout.activity_news);
 		
@@ -66,24 +66,6 @@ public class News extends SherlockActivity {
 		newsList = (ListView) findViewById(R.id.news_list);
 		new NewsTask(News.this).execute("");
 	}
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.main_menu, menu);
-        final MenuItem refresh = (MenuItem) menu.findItem(R.id.menu_refresh);
-        refresh.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-            	Log.i(Utils.TAG, "NEWS PRESSED REFRESH BUTTON");
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        refresh.setActionView(null);
-                    }
-                }, 1000);
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

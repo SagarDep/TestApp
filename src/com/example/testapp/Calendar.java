@@ -56,7 +56,7 @@ public class Calendar extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.Theme_Mytheme);
+		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		
 		setContentView(R.layout.activity_cal);
 
@@ -68,29 +68,6 @@ public class Calendar extends SherlockActivity {
 		calendarList = (ListView) findViewById(R.id.cal_list);
 		new CalendarTask(Calendar.this).execute("");
 	}
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.main_menu, menu);
-
-        // set up a listener for the refresh item
-        final MenuItem refresh = (MenuItem) menu.findItem(R.id.menu_refresh);
-        refresh.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            // on selecting show progress spinner for 1s
-            public boolean onMenuItemClick(MenuItem item) {
-                // item.setActionView(R.layout.progress_action);
-            	Log.i(Utils.TAG, "CAL PRESSED REFRESH BUTTON");
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        refresh.setActionView(null);
-                        
-                    }
-                }, 1000);
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

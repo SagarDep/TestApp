@@ -326,7 +326,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="center"
-	            android:background="@drawable/btn_sponsor_just_nu2"
+	            android:background="@drawable/btn_sponsor_just_nu"
 	            android:contentDescription="@string/btn_sponsor"
 	             />
 
