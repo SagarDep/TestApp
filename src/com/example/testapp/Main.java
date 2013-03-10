@@ -3,7 +3,6 @@ package com.example.testapp;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapsInitializer;
 
-import android.R.color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,12 +12,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class Main extends Activity {
-	private static final String sponsor_just_nu = "http://www.justnu.se/";
+	private final String sponsor_just_nu = "http://www.justnu.se/";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +85,15 @@ public class Main extends Activity {
 		small.setOnClickListener(onClickListener);
 		big.setOnTouchListener(onTouchListener);
 		big.setOnClickListener(onClickListener);
-	
+		
+		ImageButton sponsor = (ImageButton) findViewById(R.id.main_sponsor);
+		sponsor.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sponsor_just_nu));
+				startActivity(myIntent);
+			}
+		});	
 	}
 	
 	private OnClickListener getOnClickListener(final Class<?> class1) {

@@ -305,7 +305,6 @@
         android:contentDescription="@string/desc_colored_line" />
 
     <LinearLayout
-	        android:id="@+id/main_sponsor" 
 	        android:orientation="vertical"
 	        android:layout_width="match_parent"
 	  		android:layout_height="wrap_content"
@@ -319,13 +318,15 @@
 	            android:layout_height="match_parent"
 	            android:layout_gravity="center"
 	            android:gravity="center"
-	            android:text="@string/text_sponsor" />
+	            android:text="@string/text_sponsor"
+	            android:textSize="12sp" />
 	        
 	        <ImageButton
+		        android:id="@+id/main_sponsor" 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="center"
-	            android:background="@drawable/btn_sponsor_just_nu"
+	            android:background="@drawable/btn_sponsor_just_nu2"
 	            android:contentDescription="@string/btn_sponsor"
 	             />
 
