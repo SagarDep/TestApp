@@ -35,6 +35,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.actionbarsherlock.view.Window;
 import com.example.testapp.newsitem.NewsItem;
 import com.example.testapp.newsitem.NewsPost;
 import com.example.testapp.newsitem.NewsSep;
@@ -44,8 +45,6 @@ public class News extends SherlockActivity {
 	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
-	
-	private final Handler handler = new Handler();
 	
 	private static ArrayList<NewsItem> newsItems		= null;
 	private static long lastUpdateTime					= -1L;
@@ -57,12 +56,15 @@ public class News extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.BlueTheme);
 
-		setContentView(R.layout.activity_news);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		ActionBar ab = getSupportActionBar();
 		ab.setTitle("Nyheter");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		setSupportProgressBarIndeterminateVisibility(true);
+
+		setContentView(R.layout.activity_news);
 		
 		newsList = (ListView) findViewById(R.id.news_list);
 		new NewsTask(News.this).execute("");
