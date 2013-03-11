@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -18,7 +20,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-public class Map extends FragmentActivity {
+public class Map extends SherlockFragmentActivity {
 	private final LatLng POS_LUND = new LatLng(55.711350, 13.190117);
 
 	private final long									validTime 		= 900000L; // 15 minuter
@@ -29,8 +31,14 @@ public class Map extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTheme(R.style.GreenTheme);
 		setContentView(R.layout.activity_map);
-
+		
+		ActionBar ab = getSupportActionBar();
+		ab.setTitle("Karta");
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		
 		showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP);
 		showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
