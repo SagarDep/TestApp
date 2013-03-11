@@ -16,8 +16,8 @@
 	</style>
 	
     
-	<style name="IndeterminateProgress" parent="@android:style/Widget.ProgressBar.Small.Inverse">
-	    <item name="android:indeterminateDrawable">@drawable/ic_launcher</item>
+	<style name="IndeterminateProgress" parent="@android:style/Widget.ProgressBar.Small">
+	    <item name="android:indeterminateDrawable">@drawable/progress_animation</item>
 	</style>
 
     
@@ -33,6 +33,8 @@
 	    <item name="android:background">@color/main_red</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
 	
     
@@ -50,6 +52,8 @@
 	    <item name="android:background">@color/main_green</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
     
     
@@ -67,6 +71,8 @@
 	    <item name="android:background">@color/main_yellow</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
 
     
@@ -84,6 +90,8 @@
 	    <item name="android:background">@color/main_purple</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
     
     

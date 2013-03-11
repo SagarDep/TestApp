@@ -57,12 +57,11 @@ public class News extends SherlockActivity {
 		setTheme(R.style.BlueTheme);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
+
 		ActionBar ab = getSupportActionBar();
 		ab.setTitle("Nyheter");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		setSupportProgressBarIndeterminateVisibility(true);
 
 		setContentView(R.layout.activity_news);
 		
@@ -73,8 +72,19 @@ public class News extends SherlockActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuItem item = menu.add(0, 0, 0, "Refresh");
-		item.setIcon(R.drawable.refresh);
+//		item.setIcon(R.drawable.refresh);
 		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem) {
+				setSupportProgressBarIndeterminateVisibility(true);
+				menuItem.setEnabled(false);
+				return false;
+			}
+		});
+		
 	    return true;
 	}
 	
@@ -97,6 +107,7 @@ public class News extends SherlockActivity {
 		private ProgressDialog showProgress;
 		private JSONArray array;
 		
+		//Lägg till isRefresh för att se om man ska printa om det inte finns ny data
 		public NewsTask(Activity a) {
 			this.activity = a;
 			this.array = null;
