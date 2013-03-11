@@ -69,8 +69,6 @@ public class News extends SherlockActivity {
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		MenuInflater inflater = getSupportMenuInflater();
-//		inflater.inflate(R.menu.menu_items, menu);
 		super.onCreateOptionsMenu(menu);
 		MenuItem item = menu.add(0, 0, 0, "Refresh");
 		item.setIcon(R.drawable.refresh);

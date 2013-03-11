@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -31,7 +33,7 @@ public class Map extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.GreenTheme);
+		setTheme(R.style.YellowTheme);
 		setContentView(R.layout.activity_map);
 		
 		ActionBar ab = getSupportActionBar();
@@ -82,5 +84,22 @@ public class Map extends SherlockFragmentActivity {
 		int zoom = Integer.parseInt(this.getString(R.string.map_default_zoom));
 		CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(zoom).build();
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuItem item = menu.add(0, 0, 0, "Refresh");
+		item.setIcon(R.drawable.refresh);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    if (item.getItemId() == android.R.id.home) {
+	    	finish();
+	        return true;
+	    }
+	    return super.onOptionsItemSelected(item);
 	}
 }
