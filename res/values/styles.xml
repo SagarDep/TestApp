@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- BLUE -->
-    <style name="BlueTheme" parent="@style/Theme.Sherlock">
+    <style name="BlueTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/BlueTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/BlueTheme.ActionBar</item>
     </style>
@@ -100,7 +100,7 @@
     
     <style name="MyThemes.TitleStyle" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">22sp</item>
+        <!-- <item name="android:textSize">20sp</item> -->
     </style>
  
 </resources>

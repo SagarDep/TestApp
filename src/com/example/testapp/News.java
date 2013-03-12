@@ -49,7 +49,8 @@ public class News extends SherlockActivity {
 	private static ArrayList<NewsItem> newsItems		= null;
 	private static long lastUpdateTime					= -1L;
 	private static String lastUpdateDate				= null;
-	private ListView newsList;
+	private static MenuItem refreshButton				= null;
+	private ListView newsList							= null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,28 +60,28 @@ public class News extends SherlockActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		ActionBar ab = getSupportActionBar();
-		ab.setTitle("Nyheter");
+		ab.setTitle("NYHETER");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
 		setContentView(R.layout.activity_news);
 		
 		newsList = (ListView) findViewById(R.id.news_list);
-		new NewsTask(News.this).execute("");
+		new NewsTask(News.this, false).execute("");
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem item = menu.add(0, 0, 0, "Refresh");
-//		item.setIcon(R.drawable.refresh);
-		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		refreshButton = menu.add(0, 0, 0, "Uppdatera");
+//		refreshButton.setIcon(R.drawable.refresh);
+		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		
-		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		refreshButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
-				setSupportProgressBarIndeterminateVisibility(true);
-				menuItem.setEnabled(false);
+				refreshButton.setEnabled(false);
+				new NewsTask(News.this, true).execute("");
 				return false;
 			}
 		});
@@ -91,6 +92,8 @@ public class News extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    if (item.getItemId() == android.R.id.home) {
+	    	if(newsItems == null)
+				lastUpdateDate = null;
 	    	finish();
 	        return true;
 	    }
@@ -106,19 +109,23 @@ public class News extends SherlockActivity {
 		private Activity activity;
 		private ProgressDialog showProgress;
 		private JSONArray array;
+		private boolean manualRefresh;
 		
 		//Lägg till isRefresh för att se om man ska printa om det inte finns ny data
-		public NewsTask(Activity a) {
+		public NewsTask(Activity a, boolean manRef) {
 			this.activity = a;
 			this.array = null;
+			this.manualRefresh = manRef;
 		}
 		
 		@Override
 		protected void onPreExecute() {
 			if(newsItems == null)	loadFromFile();
-			if(newsItems != null)
+			if(newsItems != null) {
+				setSupportProgressBarIndeterminateVisibility(true);
 				newsList.setAdapter(new NewsAdapter(News.this, newsItems));
-			else {
+			} else {
+				
 				showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS, true, true, new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
@@ -136,7 +143,7 @@ public class News extends SherlockActivity {
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
 			if(lastUpdateDate != null) { // CACHE AVAILABLE
-				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
+				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED) {
 					msg = MSG_USE_CACHED_DATA;
 				} else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE) {
@@ -165,10 +172,7 @@ public class News extends SherlockActivity {
 				case MSG_REFRESH_FROM_DOWNLOAD:
 					Log.i(Utils.TAG, "NEWS USING FRESHLY DOWNLOADED");
 					initFromDownload();
-//					if(newsList.getAdapter() == null)
-						newsList.setAdapter(new NewsAdapter(News.this, newsItems));
-//					else
-//						Utils.showToast(activity, "Fler nyheter tillgängliga\nTryck Uppdatera för att visa dem", Toast.LENGTH_LONG);
+					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
 					if(showProgress != null) showProgress.dismiss();
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
@@ -182,6 +186,8 @@ public class News extends SherlockActivity {
 					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 					Log.i(Utils.TAG, "NEWS REFRESH NOT NEEDED, USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
 					lastUpdateTime = System.currentTimeMillis();
+					if(manualRefresh)
+						Utils.showToast(activity, "Inga nyheter finns att hämta", Toast.LENGTH_LONG);
 					break;
 				default:
 					Log.i(Utils.TAG, "NEWS (no connection) NO DATA TO SHOW");
@@ -189,6 +195,8 @@ public class News extends SherlockActivity {
 					if(showProgress != null) showProgress.dismiss();
 					break;
 			}
+			setSupportProgressBarIndeterminateVisibility(false);
+			refreshButton.setEnabled(true);
 		}
 
 		private String refreshNeeded() {
