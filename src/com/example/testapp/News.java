@@ -127,7 +127,7 @@ public class News extends SherlockActivity {
 				showProgress = ProgressDialog.show(News.this, "", Utils.MSG_LOADING_NEWS, true, true, new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
-						NewsTask.this.cancel(true);
+						NewsTask.this.cancel(true); //FIXME:Kanske inte vill köra denna raden, kanske bättre att låta tasken köra klart och bara dölja progressBaren
 						if(newsItems == null)
 							lastUpdateDate = null;
 						finish();
