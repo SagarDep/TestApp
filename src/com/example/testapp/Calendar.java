@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -34,6 +33,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.example.testapp.scheduleitem.CalDate;
 import com.example.testapp.scheduleitem.CalDesc;
@@ -43,36 +43,53 @@ import com.example.testapp.scheduleitem.ScheduleItem;
 public class Calendar extends SherlockActivity {
 	private final long TIME_ONE_MINUTE = 60000;
 	
+	private final String REFRESH_BUTTON_TEXT			= "Uppdatera";
+	private final String REFRESH_BUTTON_TEXT_PRESSED	= "Uppdaterar";
+	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
-	private final Handler handler = new Handler();
-	
 	private static ArrayList<ScheduleItem> scheduleList = null;
-	private static long lastUpdateTime = -1L;
-	private static String lastUpdateDate = null;
-	private ListView calendarList;
+	private static long lastUpdateTime					= -1L;
+	private static String lastUpdateDate				= null;
+	private static MenuItem refreshButton				= null;
+	private CalendarTask calendarTask					= null;
+	private ListView calendarList						= null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.RedTheme);
 		
-		setContentView(R.layout.activity_cal);
-
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
 		ActionBar ab = getSupportActionBar();
 		ab.setTitle("SCHEMA");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+
+		setContentView(R.layout.activity_cal);
 		
 		calendarList = (ListView) findViewById(R.id.cal_list);
-		new CalendarTask(Calendar.this).execute("");
+		calendarTask = new CalendarTask(Calendar.this, false);
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    menu.add("Refresh")
-	        .setIcon(R.drawable.refresh)
-	        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		super.onCreateOptionsMenu(menu);
+		refreshButton = menu.add(0, 0, 0, REFRESH_BUTTON_TEXT);
+//		refreshButton.setIcon(R.drawable.refresh);
+		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		if(calendarTask.getStatus() != AsyncTask.Status.FINISHED) refreshButton.setEnabled(false);
+		refreshButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem) {
+				refreshButton.setTitle(REFRESH_BUTTON_TEXT_PRESSED);
+				refreshButton.setEnabled(false);
+				new CalendarTask(Calendar.this, true).execute("");
+				return false;
+			}
+		});
 	    return true;
 	}
 	
@@ -96,10 +113,12 @@ public class Calendar extends SherlockActivity {
 		private Activity activity;
 		private ProgressDialog showProgress;
 		private JSONArray array;
+		private boolean manualRefresh;
 
-		public CalendarTask(Activity a) {
+		public CalendarTask(Activity a, boolean manRef) {
 			this.activity = a;
 			this.array = null;
+			this.manualRefresh = manRef;
 		}
 		
 		@Override

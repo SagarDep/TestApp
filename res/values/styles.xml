@@ -4,11 +4,13 @@
     <style name="BlueTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/BlueTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/BlueTheme.ActionBar</item>
+	    <item name="android:actionBarItemBackground">@drawable/blue_bar_state</item>
+	    <item name="actionBarItemBackground">@drawable/blue_bar_state</item>
     </style>
  
     <style name="BlueTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
-	    <item name="android:background">@color/main_blue</item>
-	    <item name="background">@color/main_blue</item>
+	    <item name="android:background">@drawable/blue_bar</item>
+	    <item name="background">@drawable/blue_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
@@ -26,11 +28,13 @@
     <style name="RedTheme" parent="@style/Theme.Sherlock">
         <item name="actionBarStyle">@style/RedTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/RedTheme.ActionBar</item>
+	    <item name="android:actionBarItemBackground">@drawable/red_bar_state</item>
+	    <item name="actionBarItemBackground">@drawable/red_bar_state</item>
     </style>
  
     <style name="RedTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
-	    <item name="background">@color/main_red</item>
-	    <item name="android:background">@color/main_red</item>
+	    <item name="background">@drawable/red_bar</item>
+	    <item name="android:background">@drawable/red_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
