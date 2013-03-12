@@ -62,6 +62,8 @@ public class Utils {
 	public static final String PREFS_KEY_NEWS_UPDATE		= "newsUpdate";
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_UPDATE	= "scheduleUpdate";
+	public static final String PREFS_KEY_PLACE				= "place";
+	public static final String PREFS_KEY_PLACE_UPDATE			= "placeDate";
 	public static final String PREFS_KEY_MAP				= "map";
 	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
 
@@ -70,12 +72,12 @@ public class Utils {
 	
 	public static final String DB_NEWS_URL		= "http://nutty.rymdraket.net/android/news.php?mode=";
 	public static final String DB_SCHEDULE_URL	= "http://nutty.rymdraket.net/android/schedule.php?mode=";
+	public static final String DB_PLACES_URL	= "http://nutty.rymdraket.net/android/places.php?mode=";
 	public static final String DB_MARKER_URL	= "http://nutty.rymdraket.net/android/markers.php";
 	public static final String DB_IMAGE_URL		= "http://nutty.rymdraket.net/android/imgs/";
 
 	public static final int DB_MODE_REFRESH		= 0;
 	public static final int DB_MODE_GET			= 1;
-	public static final int DB_MODE_GET_LATEST	= 2;
 	
 	public static final String MSG_LOADING_NEWS		= "Laddar nyheter...";
 	public static final String MSG_LOADING_SCHEDULE	= "Laddar schema...";

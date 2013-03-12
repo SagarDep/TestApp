@@ -1,13 +1,26 @@
 package com.example.testapp;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +35,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.actionbarsherlock.view.Window;
 import com.example.testapp.placeitem.PlaceItem;
+import com.example.testapp.scheduleitem.ScheduleItem;
 
 public class Places extends SherlockActivity {
 	private final long TIME_ONE_MINUTE = 60000;
@@ -204,12 +218,65 @@ public class Places extends SherlockActivity {
 		}
 
 		private String refreshNeeded() {
-			// TODO Auto-generated method stub
-			return null;
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(Utils.DB_PLACES_URL + Utils.DB_MODE_REFRESH);
+			BufferedReader br = null;
+			try {
+				HttpResponse response = client.execute(request);
+				int statusCode = response.getStatusLine().getStatusCode();
+				if(statusCode == 200) {
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 8192);
+					String line = br.readLine();
+					JSONObject o = new JSONObject(line.substring(1, line.length()-1));
+					String updateDate = o.getString("UPDATE_TIME");
+					if(lastUpdateDate != null)
+						return Utils.compareTime(updateDate, lastUpdateDate) > 0 ? updateDate : REFRESH_MSG_REFRESH_NOT_NEEDED;
+					else
+						return updateDate;
+				} else 
+					Log.e(Utils.TAG,"PLACE  Failed to download JSON file");
+			} catch (ClientProtocolException e) {	e.printStackTrace();
+			} catch (IOException e) {				e.printStackTrace();
+			} catch (JSONException e) {				e.printStackTrace();
+			} finally {
+				try {
+					if(br != null)	br.close();
+				} catch (IOException e) {	e.printStackTrace();	}
+			}
+			return REFRESH_MSG_CONNECTION_FAILURE;
 		}
 		
 		private JSONArray updatePlaceInfo(String updateDate) {
-			// TODO Auto-generated method stub
+			StringBuilder builder = new StringBuilder();
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(Utils.DB_PLACES_URL + Utils.DB_MODE_GET);
+			BufferedReader br = null;
+			try {
+				HttpResponse response = client.execute(request);
+				int statusCode = response.getStatusLine().getStatusCode();
+				if(statusCode == 200) {
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 8192);
+					String line;
+					
+					while((line = br.readLine()) != null)
+						builder.append(line);
+					
+					if(updateDate != null)
+						lastUpdateDate = updateDate;
+					else
+						lastUpdateDate = refreshNeeded();
+					
+					return new JSONArray(builder.toString());
+				} else 
+					Log.e(Utils.TAG,"PLACE  Failed to download JSON file");
+			} catch (ClientProtocolException e) {	e.printStackTrace();
+			} catch (IOException e) {				e.printStackTrace();
+			} catch (JSONException e) {				e.printStackTrace();
+			} finally {
+				try {
+					if(br != null)	br.close();
+				} catch (IOException e) {	e.printStackTrace();	}
+			}
 			return null;
 		}
 		
@@ -218,34 +285,28 @@ public class Places extends SherlockActivity {
 			
 		}
 
-		private void loadFromFile() {
-			// TODO Auto-generated method stub
-			
-		}
-		
 		private void saveToFile() {
-			// TODO Auto-generated method stub
-			
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			Editor editor = prefs.edit();
+			try {
+				editor.putString(Utils.PREFS_KEY_PLACE, ObjectSerializer.serialize(placeItems));
+				editor.putString(Utils.PREFS_KEY_PLACE_UPDATE, lastUpdateDate);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(Utils.TAG, "PLACE save_to_file IOException");
+			}
+			editor.commit();
+		}
+
+		@SuppressWarnings("unchecked")
+		private void loadFromFile() {
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			try {
+				placeItems = (ArrayList<PlaceItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_PLACE, null));
+				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_PLACE_UPDATE, null);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

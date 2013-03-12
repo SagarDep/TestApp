@@ -262,7 +262,6 @@ public class Calendar extends SherlockActivity {
 					if(br != null)	br.close();
 				} catch (IOException e) {	e.printStackTrace();	}
 			}
-
 			return null;
 		}
 		
