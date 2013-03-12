@@ -50,6 +50,7 @@ public class News extends SherlockActivity {
 	private static long lastUpdateTime					= -1L;
 	private static String lastUpdateDate				= null;
 	private static MenuItem refreshButton				= null;
+	private NewsTask newsTask							= null;
 	private ListView newsList							= null;
 	
 	@Override
@@ -67,7 +68,8 @@ public class News extends SherlockActivity {
 		setContentView(R.layout.activity_news);
 		
 		newsList = (ListView) findViewById(R.id.news_list);
-		new NewsTask(News.this, false).execute("");
+		newsTask = new NewsTask(News.this, false);
+		newsTask.execute("");
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,7 +77,7 @@ public class News extends SherlockActivity {
 		refreshButton = menu.add(0, 0, 0, "Uppdatera");
 //		refreshButton.setIcon(R.drawable.refresh);
 		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		
+		if(newsTask.getStatus() != AsyncTask.Status.FINISHED) refreshButton.setEnabled(false);
 		refreshButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override
