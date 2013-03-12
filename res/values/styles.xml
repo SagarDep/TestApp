@@ -25,7 +25,7 @@
     
     
     <!-- RED -->
-    <style name="RedTheme" parent="@style/Theme.Sherlock">
+    <style name="RedTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/RedTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/RedTheme.ActionBar</item>
 	    <item name="android:actionBarItemBackground">@drawable/red_bar_state</item>
@@ -46,7 +46,7 @@
     
     
     <!-- GREEN -->
-    <style name="GreenTheme" parent="@style/Theme.Sherlock">
+    <style name="GreenTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/GreenTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/GreenTheme.ActionBar</item>
     </style>
@@ -65,7 +65,7 @@
     
     
     <!-- YELLOW -->
-    <style name="YellowTheme" parent="@style/Theme.Sherlock">
+    <style name="YellowTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/YellowTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/YellowTheme.ActionBar</item>
     </style>
@@ -84,7 +84,7 @@
     
     
     <!-- PURPLE -->
-    <style name="PurpleTheme" parent="@style/Theme.Sherlock">
+    <style name="PurpleTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/PurpleTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/PurpleTheme.ActionBar</item>
     </style>

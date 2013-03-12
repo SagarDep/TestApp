@@ -23,7 +23,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -32,7 +31,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.actionbarsherlock.view.Window;
@@ -174,7 +172,7 @@ public class News extends SherlockActivity {
 			String errMsg;
 			switch(msg) {
 				case MSG_REFRESH_FROM_DOWNLOAD:
-					Log.i(Utils.TAG, "NEWS USING FRESHLY DOWNLOADED");
+					Log.i(Utils.TAG, "NEWS USING FRESHLY DOWNLOADED " + ((manualRefresh) ? "MANUAL REFRESH" : "SYSTEM REFRESH"));
 					initFromDownload();
 					newsList.setAdapter(new NewsAdapter(News.this, newsItems));
 					if(showProgress != null) showProgress.dismiss();

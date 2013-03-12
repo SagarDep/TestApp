@@ -49,7 +49,7 @@ public class Calendar extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
-	private static ArrayList<ScheduleItem> scheduleList = null;
+	private static ArrayList<ScheduleItem> calendarItems= null;
 	private static long lastUpdateTime					= -1L;
 	private static String lastUpdateDate				= null;
 	private static MenuItem refreshButton				= null;
@@ -72,6 +72,7 @@ public class Calendar extends SherlockActivity {
 		
 		calendarList = (ListView) findViewById(R.id.cal_list);
 		calendarTask = new CalendarTask(Calendar.this, false);
+		calendarTask.execute("");
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,17 +97,16 @@ public class Calendar extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    if (item.getItemId() == android.R.id.home) {
-	        finish();
+	    	if(calendarItems == null)
+				lastUpdateDate = null;
+	    	finish();
 	        return true;
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
-	
 	class CalendarTask extends AsyncTask<String, Void, Integer> {
 		private final int MSG_REFRESH_FROM_DOWNLOAD	= 0;
 		private final int MSG_USE_CACHED_DATA		= 1;
-		private final int MSG_LOAD_FROM_FILE		= 2;
-		private final int MSG_ERR_LOAD_FROM_FILE	= 3;
 		private final int MSG_ERROR_NO_DATA			= 4;
 		private final int MSG_ERR_USE_CACHED_DATA	= 5;
 		
@@ -123,54 +123,46 @@ public class Calendar extends SherlockActivity {
 		
 		@Override
 		protected void onPreExecute() {
-			showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE, true, true, new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					CalendarTask.this.cancel(true);
-					if(scheduleList == null)
-						lastUpdateDate = null;
-					finish();
-				}
-			});
-			showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			if(calendarItems == null)	loadFromFile();
+			if(calendarItems != null) {
+				setSupportProgressBarIndeterminateVisibility(true);
+				calendarList.setAdapter(new CalAdapter(Calendar.this, calendarItems));
+			} else {
+				showProgress = ProgressDialog.show(Calendar.this, "", Utils.MSG_LOADING_SCHEDULE, true, true, new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+//						CalendarTask.this.cancel(true);
+//						if(calendarItems == null)
+//							lastUpdateDate = null;
+						finish();
+					}
+				});
+				showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			}
 		}
 		
 		@Override
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
-			if(lastUpdateDate != null) { //Vi har information sen innan
-				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
+			if(lastUpdateDate != null) { // CACHE AVAILABLE
+				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED)
 					msg = MSG_USE_CACHED_DATA;
 				else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE)
 					msg = MSG_ERR_USE_CACHED_DATA;
 				else {
-					this.array = updateScheduleInfo(updateDate);
+					this.array = updateCalendarInfo(updateDate);
 					if(this.array != null)
 						msg = MSG_REFRESH_FROM_DOWNLOAD;
 					else
 						msg = MSG_ERR_USE_CACHED_DATA;
 				}
-			} else { //Vi har inget alls inläst! Läs in in lastUpdateCount från fil om den finns
-				loadFromFile(true);
-				if(lastUpdateDate != null) {
-					String updateDate = refreshNeeded();
-					if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED || updateDate == REFRESH_MSG_CONNECTION_FAILURE)
-						msg = MSG_LOAD_FROM_FILE;
-					else {
-						this.array = updateScheduleInfo(updateDate);
-						if(this.array != null)
-							msg = MSG_REFRESH_FROM_DOWNLOAD;
-						else
-							msg = MSG_ERR_LOAD_FROM_FILE;
-					}
-				} else {
-					this.array = updateScheduleInfo(null);
-					if(this.array != null)
-						msg = MSG_REFRESH_FROM_DOWNLOAD;
-					else
-						msg = MSG_ERROR_NO_DATA;
-				}
+			} else { // CACHE EMPTY
+				this.array = updateCalendarInfo(null);
+				if(this.array != null)
+					msg = MSG_REFRESH_FROM_DOWNLOAD;
+				else
+					msg = MSG_ERROR_NO_DATA;
 			}
 			return msg;
 		}
@@ -180,48 +172,34 @@ public class Calendar extends SherlockActivity {
 			String errMsg;
 			switch(msg) {
 				case MSG_REFRESH_FROM_DOWNLOAD:
-					Log.i(Utils.TAG, "CAL USING FRESHLY DOWNLOADED");
+					Log.i(Utils.TAG, "CAL USING FRESHLY DOWNLOADED " + ((manualRefresh) ? "MANUAL REFRESH" : "SYSTEM REFRESH"));
 					initFromDownload();
-					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
-					showProgress.dismiss();
+					calendarList.setAdapter(new CalAdapter(Calendar.this, calendarItems));
+					if(showProgress != null) showProgress.dismiss();
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
 					break;
 				case MSG_ERR_USE_CACHED_DATA:
 					Log.i(Utils.TAG, "CAL (no connection) USING CACHED VERSION");
-					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
-					showProgress.dismiss();
 					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 					break;
 				case MSG_USE_CACHED_DATA:
 					long timeDiff = System.currentTimeMillis() - lastUpdateTime;
 					Log.i(Utils.TAG, "CAL USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
 					lastUpdateTime = System.currentTimeMillis();
-					showProgress.dismiss();
-					break;
-				case MSG_ERR_LOAD_FROM_FILE:
-					Log.i(Utils.TAG, "CAL (no connection) USING STORED VERSION");
-					loadFromFile(false);
-					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
-					showProgress.dismiss();
-					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
-					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
-					break;
-				case MSG_LOAD_FROM_FILE:
-					Log.i(Utils.TAG, "CAL REFRESH NOT NEEDED, USING STORED VERSION");
-					loadFromFile(false);
-					calendarList.setAdapter(new CalAdapter(Calendar.this, scheduleList));
-					lastUpdateTime = System.currentTimeMillis();
-					showProgress.dismiss();
+					if(manualRefresh)
+						Utils.showToast(activity, "Inga nya händelser finns att hämta", Toast.LENGTH_LONG);
 					break;
 				default:
 					Log.i(Utils.TAG, "CAL (no connection) NO DATA TO SHOW");
 					Utils.showToast(activity, Utils.EMSG_NO_INTERNET_CONNECTION, Toast.LENGTH_LONG);
-					showProgress.dismiss();
+					if(showProgress != null) showProgress.dismiss();
 					break;
 			}
+			setSupportProgressBarIndeterminateVisibility(false);
+			refreshButton.setTitle(REFRESH_BUTTON_TEXT);
+			refreshButton.setEnabled(true);
 		}
 		
 		private String refreshNeeded() {
@@ -232,7 +210,7 @@ public class Calendar extends SherlockActivity {
 				HttpResponse response = client.execute(request);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if(statusCode == 200) {
-					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 8192);
 					String line = br.readLine();
 					JSONObject o = new JSONObject(line.substring(1, line.length()-1));
 					String updateDate = o.getString("UPDATE_TIME");
@@ -253,7 +231,7 @@ public class Calendar extends SherlockActivity {
 			return REFRESH_MSG_CONNECTION_FAILURE;
 		}
 		
-		private JSONArray updateScheduleInfo(String updateDate) {
+		private JSONArray updateCalendarInfo(String updateDate) {
 			StringBuilder builder = new StringBuilder();
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(Utils.DB_SCHEDULE_URL + Utils.DB_MODE_GET);
@@ -262,7 +240,7 @@ public class Calendar extends SherlockActivity {
 				HttpResponse response = client.execute(request);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if(statusCode == 200) {
-					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 8192);
 					String line;
 					
 					while((line = br.readLine()) != null)
@@ -290,21 +268,21 @@ public class Calendar extends SherlockActivity {
 		
 		private void initFromDownload() {
 			HashMap<String,String> map = new HashMap<String, String>();
-			scheduleList = new ArrayList<ScheduleItem>();
+			calendarItems = new ArrayList<ScheduleItem>();
 			try {
 				for(int i = 0; i < this.array.length(); i++) {
 					JSONObject o = this.array.getJSONObject(i);
 					if(!map.containsKey(o.getString("scheduleDay"))) {
 						if(map.size() != 0) {
-							scheduleList.add(new CalSep());
+							calendarItems.add(new CalSep());
 						}
 						map.put(o.getString("scheduleDay"), null);
-						scheduleList.add(new CalDate(o.getString("scheduleDay"), o.getString("scheduleDate")));
+						calendarItems.add(new CalDate(o.getString("scheduleDay"), o.getString("scheduleDate")));
 					}
 					String time = o.getString("scheduleFrom") + "-" + o.getString("scheduleTo");
 					String title = o.getString("scheduleTitle");
 					String place = o.getString("schedulePlace");
-					scheduleList.add(new CalDesc(time, title, place));
+					calendarItems.add(new CalDesc(time, title, place));
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -315,7 +293,7 @@ public class Calendar extends SherlockActivity {
 			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 			Editor editor = prefs.edit();
 			try {
-				editor.putString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(scheduleList));
+				editor.putString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(calendarItems));
 				editor.putString(Utils.PREFS_KEY_SCHEDULE_UPDATE, lastUpdateDate);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -325,18 +303,13 @@ public class Calendar extends SherlockActivity {
 		}
 		
 		@SuppressWarnings("unchecked")
-		private void loadFromFile(boolean loadOnlyCount) {
+		private void loadFromFile() {
 			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
-			
-			if(loadOnlyCount)
+			try {
+				calendarItems = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
 				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
-			else {
-				try {
-					scheduleList = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
-					lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
