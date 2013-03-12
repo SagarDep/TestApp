@@ -85,7 +85,6 @@ public class News extends SherlockActivity {
 				return false;
 			}
 		});
-		
 	    return true;
 	}
 	
@@ -111,7 +110,6 @@ public class News extends SherlockActivity {
 		private JSONArray array;
 		private boolean manualRefresh;
 		
-		//Lägg till isRefresh för att se om man ska printa om det inte finns ny data
 		public NewsTask(Activity a, boolean manRef) {
 			this.activity = a;
 			this.array = null;
@@ -280,7 +278,6 @@ public class News extends SherlockActivity {
 			} catch (JSONException e) {		e.printStackTrace();
 			}
 		}
-		
 	}
 	
 	private void saveToFile() {

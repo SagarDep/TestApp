@@ -30,7 +30,7 @@ public class Places extends SherlockActivity {
 		setContentView(R.layout.activity_places);
 		
 		ActionBar ab = getSupportActionBar();
-		ab.setTitle("Platser");
+		ab.setTitle("PLATSER");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);		
 		

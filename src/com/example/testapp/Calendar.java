@@ -61,7 +61,7 @@ public class Calendar extends SherlockActivity {
 		setContentView(R.layout.activity_cal);
 
 		ActionBar ab = getSupportActionBar();
-		ab.setTitle("Schema");
+		ab.setTitle("SCHEMA");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		

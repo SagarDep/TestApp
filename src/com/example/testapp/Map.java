@@ -37,7 +37,7 @@ public class Map extends SherlockFragmentActivity {
 		setContentView(R.layout.activity_map);
 		
 		ActionBar ab = getSupportActionBar();
-		ab.setTitle("Karta");
+		ab.setTitle("KARTA");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		
