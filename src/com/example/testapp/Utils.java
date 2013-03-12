@@ -65,6 +65,9 @@ public class Utils {
 	public static final String PREFS_KEY_MAP				= "map";
 	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
 
+	public static final String REFRESH_BUTTON_TEXT			= "Uppdatera";
+	public static final String REFRESH_BUTTON_TEXT_PRESSED	= "Letar...";
+	
 	public static final String DB_NEWS_URL		= "http://nutty.rymdraket.net/android/news.php?mode=";
 	public static final String DB_SCHEDULE_URL	= "http://nutty.rymdraket.net/android/schedule.php?mode=";
 	public static final String DB_MARKER_URL	= "http://nutty.rymdraket.net/android/markers.php";

@@ -43,9 +43,6 @@ import com.example.testapp.scheduleitem.ScheduleItem;
 public class Calendar extends SherlockActivity {
 	private final long TIME_ONE_MINUTE = 60000;
 	
-	private final String REFRESH_BUTTON_TEXT			= "Uppdatera";
-	private final String REFRESH_BUTTON_TEXT_PRESSED	= "Letar...";
-	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
@@ -77,18 +74,18 @@ public class Calendar extends SherlockActivity {
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		refreshButton = menu.add(0, 0, 0, REFRESH_BUTTON_TEXT);
+		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
 //		refreshButton.setIcon(R.drawable.refresh);
 		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		if(calendarTask.getStatus() != AsyncTask.Status.FINISHED){
-			refreshButton.setTitle(REFRESH_BUTTON_TEXT_PRESSED);
+			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 			refreshButton.setEnabled(false);
 		}
 		refreshButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
-				refreshButton.setTitle(REFRESH_BUTTON_TEXT_PRESSED);
+				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 				refreshButton.setEnabled(false);
 				new CalendarTask(Calendar.this, true).execute("");
 				return false;
@@ -201,7 +198,7 @@ public class Calendar extends SherlockActivity {
 					break;
 			}
 			setSupportProgressBarIndeterminateVisibility(false);
-			refreshButton.setTitle(REFRESH_BUTTON_TEXT);
+			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
 			refreshButton.setEnabled(true);
 		}
 		

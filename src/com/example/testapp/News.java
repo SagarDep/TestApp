@@ -41,9 +41,6 @@ import com.example.testapp.newsitem.NewsSep;
 public class News extends SherlockActivity {
 	private final long TIME_ONE_MINUTE = 60000;
 	
-	private final String REFRESH_BUTTON_TEXT			= "Uppdatera";
-	private final String REFRESH_BUTTON_TEXT_PRESSED	= "Letar...";
-	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 	
@@ -75,18 +72,18 @@ public class News extends SherlockActivity {
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		refreshButton = menu.add(0, 0, 0, REFRESH_BUTTON_TEXT);
+		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
 //		refreshButton.setIcon(R.drawable.refresh);
 		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		if(newsTask.getStatus() != AsyncTask.Status.FINISHED) {
-			refreshButton.setTitle(REFRESH_BUTTON_TEXT_PRESSED);
+			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 			refreshButton.setEnabled(false);
 		}
 		refreshButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
-				refreshButton.setTitle(REFRESH_BUTTON_TEXT_PRESSED);
+				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 				refreshButton.setEnabled(false);
 				new NewsTask(News.this, true).execute("");
 				return false;
@@ -149,11 +146,11 @@ public class News extends SherlockActivity {
 			int msg = -1;
 			if(lastUpdateDate != null) { // CACHE AVAILABLE
 				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
-				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED) {
+				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED)
 					msg = MSG_USE_CACHED_DATA;
-				} else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE) {
+				else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE)
 					msg = MSG_ERR_USE_CACHED_DATA;
-				} else {
+				else {
 					this.array = updateNewsInfo(updateDate);
 					if(this.array != null)
 						msg = MSG_REFRESH_FROM_DOWNLOAD;
@@ -201,7 +198,7 @@ public class News extends SherlockActivity {
 					break;
 			}
 			setSupportProgressBarIndeterminateVisibility(false);
-			refreshButton.setTitle(REFRESH_BUTTON_TEXT);
+			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
 			refreshButton.setEnabled(true);
 		}
 
