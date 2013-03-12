@@ -49,11 +49,13 @@
     <style name="GreenTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/GreenTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/GreenTheme.ActionBar</item>
+	    <item name="android:actionBarItemBackground">@drawable/green_bar_state</item>
+	    <item name="actionBarItemBackground">@drawable/green_bar_state</item>
     </style>
  
     <style name="GreenTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
-	    <item name="background">@color/main_green</item>
-	    <item name="android:background">@color/main_green</item>
+	    <item name="background">@drawable/green_bar</item>
+	    <item name="android:background">@drawable/green_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
