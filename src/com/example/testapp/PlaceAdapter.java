@@ -56,17 +56,17 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 		PlaceItem item = getItem(position);
 		
 		if (item != null) {
-			if (item.getType() == PlaceItem.TYPE_PLACE_TITLE) {
+			if (item.getType() == PlaceItem.TYPE_PLACE_CAT) {
 				vi = inflater.inflate(R.layout.row_places_title, null);
 				PlaceCategory category = (PlaceCategory) item;
 
-				Bitmap icon = Utils.getMarkerIconBitmap(category.getCategory());
+				Bitmap icon = Utils.getMarkerIconBitmap(category.category);
 
 				ImageView im = (ImageView) vi.findViewById(R.id.place_icon);
 				TextView tv = (TextView) vi.findViewById(R.id.place_category);
 
 				im.setImageBitmap(icon);
-				tv.setText(category.getCategory());
+				tv.setText(category.category);
 
 			} else if (item.getType() == PlaceItem.TYPE_PLACE_INFO) {
 				vi = inflater.inflate(R.layout.row_places_info, null);
@@ -76,8 +76,8 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 				TextView addr = (TextView) vi.findViewById(R.id.place_info_addr);
 				ImageView im = (ImageView) vi.findViewById(R.id.place_info_arrow);
 				
-				title.setText(info.getTitle());
-				addr.setText(info.getAddr());
+				title.setText(info.title);
+				addr.setText(info.address);
 				im.setImageBitmap(arrow);
 
 			} else {

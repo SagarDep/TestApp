@@ -1,7 +1,11 @@
 package com.example.testapp.placeitem;
 
-public abstract class PlaceItem implements Comparable<PlaceItem> {
-	public static final int TYPE_PLACE_TITLE	= 0;
+import java.io.Serializable;
+
+public abstract class PlaceItem implements Comparable<PlaceItem>, Serializable {
+	private static final long serialVersionUID = 2829552673001681053L;
+
+	public static final int TYPE_PLACE_CAT	= 0;
 	public static final int TYPE_PLACE_INFO	= 1;
 	public static final int TYPE_PLACE_SEP	= 2;
 	
@@ -17,14 +21,14 @@ public abstract class PlaceItem implements Comparable<PlaceItem> {
 	
 	@Override
 	public int compareTo(PlaceItem b) {
-		if(type == TYPE_PLACE_TITLE) {
+		if(type == TYPE_PLACE_CAT) {
 			PlaceCategory me = (PlaceCategory) this;
 			PlaceCategory other = (PlaceCategory) b;
-			return me.getCategory().compareTo(other.getCategory());
+			return me.category.compareTo(other.category);
 		} else if (type == TYPE_PLACE_INFO){
 			PlaceInfo me = (PlaceInfo) this;
 			PlaceInfo other = (PlaceInfo) b;
-			return me.getTitle().compareTo(other.getTitle());
+			return me.title.compareTo(other.title);
 		} else 
 			return 0;
 	}

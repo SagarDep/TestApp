@@ -1,28 +1,16 @@
 package com.example.testapp.placeitem;
 
+import java.io.Serializable;
+
 import android.graphics.Bitmap;
 
-public class PlaceCategory extends PlaceItem {
-	private Bitmap icon;
-	private String category;
+public class PlaceCategory extends PlaceItem implements Serializable {
+	private static final long serialVersionUID = -5229983019516181154L;
 
-	public PlaceCategory(int type) {
-		super(type);
-	}
+	public String category;
 	
-	public String getCategory() {
-		return category;
+	public PlaceCategory() {
+		super(PlaceItem.TYPE_PLACE_CAT);
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public Bitmap getIcon() {
-		return icon;
-	}
-
-	public void setIcon(Bitmap icon) {
-		this.icon = icon;
-	}
 }

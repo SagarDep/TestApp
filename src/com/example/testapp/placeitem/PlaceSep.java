@@ -1,9 +1,12 @@
 package com.example.testapp.placeitem;
 
-public class PlaceSep extends PlaceItem {
+import java.io.Serializable;
 
-	public PlaceSep(int type) {
-		super(type);
+public class PlaceSep extends PlaceItem implements Serializable {
+	private static final long serialVersionUID = 3731697402991789342L;
+
+	public PlaceSep() {
+		super(PlaceItem.TYPE_PLACE_SEP);
 	}
 
 }

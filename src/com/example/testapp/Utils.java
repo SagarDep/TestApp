@@ -63,7 +63,7 @@ public class Utils {
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_UPDATE	= "scheduleUpdate";
 	public static final String PREFS_KEY_PLACE				= "place";
-	public static final String PREFS_KEY_PLACE_UPDATE			= "placeDate";
+	public static final String PREFS_KEY_PLACE_UPDATE		= "placeDate";
 	public static final String PREFS_KEY_MAP				= "map";
 	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
 
@@ -278,9 +278,9 @@ public class Utils {
 			// Creating all info items and sorting them on category
 			HashMap<String, ArrayList<PlaceInfo>> placeMap = new HashMap<String, ArrayList<PlaceInfo>>();
 			for (MarkerInfo m : markers) {
-				PlaceInfo placeInfo = new PlaceInfo(PlaceItem.TYPE_PLACE_INFO);
-				placeInfo.setTitle(m.title);
-				placeInfo.setAddr(m.address);
+				PlaceInfo placeInfo = new PlaceInfo();
+				placeInfo.title = m.title;
+				placeInfo.address = m.address;
 
 				if (placeMap.containsKey(m.cat)) {
 					placeMap.get(m.cat).add(placeInfo);
@@ -300,9 +300,9 @@ public class Utils {
 
 			for (String key : keys) {
 				// Add category
-				PlaceCategory placeCat = new PlaceCategory(PlaceItem.TYPE_PLACE_TITLE);
-				placeCat.setCategory(key);
-				placeCat.setIcon(Utils.getMarkerIconBitmap(key));
+				PlaceCategory placeCat = new PlaceCategory();
+				placeCat.category = key;
+				
 				list.add(placeCat);
 
 				// Add all items, sorted based on name
@@ -312,7 +312,7 @@ public class Utils {
 					list.add(item);
 				}
 				// Add a separator
-				list.add(new PlaceSep(PlaceItem.TYPE_PLACE_SEP));
+				list.add(new PlaceSep());
 			}
 		}
 	}

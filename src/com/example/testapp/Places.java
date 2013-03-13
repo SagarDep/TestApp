@@ -1,10 +1,23 @@
 package com.example.testapp;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -21,6 +34,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,8 +49,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.actionbarsherlock.view.Window;
+import com.example.testapp.placeitem.PlaceCategory;
+import com.example.testapp.placeitem.PlaceInfo;
 import com.example.testapp.placeitem.PlaceItem;
-import com.example.testapp.scheduleitem.ScheduleItem;
+import com.example.testapp.placeitem.PlaceSep;
 
 public class Places extends SherlockActivity {
 	private final long TIME_ONE_MINUTE = 60000;
@@ -142,6 +159,7 @@ public class Places extends SherlockActivity {
 				setSupportProgressBarIndeterminateVisibility(true);
 				placeList.setAdapter(new PlaceAdapter(Places.this, placeItems));
 			} else {
+				Log.v(Utils.TAG, "PLACE placeItems == null");
 				showProgress = ProgressDialog.show(Places.this, "", Utils.MSG_LOADING_PLACES, true, true, new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
@@ -266,7 +284,44 @@ public class Places extends SherlockActivity {
 					else
 						lastUpdateDate = refreshNeeded();
 					
-					return new JSONArray(builder.toString());
+					JSONArray array = new JSONArray(builder.toString());
+					
+					File[] files = getFilesDir().listFiles(new FilenameFilter() {
+					    public boolean accept(File dir, String name) {
+					        return name.toLowerCase().endsWith(".png");
+					    }
+					});
+					Set<String> set = new HashSet<String>();
+					if(files != null)
+						for (int i = 0; i < files.length; i++) 
+							set.add(files[i].getName());
+					
+					for (int i = 1; i <= array.length(); i++) {
+						Bitmap image = null;
+						InputStream is = null;
+						FileOutputStream out = null;
+						String fileName = i + ".png";
+						if(!set.contains(fileName)) {
+							Log.v(Utils.TAG, "PLACE SET DOES NOT CONTAIN IMAGE " + fileName);
+							try {
+								is = new URL(Utils.DB_IMAGE_URL + i + ".png").openStream();
+								image = BitmapFactory.decodeStream(is);
+								out = activity.openFileOutput(fileName, Context.MODE_PRIVATE);
+								image.compress(Bitmap.CompressFormat.PNG, 100, out);
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							} catch (FileNotFoundException e) {
+								Log.e(Utils.TAG, "PLACE Could not save image " + fileName + " to private storage");
+							} catch (IOException e) {
+								Log.w(Utils.TAG, "PLACE image " + fileName + " could not be found.");
+							} finally {
+								if(is != null) is.close();
+								if(out != null) out.close();
+							}
+						}
+					}
+					
+					return array;
 				} else 
 					Log.e(Utils.TAG,"PLACE  Failed to download JSON file");
 			} catch (ClientProtocolException e) {	e.printStackTrace();
@@ -281,8 +336,50 @@ public class Places extends SherlockActivity {
 		}
 		
 		private void initFromDownload() {
-			// TODO Auto-generated method stub
+			ArrayList<PlaceInfo> list = new ArrayList<PlaceInfo>();
+			HashMap<String, String> set = new HashMap<String, String>();
 			
+			for (int i = 0; i < this.array.length(); i++) {
+				try {
+					JSONObject o = this.array.getJSONObject(i);
+					PlaceInfo p = new PlaceInfo();
+					p.id = o.getInt("ID");
+					p.title = o.getString("TITLE");
+					p.address = o.getString("ADDRESS");
+					p.desc = o.getString("DESC");
+					p.lat = o.getDouble("LATITUDE");
+					p.lng = o.getDouble("LONGITUDE");
+					p.cat = o.getString("CATEGORY");
+					
+					if(!set.containsKey(p.cat)) 
+						set.put(p.cat, null);
+					
+					list.add(p);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			String[] keys = set.keySet().toArray(new String[set.keySet().size()]);
+			Arrays.sort(keys);
+			
+			placeItems = new ArrayList<PlaceItem>();
+			for (String category : keys) {
+				PlaceCategory cat = new PlaceCategory();
+				cat.category = category;
+				
+				placeItems.add(cat);
+				ArrayList<PlaceInfo> places = new ArrayList<PlaceInfo>();
+				for (PlaceInfo p : list) 
+					if(p.cat == category)
+						places.add(p);
+				
+				Collections.sort(places);
+				for (PlaceInfo placeInfo : places) 
+					placeItems.add(placeInfo);
+				
+				placeItems.add(new PlaceSep());
+			}
 		}
 
 		private void saveToFile() {
