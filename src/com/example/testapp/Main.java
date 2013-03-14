@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +34,12 @@ public class Main extends Activity {
 		Utils.initMarkerIcons(this);
 		
 		initButtons();
+	}
+	
+	@Override
+	protected void onResume()  {
+		super.onResume();
+		resetButtons();
 	}
 	
 	private void initButtons() {
@@ -96,6 +103,43 @@ public class Main extends Activity {
 		});	
 	}
 	
+	private void resetButtons() {
+		ImageButton button = (ImageButton) findViewById(R.id.main_btn_light_blue);
+		TextView title = (TextView) findViewById(R.id.main_title_blue);
+		TextView desc = (TextView) findViewById(R.id.main_desc_blue);
+		button.setBackgroundColor(getResources().getColor(R.color.main_light_blue));
+		title.setTextColor(getResources().getColor(R.color.main_text_title));
+		desc.setTextColor(getResources().getColor(R.color.main_text_title));
+
+		button = (ImageButton) findViewById(R.id.main_btn_light_red);
+		title = (TextView) findViewById(R.id.main_title_red);
+		desc = (TextView) findViewById(R.id.main_desc_red);
+		button.setBackgroundColor(getResources().getColor(R.color.main_light_red));
+		title.setTextColor(getResources().getColor(R.color.main_text_title));
+		desc.setTextColor(getResources().getColor(R.color.main_text_title));
+
+		button = (ImageButton) findViewById(R.id.main_btn_light_green);
+		title = (TextView) findViewById(R.id.main_title_green);
+		desc = (TextView) findViewById(R.id.main_desc_green);
+		button.setBackgroundColor(getResources().getColor(R.color.main_light_green));
+		title.setTextColor(getResources().getColor(R.color.main_text_title));
+		desc.setTextColor(getResources().getColor(R.color.main_text_title));
+		
+		button = (ImageButton) findViewById(R.id.main_btn_light_yellow);
+		title = (TextView) findViewById(R.id.main_title_yellow);
+		desc = (TextView) findViewById(R.id.main_desc_yellow);
+		button.setBackgroundColor(getResources().getColor(R.color.main_light_yellow));
+		title.setTextColor(getResources().getColor(R.color.main_text_title));
+		desc.setTextColor(getResources().getColor(R.color.main_text_title));
+
+		button = (ImageButton) findViewById(R.id.main_btn_light_purple);
+		title = (TextView) findViewById(R.id.main_title_purple);
+		desc = (TextView) findViewById(R.id.main_desc_purple);
+		button.setBackgroundColor(getResources().getColor(R.color.main_light_purple));
+		title.setTextColor(getResources().getColor(R.color.main_text_title));
+		desc.setTextColor(getResources().getColor(R.color.main_text_title));
+	}
+	
 	private OnClickListener getOnClickListener(final Class<?> class1) {
 		return new View.OnClickListener() {
 			@Override
@@ -113,6 +157,10 @@ public class Main extends Activity {
 				ImageButton button = (ImageButton) findViewById(resButton);
 				TextView title = (TextView) findViewById(resTitle);
 				TextView desc = (TextView) findViewById(resDesc);
+				
+				Rect hitBox = new Rect();
+				button.getHitRect(hitBox);
+				
 				switch(event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					button.setBackgroundColor(getResources().getColor(resOnPress));
@@ -120,9 +168,11 @@ public class Main extends Activity {
 					desc.setTextColor(getResources().getColor(R.color.white));
 					break;
 				case MotionEvent.ACTION_UP:
-					button.setBackgroundColor(getResources().getColor(resOnRelease));
-					title.setTextColor(getResources().getColor(R.color.main_text_title));
-					desc.setTextColor(getResources().getColor(R.color.main_text_title));
+					if(!hitBox.contains((int) event.getX(), (int) event.getY())) {
+						button.setBackgroundColor(getResources().getColor(resOnRelease));
+						title.setTextColor(getResources().getColor(R.color.main_text_title));
+						desc.setTextColor(getResources().getColor(R.color.main_text_title));
+					}
 					break;
 				default:
 					break;
