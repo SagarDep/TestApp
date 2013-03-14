@@ -60,7 +60,6 @@ public class Places extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 	
-	
 	private static ArrayList<PlaceItem> placeItems		= null;
 	private static long lastUpdateTime					= -1L;
 	private static String lastUpdateDate				= null;

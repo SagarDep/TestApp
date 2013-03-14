@@ -70,11 +70,13 @@
     <style name="YellowTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/YellowTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/YellowTheme.ActionBar</item>
+	    <item name="android:actionBarItemBackground">@drawable/yellow_bar_state</item>
+	    <item name="actionBarItemBackground">@drawable/yellow_bar_state</item>
     </style>
  
     <style name="YellowTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
-	    <item name="background">@color/main_yellow</item>
-	    <item name="android:background">@color/main_yellow</item>
+	    <item name="background">@drawable/yellow_bar</item>
+	    <item name="android:background">@drawable/yellow_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
