@@ -65,7 +65,7 @@ public class Utils {
 	public static final String PREFS_KEY_PLACE				= "place";
 	public static final String PREFS_KEY_PLACE_UPDATE		= "placeDate";
 	public static final String PREFS_KEY_MAP				= "map";
-	public static final String PREFS_KEY_MAP_DATE			= "mapDate";
+	public static final String PREFS_KEY_MAP_UPDATE			= "mapDate";
 
 	public static final String REFRESH_BUTTON_TEXT			= "Uppdatera";
 	public static final String REFRESH_BUTTON_TEXT_PRESSED	= "Letar...";
@@ -83,6 +83,7 @@ public class Utils {
 	public static final String MSG_LOADING_SCHEDULE	= "Laddar schema...";
 	public static final String MSG_LOADING_PLACES	= "Laddar platser...";
 	public static final String MSG_LOADING_MAP		= "Laddar karta...";
+	public static final String MSG_LOADING_CONTACT	= "Laddar kontakter...";
 
 	public static final int ECODE_NO_ERROR					= -1;
 	public static final int ECODE_NO_INTERNET_CONNECTION	=  0;
@@ -228,7 +229,7 @@ public class Utils {
 		Editor editor = prefs.edit();
 		try {
 			editor.putString(Utils.PREFS_KEY_MAP, ObjectSerializer.serialize(markList));
-			editor.putLong(Utils.PREFS_KEY_MAP_DATE, lastUpdateTime);
+			editor.putLong(Utils.PREFS_KEY_MAP_UPDATE, lastUpdateTime);
 		} catch (IOException e) {
 			Log.e(Utils.TAG, "MAP Could not save info to PREFS");
 			e.printStackTrace();
@@ -480,7 +481,7 @@ public class Utils {
 							markList = list;
 							initImgArray(activity);
 							newsList.setAdapter(new PlaceAdapter(activity, placeList));
-							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_MAP_DATE, -1L);
+							lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_MAP_UPDATE, -1L);
 						}
 					} catch (IOException e) {
 						Log.e(Utils.TAG, mode + " retrieve_from_file IOException");

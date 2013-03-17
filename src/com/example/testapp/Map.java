@@ -2,6 +2,7 @@ package com.example.testapp;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -11,10 +12,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +35,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -49,13 +46,9 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.example.testapp.Places.PlaceTask;
-import com.example.testapp.placeitem.PlaceCategory;
+import com.actionbarsherlock.view.Window;
 import com.example.testapp.placeitem.PlaceInfo;
-import com.example.testapp.placeitem.PlaceItem;
-import com.example.testapp.placeitem.PlaceSep;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -63,6 +56,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends SherlockFragmentActivity {
 	private final LatLng POS_LUND = new LatLng(55.711350, 13.190117); //Gör om beroende på skärmstorlek
@@ -71,7 +65,7 @@ public class Map extends SherlockFragmentActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE = "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED = "NOT_NEEDED";
 	
-	private static ArrayList<PlaceItem> mapItems	= null;
+	private static ArrayList<PlaceInfo> mapItems	= null;
 	private static long lastUpdateTime				= -1L;
 	private static String lastUpdateDate			= null;
 	private static MenuItem refreshButton			= null;
@@ -93,28 +87,39 @@ public class Map extends SherlockFragmentActivity {
 		
 		setContentView(R.layout.activity_map);
 
+		
+		//KANSKE KAN SPARA MAP SOM STATIC OCH KOLLA OM != NULL?
+		map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+		map.setMyLocationEnabled(true);
+
 		mapTask = new MapTask(Map.this, false);
 		mapTask.execute("");
 		
-		//KANSKE KAN SPARA MAP SOM STATIC OCH KOLLA OM != NULL?
-		this.map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-		map.setMyLocationEnabled(true);
-		
-//		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
-//		if (Utils.imgArray != null && (Utils.markMap != null || Utils.markList != null) && timeDiff < validTime) {
-//			Log.i(Utils.TAG, "MAP USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-//			Utils.initFromCache(map, showProgress);
-//		} else
-//			Utils.initFromDB(this, showProgress, map, null);
-
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {
 			@Override
 			public View getInfoContents(Marker marker) {
 				View v = getLayoutInflater().inflate(R.layout.map_info, null);
 
-				MarkerInfo info = Utils.markMap.get(marker);
-				Bitmap icon = Utils.imgArray.get(info.id);
+				PlaceInfo info = null;
+				for (PlaceInfo p : mapItems) {
+					if(marker.getSnippet().equals("" + p.id)) {
+						info = p;
+						break;
+					}
+				}
 
+				Bitmap icon = null;
+				try {
+					FileInputStream fi = openFileInput(info.id + ".png");
+					icon = BitmapFactory.decodeStream(fi);
+					fi.close();
+				} catch (FileNotFoundException e) {
+					Log.w(Utils.TAG, "MAP Image " + info.id + ".png not found in private storage");
+				} catch (IOException e) {
+					Log.w(Utils.TAG, "MAP IOException");
+					e.printStackTrace();
+				}
+				
 				ImageView im = (ImageView) v.findViewById(R.id.map_info_icon);
 				TextView tv1 = (TextView) v.findViewById(R.id.map_info_title);
 				TextView tv2 = (TextView) v.findViewById(R.id.map_info_address);
@@ -155,6 +160,7 @@ public class Map extends SherlockFragmentActivity {
 			public boolean onMenuItemClick(MenuItem menuItem) {
 				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 				refreshButton.setEnabled(false);
+//				map.clear(); //TA BORT SEN
 				new MapTask(Map.this, true).execute("");
 				return false;
 			}
@@ -197,10 +203,10 @@ public class Map extends SherlockFragmentActivity {
 			if(mapItems == null)	loadFromFile();
 			if(mapItems != null) {
 				setSupportProgressBarIndeterminateVisibility(true);
-				placeList.setAdapter(new PlaceAdapter(Places.this, mapItems));
+				addMarkersToMap();
 			} else {
 				Log.v(Utils.TAG, "MAP mapItems == null");
-				showProgress = ProgressDialog.show(Places.this, "", Utils.MSG_LOADING_PLACES, true, true, new DialogInterface.OnCancelListener() {
+				showProgress = ProgressDialog.show(Map.this, "", Utils.MSG_LOADING_MAP, true, true, new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
 //						PlaceTask.this.cancel(true);
@@ -248,7 +254,7 @@ public class Map extends SherlockFragmentActivity {
 				case MSG_REFRESH_FROM_DOWNLOAD:
 					Log.i(Utils.TAG, "MAP USING FRESHLY DOWNLOADED " + ((manualRefresh) ? "MANUAL REFRESH" : "SYSTEM REFRESH"));
 					initFromDownload();
-					placeList.setAdapter(new PlaceAdapter(Places.this, mapItems));
+					addMarkersToMap();
 					if(showProgress != null) showProgress.dismiss();
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
@@ -328,7 +334,7 @@ public class Map extends SherlockFragmentActivity {
 					JSONArray array = new JSONArray(builder.toString());
 					
 					File[] files = getFilesDir().listFiles(new FilenameFilter() {
-					    public boolean accept(File dir, String name) {
+						public boolean accept(File dir, String name) {
 					        return name.toLowerCase().endsWith(".png");
 					    }
 					});
@@ -343,7 +349,7 @@ public class Map extends SherlockFragmentActivity {
 						FileOutputStream out = null;
 						String fileName = i + ".png";
 						if(!set.contains(fileName)) {
-							Log.v(Utils.TAG, "MAP SET DOES NOT CONTAIN IMAGE " + fileName);
+							Log.v(Utils.TAG, "MAP Need to download image " + fileName);
 							try {
 								is = new URL(Utils.DB_IMAGE_URL + i + ".png").openStream();
 								image = BitmapFactory.decodeStream(is);
@@ -376,10 +382,8 @@ public class Map extends SherlockFragmentActivity {
 			return null;
 		}
 		
-		//SKA ÄNDRAS
 		private void initFromDownload() {
-			ArrayList<PlaceInfo> list = new ArrayList<PlaceInfo>();
-			HashMap<String, String> set = new HashMap<String, String>();
+			mapItems = new ArrayList<PlaceInfo>();
 			
 			for (int i = 0; i < this.array.length(); i++) {
 				try {
@@ -393,47 +397,27 @@ public class Map extends SherlockFragmentActivity {
 					p.lng = o.getDouble("LONGITUDE");
 					p.cat = o.getString("CATEGORY");
 					
-					if(!set.containsKey(p.cat)) 
-						set.put(p.cat, null);
-					
-					list.add(p);
+					mapItems.add(p);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
-			
-			String[] keys = set.keySet().toArray(new String[set.keySet().size()]);
-			Arrays.sort(keys);
-			
-			mapItems = new ArrayList<PlaceItem>();
-			for (String category : keys) {
-				PlaceCategory cat = new PlaceCategory();
-				cat.category = category;
-				
-				mapItems.add(cat);
-				ArrayList<PlaceInfo> places = new ArrayList<PlaceInfo>();
-				for (PlaceInfo p : list) 
-					if(p.cat == category)
-						places.add(p);
-				
-				Collections.sort(places);
-				for (PlaceInfo placeInfo : places) 
-					mapItems.add(placeInfo);
-				
-				mapItems.add(new PlaceSep());
-			}
 		}
 		
-		private void addMarkersTopMap() {
-			
+		private void addMarkersToMap() {
+			ArrayList<PlaceInfo> list = mapItems;
+			map.clear();
+			for (PlaceInfo i : list) {
+				map.addMarker(new MarkerOptions().position(new LatLng(i.lat, i.lng)).title(i.title).icon(Utils.getMarkerIcon(i.cat)).snippet(""+i.id));
+			}
 		}
 		
 		private void saveToFile() {
 			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 			Editor editor = prefs.edit();
 			try {
-				editor.putString(Utils.PREFS_KEY_PLACE, ObjectSerializer.serialize(mapItems));
-				editor.putString(Utils.PREFS_KEY_PLACE_UPDATE, lastUpdateDate);
+				editor.putString(Utils.PREFS_KEY_MAP, ObjectSerializer.serialize(mapItems));
+				editor.putString(Utils.PREFS_KEY_MAP_UPDATE, lastUpdateDate);
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e(Utils.TAG, "MAP save_to_file IOException");
@@ -445,8 +429,8 @@ public class Map extends SherlockFragmentActivity {
 		private void loadFromFile() {
 			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 			try {
-				mapItems = (ArrayList<PlaceItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_PLACE, null));
-				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_PLACE_UPDATE, null);
+				mapItems = (ArrayList<PlaceInfo>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_MAP, null));
+				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_MAP_UPDATE, null);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
