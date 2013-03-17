@@ -367,7 +367,6 @@ public class Map extends SherlockFragmentActivity {
 							}
 						}
 					}
-					
 					return array;
 				} else 
 					Log.e(Utils.TAG,"MAP  Failed to download JSON file");
@@ -437,16 +436,3 @@ public class Map extends SherlockFragmentActivity {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
