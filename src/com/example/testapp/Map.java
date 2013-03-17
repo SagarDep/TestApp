@@ -349,7 +349,7 @@ public class Map extends SherlockFragmentActivity {
 						FileOutputStream out = null;
 						String fileName = i + ".png";
 						if(!set.contains(fileName)) {
-							Log.v(Utils.TAG, "MAP Need to download image " + fileName);
+							Log.v(Utils.TAG, "MAP NEED TO DOWNLOAD IMAGE " + fileName);
 							try {
 								is = new URL(Utils.DB_IMAGE_URL + i + ".png").openStream();
 								image = BitmapFactory.decodeStream(is);

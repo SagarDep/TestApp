@@ -301,7 +301,7 @@ public class Places extends SherlockActivity {
 						FileOutputStream out = null;
 						String fileName = i + ".png";
 						if(!set.contains(fileName)) {
-							Log.v(Utils.TAG, "PLACE SET DOES NOT CONTAIN IMAGE " + fileName);
+							Log.v(Utils.TAG, "PLACE NEED TO DOWNLOAD IMAGE " + fileName);
 							try {
 								is = new URL(Utils.DB_IMAGE_URL + i + ".png").openStream();
 								image = BitmapFactory.decodeStream(is);
