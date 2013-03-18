@@ -85,7 +85,7 @@ public class Main extends Activity {
 
 		//PURPLE
 		onTouchListener = getOnTouchListener(R.id.main_btn_light_purple, R.color.main_purple, R.color.main_light_purple, R.id.main_title_purple, R.id.main_desc_purple);
-		onClickListener = getOnClickListener(Map.class); //SKA ÄNDRAS TILL CONTACT NÄR DEN FINNS
+		onClickListener = getOnClickListener(Contacts.class);
 		small = (ImageButton) findViewById(R.id.main_btn_purple);
 		big	  = (ImageButton) findViewById(R.id.main_btn_light_purple);
 		small.setOnTouchListener(onTouchListener);

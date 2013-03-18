@@ -5,25 +5,20 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="logo">MainLogo</string>
-    
     <string name="btn_blue">NYHETER</string>
     <string name="btn_red">SCHEMA</string>
     <string name="btn_green">PLATSER</string>
     <string name="btn_yellow">KARTA</string>
     <string name="btn_purple">KONTAKT</string>
-
     <string name="btn_blue_desc">Det senaste av det senaste</string>
     <string name="btn_red_desc">När och vart det senaste händer</string>
     <string name="btn_green_desc">Vart ska vi?</string>
     <string name="btn_yellow_desc">Var fan e jag?</string>
     <string name="btn_purple_desc">Who you gonna call?</string>
-    
     <string name="text_sponsor">Sponsor</string>
     <string name="btn_sponsor">Sponsor Just Nu</string>
-    
     <string name="desc_logo">Main Logo</string>
     <string name="desc_colored_line">Colored Line</string>
-    
     <string name="map_default_zoom">13</string>
     <string name="title">TITLE</string>
     <string name="date">DATE</string>
@@ -49,6 +44,8 @@
     <string name="title_activity_calendar">Calendar</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_places">Places</string>
-
     <string name="action_label_refresh">Refresh</string>
+    <string name="title_activity_contacts">Contacts</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

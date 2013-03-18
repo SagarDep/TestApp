@@ -91,11 +91,13 @@
     <style name="PurpleTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/PurpleTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/PurpleTheme.ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/purple_bar_state</item>
+	    <item name="actionBarItemBackground">@drawable/purple_bar_state</item>
     </style>
  
     <style name="PurpleTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
-	    <item name="background">@color/main_purple</item>
-	    <item name="android:background">@color/main_purple</item>
+	    <item name="background">@drawable/purple_bar</item>
+	    <item name="android:background">@drawable/purple_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
