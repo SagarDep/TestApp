@@ -16,28 +16,11 @@ public class TODO {
 	 	
 	 	IDEA: Lägg till en väderfunktion som  kanske kan visa väder direkt på knappen om det ska finnas en.
 	 	
-	 	TODO: Skriv om nyhetsdelen så att den fungerar som kartagrejorna. Lägg även till så att man först frågar databasen om det faktiskt hänt något innan man tankar ner en massa. Tex med senaste nyhetsID
-	 	TODO: Lägg in skugga under top_bar
-	 	FIXME: Se om det går att specialbehandla den sista nyhets rown så att den får lite längre avstånd när man scrollat ända ner.
-	 	
 	 	FIXME: VIKTIG! Om man startar tex schema och den börjar ladda men trycker Home innan den är klar kan appen krasha när du försöker gå in igen
-	 	
-	 	TODO: Fixa ett post program på samma sätt som jag gör andra databas anrop, genom PHP fil, borde funka
-	 	
-	 	TODO: Testa Schema mer nogrant efter refaktoriseringen
-	 	TODO: Gör samma refaktorisering av Nyheter
-	 	TODO: Lägg till fler loggmeddelande i Calendar
-	 	
-	 	
-	 	FIXME: Byta ut uppdatera knappen i Top Bar, ser inte ut som en knapp atm
-	 	
-	 	FIXME: DONE? Appen crashar om man startar Map den för första gången utan internet
 	 	
 	 	TODO: Gör att Separator raderna är dynamiskt stora baserat på telefon.
 	 	
 	 	TODO: I Utils, translateMonth, byt ut for loop mot concat 
-	 	
-	 	IDEA: Istället för att ladda ner bildern i map och spara dem kan man bara strunta i bilder vid brist på uppkoppling.
 	 	
 	 	TODO: Kolla upp hur man kan använda savedInstanceState och om den kan användas för nåt vettigt.
 	 	
@@ -47,16 +30,6 @@ public class TODO {
 	 	
 	 	TODO: Gör så att om man klickar på ett schemaevent så kommer man till platsen det handlar om
 	 	
-	 	TODO: Gör 9 patch knappar för focus och focus/pressed
-	 	
 		TODO: Se till att info window i map inte tar upp hela bredden, ser konstigt ut.
-
-	 	//LADDA INTE NER FÖR MYCKET
-	 	TODO: DONE! 1. Kolla om den cachade datan är äldre än en viss tid och om det är fallet uppdatera den (typ 5minuter eller nåt) + punkt 3
-	 	TODO: DONE! 2. Spara ner de senaste nerladdade nyheterna så om uppkoppling saknas läses de gamla in.
-	 	TODO: 3. Gör så att man kan refresha nyheter utan att gå ut och tillbaka
-
-		IDEA: Läs in allt på en gång när appen startar. Kör en diff mellan en sparad Array och en nyss nerladdade och notera på
-			  knappen till tex nyheter att det har hänt nåt nytt.
 */
 }
