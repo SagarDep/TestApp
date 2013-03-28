@@ -283,6 +283,7 @@ public class News extends SherlockActivity {
 				}
 			} catch (JSONException e) {		e.printStackTrace();
 			}
+			newsItems.add(new NewsSep());
 			
 			Log.v(Utils.TAG, "newsItems size after init = " + newsItems.size());
 		}
