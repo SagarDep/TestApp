@@ -165,9 +165,10 @@ public class Utils {
 		else if(month.equals("11")) month = "Nov";
 		else if(month.equals("12")) month = "Dec";
 		
-		String day = date[2].substring(0,1).equals("0") ? date[2].substring(1, 2) : date[2];
+//		String day = date[2].substring(0,1).equals("0") ? date[2].substring(1, 2) : date[2];
+		String day = date[2];
 		
-		return day + " " + month + " " + date[0];
+		return day + "\n" + month;
 	}
 
 	public static BitmapDescriptor getMarkerIcon(String category) {

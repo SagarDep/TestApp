@@ -5,39 +5,50 @@
     android:layout_height="wrap_content"
     android:padding="4dip" >
 
+    <TextView
+ 	    android:id="@+id/news_post_date"
+ 	    android:layout_width="wrap_content"
+ 	    android:layout_height="wrap_content"
+ 	    android:layout_alignBottom="@+id/news_post_details"
+ 	    android:layout_alignParentLeft="true"
+ 	    android:layout_alignTop="@id/news_post_details"
+ 	    android:background="@color/main_blue"
+ 	    android:gravity="center_horizontal"
+ 	    android:paddingBottom="50dp"
+ 	    android:paddingLeft="4dp"
+ 	    android:paddingRight="4dp"
+ 	    android:paddingTop="4dp"
+ 	    android:text="@string/date"
+ 	    android:textColor="@color/white"
+ 	    android:textSize="14sp" />
+    
      <TextView
          android:id="@+id/news_post_title"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
+         android:layout_alignParentTop="true"
+         android:layout_toRightOf="@id/news_post_date"
          android:layout_marginLeft="10dp"
          android:text="@string/title"
          android:textColor="@color/main_text_title"
-         android:textSize="20sp"
+         android:textSize="25sp"
          android:textStyle="bold" />
 
- 	<TextView
- 	    android:id="@+id/news_post_date"
- 	    android:layout_width="wrap_content"
- 	    android:layout_height="wrap_content"
- 	    android:layout_alignParentRight="true"
- 	    android:background="@color/main_blue"
- 	    android:padding="4dp"
- 	    android:text="@string/date"
- 	    android:textColor="@color/white"
- 	    android:textSize="14sp" />
-
+ 	
  	<TextView
  	    android:id="@+id/news_post_details"
  	    android:layout_width="fill_parent"
  	    android:layout_height="wrap_content"
- 	    android:layout_alignParentLeft="true"
- 	    android:layout_below="@+id/news_post_date"
+ 	    android:layout_below="@+id/news_post_title"
+ 	    android:layout_toRightOf="@id/news_post_date"
  	    android:background="@color/main_light_blue"
  	    android:paddingBottom="10dp"
  	    android:paddingLeft="10dp"
- 	    android:paddingRight="20dp"
+ 	    android:paddingRight="30dp"
  	    android:paddingTop="10dp"
  	    android:text="@string/desc"
  	    android:textColor="@color/main_text_title" />
+
+ 	
 
 </RelativeLayout>

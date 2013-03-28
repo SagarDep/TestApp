@@ -269,6 +269,7 @@ public class News extends SherlockActivity {
 		
 		private void initFromDownload() {
 			newsItems = new ArrayList<NewsItem>();
+			newsItems.add(new NewsSep());
 			try {
 				for (int i = 0; i < this.array.length(); i++) {
 					JSONObject o = this.array.getJSONObject(i);
@@ -282,6 +283,8 @@ public class News extends SherlockActivity {
 				}
 			} catch (JSONException e) {		e.printStackTrace();
 			}
+			
+			Log.v(Utils.TAG, "newsItems size after init = " + newsItems.size());
 		}
 	}
 	
