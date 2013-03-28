@@ -10,7 +10,7 @@
  	    android:layout_width="wrap_content"
  	    android:layout_height="wrap_content"
  	    android:layout_alignBottom="@+id/news_post_details"
- 	    android:layout_alignParentLeft="true"
+ 	    android:layout_alignParentRight="true"
  	    android:layout_alignTop="@id/news_post_details"
  	    android:background="@color/main_blue"
  	    android:gravity="center_horizontal"
@@ -20,7 +20,8 @@
  	    android:paddingTop="4dp"
  	    android:text="@string/date"
  	    android:textColor="@color/white"
- 	    android:textSize="14sp" />
+ 	    android:textSize="14sp"
+ 	    android:layout_marginRight="20dp" />
     
      <TextView
          android:id="@+id/news_post_title"
@@ -31,15 +32,16 @@
          android:text="@string/title"
          android:textColor="@color/main_text_title"
          android:textSize="25sp"
-         android:textStyle="bold" />
+         android:textStyle="bold"
+         android:layout_marginLeft="10dp"
+         android:layout_marginRight="20dp" />
 
- 	
  	<TextView
  	    android:id="@+id/news_post_details"
  	    android:layout_width="fill_parent"
  	    android:layout_height="wrap_content"
  	    android:layout_below="@+id/news_post_title"
- 	    android:layout_toRightOf="@id/news_post_date"
+ 	    android:layout_toLeftOf="@+id/news_post_date"
  	    android:background="@color/main_light_blue"
  	    android:paddingBottom="10dp"
  	    android:paddingLeft="10dp"
@@ -47,7 +49,5 @@
  	    android:paddingTop="10dp"
  	    android:text="@string/desc"
  	    android:textColor="@color/main_text_title" />
-
- 	
 
 </RelativeLayout>
