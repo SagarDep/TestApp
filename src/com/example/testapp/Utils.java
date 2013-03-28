@@ -146,6 +146,29 @@ public class Utils {
 		split[2] = monthMap.get(split[2]);
 		return split[0] + " " + split[1] + " " + split[2] + " " + split[3];
 	}
+	
+	public static String formatDate(String pubDate) {
+		String[] date = pubDate.trim().split(" ")[0].split("-");
+		
+		String month = date[1];
+		
+		if(month.equals("01")) month = "Jan";
+		else if(month.equals("02")) month = "Feb";
+		else if(month.equals("03")) month = "Mar";
+		else if(month.equals("04")) month = "Apr";
+		else if(month.equals("05")) month = "Maj";
+		else if(month.equals("06")) month = "Jun";
+		else if(month.equals("07")) month = "Jul";
+		else if(month.equals("08")) month = "Aug";
+		else if(month.equals("09")) month = "Sep";
+		else if(month.equals("10")) month = "Okt";
+		else if(month.equals("11")) month = "Nov";
+		else if(month.equals("12")) month = "Dec";
+		
+		String day = date[2].substring(0,1).equals("0") ? date[2].substring(1, 2) : date[2];
+		
+		return day + " " + month + " " + date[0];
+	}
 
 	public static BitmapDescriptor getMarkerIcon(String category) {
 		return iconBMMap.get(category);

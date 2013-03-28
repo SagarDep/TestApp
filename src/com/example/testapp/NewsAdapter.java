@@ -48,6 +48,33 @@ public class NewsAdapter extends BaseAdapter {
 		
 		NewsItem item = data.get(position);
 		
+		
+		int mainColor = -1;
+		int lightColor = -1;
+		
+		switch(position % 5) {
+		case 0:
+			mainColor = activity.getResources().getColor(R.color.main_red);
+			lightColor = activity.getResources().getColor(R.color.main_light_red);
+			break;
+		case 1:
+			mainColor = activity.getResources().getColor(R.color.main_green);
+			lightColor = activity.getResources().getColor(R.color.main_light_green);
+			break;
+		case 2:
+			mainColor = activity.getResources().getColor(R.color.main_yellow);
+			lightColor = activity.getResources().getColor(R.color.main_light_yellow);
+			break;
+		case 3:
+			mainColor = activity.getResources().getColor(R.color.main_purple);
+			lightColor = activity.getResources().getColor(R.color.main_light_purple);
+			break;
+		case 4:
+			mainColor = activity.getResources().getColor(R.color.main_blue);
+			lightColor = activity.getResources().getColor(R.color.main_light_blue);
+			break;
+		}
+		
 		if(item != null) {
 			
 			if(item.getType() == NewsItem.TYPE_NEWS_POST) {
@@ -55,13 +82,15 @@ public class NewsAdapter extends BaseAdapter {
 				
 				NewsPost post = (NewsPost) item;
 				
-				TextView title = (TextView) vi.findViewById(R.id.title);
-				TextView text = (TextView) vi.findViewById(R.id.details);
-				TextView date = (TextView) vi.findViewById(R.id.date);
+				TextView title = (TextView) vi.findViewById(R.id.news_post_title);
+				TextView text = (TextView) vi.findViewById(R.id.news_post_details);
+				TextView date = (TextView) vi.findViewById(R.id.news_post_date);
 				
 				title.setText(post.getTitle().toUpperCase());
-				text.setText(post.getText());
-				date.setText(Html.fromHtml(post.getDate()));
+				date.setText(Utils.formatDate(post.getDate()));
+				date.setBackgroundColor(mainColor);
+				text.setText(Html.fromHtml(post.getText()));
+				text.setBackgroundColor(lightColor);
 				
 			} else {
 				vi = inflater.inflate(R.layout.row_news_sep, null);

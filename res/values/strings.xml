@@ -20,8 +20,8 @@
     <string name="desc_logo">Main Logo</string>
     <string name="desc_colored_line">Colored Line</string>
     <string name="map_default_zoom">13</string>
-    <string name="title">DAGENS BRÄNNBOLL ÄR INSTÄLLD</string>
-    <string name="date">28 mar 2013</string>
+    <string name="title">INGEN BRÄNNBOLL IDAG</string>
+    <string name="date">28 mars 2013</string>
     <string name="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et dui dui, vel luctus quam. Sed quis lorem diam, sit amet egestas massa. Mauris bibendum pellentesque euismod. Curabitur felis tortor, sollicitudin porttitor adipiscing quis, bibendum in quam. Sed in suscipit quam. Vivamus nisl turpis, fermentum sit amet dignissim nec, sollicitudin eget sapien. Duis ut ante est. Praesent purus tortor, suscipit id tincidunt non, suscipit eu velit.</string>
     <string name="addr">ADDRESS</string>
     <string name="map_icon">IconHolder for Map</string>
