@@ -14,6 +14,8 @@ public class TODO {
 	 	TODO: Fixa directions till platserna, eventuellt genom att öppna Google Maps
 	 	TODO: Ta bort clickable från InfoWindow om detta inte ska användas. (Kan tex användas för att visa vilka bussar som går)
 	 	
+	 	FIXME: Använd annan icon för hemknappen
+	 	
 	 	IDEA: Lägg till en väderfunktion som  kanske kan visa väder direkt på knappen om det ska finnas en.
 	 	
 	 	FIXME: VIKTIG! Om man startar tex schema och den börjar ladda men trycker Home innan den är klar kan appen krasha när du försöker gå in igen
