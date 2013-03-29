@@ -59,7 +59,7 @@ public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 				TextView date = (TextView) vi.findViewById(R.id.date_date);
 				
 				title.setText(calDate.getDay().toUpperCase());
-				date.setText(calDate.getDate().toLowerCase());
+				date.setText(calDate.getDate());
 				
 			} else if(item.getType() == ScheduleItem.TYPE_CALDESC) {
 				vi = inflater.inflate(R.layout.row_cal_desc, null);
@@ -70,8 +70,8 @@ public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 				TextView place = (TextView) vi.findViewById(R.id.desc_place);
 				
 				time.setText(calDesc.getTime());
-				desc.setText(calDesc.getDesc());
-				place.setText(calDesc.getPlace());
+				desc.setText(" " + calDesc.getDesc());
+				place.setText("Plats: " + calDesc.getPlace());
 				vi.setOnClickListener(new OnClickListener(){
 					
 					@Override

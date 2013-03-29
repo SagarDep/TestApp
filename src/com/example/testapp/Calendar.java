@@ -290,6 +290,7 @@ public class Calendar extends SherlockActivity {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+			calendarItems.add(new CalSep());
 		}
 		
 		private void saveToFile() {

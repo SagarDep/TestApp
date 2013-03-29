@@ -3,43 +3,48 @@
     android:id="@+id/row_cal_desc"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/main_light_red"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:paddingLeft="4dp"
-    android:paddingRight="4dp" >
-
-     <TextView
-         android:id="@+id/desc_time"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="TIME"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="#3c3c3c"
-         android:textStyle="bold" />
-    
-      <TextView
-        android:id="@+id/desc_desc"
+    >
+	
+    <RelativeLayout 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/desc_time"
-        android:text="description"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#505050" />
-     
-    <TextView
-        android:id="@+id/desc_place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/desc_desc"
-        android:layout_below="@+id/desc_time"
-        android:layout_marginTop="-5dp"
-        android:text="place"
-        android:textColor="#8e8e8e"
-        android:textSize="12sp"
-        android:textStyle="italic" />
-
-   
+        android:background="@color/main_light_red"
+        >
+	    
+        <TextView
+	         android:id="@+id/desc_time"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:text="TIME"
+	         android:textColor="#505050"
+	         android:textSize="18sp"
+	         android:paddingLeft="4dp" />
+	    
+	    <TextView
+	          android:id="@+id/desc_desc"
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:layout_alignParentRight="true"
+	          android:layout_toRightOf="@+id/desc_time"
+	          android:text="description"
+	          android:layout_marginRight="20dp"
+	         android:textSize="18sp"
+	         android:textStyle="bold"
+	          android:textColor="@color/main_text_title" />
+	     
+	    <TextView
+	        android:id="@+id/desc_place"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignRight="@+id/desc_desc"
+	        android:layout_below="@+id/desc_time"
+	        android:layout_marginTop="-4dp"
+	        android:paddingBottom="4dp"
+	        android:paddingLeft="4dp"
+	        android:text="place"
+	        android:textColor="#8e8e8e"
+	        android:textSize="12sp" />
     
+    </RelativeLayout>
 </RelativeLayout>
