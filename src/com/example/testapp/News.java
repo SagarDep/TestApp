@@ -73,9 +73,10 @@ public class News extends SherlockActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
-//		refreshButton.setIcon(R.drawable.refresh);
+		refreshButton.setIcon(R.drawable.refresh_white);
 		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		if(newsTask.getStatus() != AsyncTask.Status.FINISHED) {
+			refreshButton.setIcon(null);
 			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 			refreshButton.setEnabled(false);
 		}
@@ -83,6 +84,7 @@ public class News extends SherlockActivity {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
+				refreshButton.setIcon(null);
 				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 				refreshButton.setEnabled(false);
 				new NewsTask(News.this, true).execute("");
@@ -200,6 +202,7 @@ public class News extends SherlockActivity {
 			setSupportProgressBarIndeterminateVisibility(false);
 			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
 			refreshButton.setEnabled(true);
+			refreshButton.setIcon(R.drawable.refresh_white);
 		}
 
 		private String refreshNeeded() {
