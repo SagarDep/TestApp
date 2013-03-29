@@ -271,6 +271,7 @@ public class Calendar extends SherlockActivity {
 		private void initFromDownload() {
 			HashMap<String,String> map = new HashMap<String, String>();
 			calendarItems = new ArrayList<ScheduleItem>();
+			calendarItems.add(new CalSep());
 			try {
 				for(int i = 0; i < this.array.length(); i++) {
 					JSONObject o = this.array.getJSONObject(i);

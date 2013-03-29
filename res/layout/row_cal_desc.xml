@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/row_cal_desc"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/main_light_red"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp" >
 
      <TextView
          android:id="@+id/desc_time"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignParentLeft="true"
          android:text="TIME"
          android:textAppearance="?android:attr/textAppearanceSmall"
          android:textColor="#3c3c3c"
@@ -25,16 +29,16 @@
      
     <TextView
         android:id="@+id/desc_place"
-        android:text="place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/desc_desc"
         android:layout_below="@+id/desc_time"
         android:layout_marginTop="-5dp"
+        android:text="place"
         android:textColor="#8e8e8e"
         android:textSize="12sp"
-        android:layout_alignParentLeft="true"
-        android:textStyle="italic"
-         />
+        android:textStyle="italic" />
 
    
     
