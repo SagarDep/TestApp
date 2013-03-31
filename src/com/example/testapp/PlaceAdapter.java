@@ -4,14 +4,17 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.testapp.placeitem.PlaceCategory;
 import com.example.testapp.placeitem.PlaceInfo;
@@ -60,7 +63,7 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 				vi = inflater.inflate(R.layout.row_places_title, null);
 				PlaceCategory category = (PlaceCategory) item;
 
-				Bitmap icon = Utils.getMarkerIconBitmap(category.category);
+				Bitmap icon = Utils.getMarkerIconBitmap(category.img);
 
 				ImageView im = (ImageView) vi.findViewById(R.id.place_icon);
 				TextView tv = (TextView) vi.findViewById(R.id.place_category);
@@ -70,7 +73,7 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 
 			} else if (item.getType() == PlaceItem.TYPE_PLACE_INFO) {
 				vi = inflater.inflate(R.layout.row_places_info, null);
-				PlaceInfo info = (PlaceInfo) item;
+				final PlaceInfo info = (PlaceInfo) item;
 
 				TextView title = (TextView) vi.findViewById(R.id.place_info_title);
 				TextView addr = (TextView) vi.findViewById(R.id.place_info_addr);
@@ -79,6 +82,19 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 				title.setText(info.title);
 				addr.setText(info.address);
 				im.setImageBitmap(arrow);
+				
+				vi.setOnClickListener(new OnClickListener(){
+					
+					@Override
+					public void onClick(View vi) {
+						TextView tv = (TextView) vi.findViewById(R.id.place_info_addr);
+						Utils.showToast(activity, "Test " + tv.getText(), Toast.LENGTH_SHORT);
+						Intent myIntent = new Intent(vi.getContext(), Map.class);
+						myIntent.putExtra("id", info.id);
+						activity.startActivityForResult(myIntent, 0);
+					}
+					
+				});
 
 			} else {
 				vi = inflater.inflate(R.layout.row_places_sep, null);

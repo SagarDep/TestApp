@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,8 +72,10 @@ public class Map extends SherlockFragmentActivity {
 	private static MenuItem refreshButton			= null;
 	private static MapTask mapTask 					= null;
 	private static GoogleMap map 					= null;
+	private static HashMap<Integer, Marker> markers	= null;
 
-
+	private static int markerId						= -1;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,7 +89,10 @@ public class Map extends SherlockFragmentActivity {
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		
 		setContentView(R.layout.activity_map);
-
+		
+		Bundle extras = getIntent().getExtras();
+		if(extras != null)
+			markerId = extras.getInt("id");
 		
 		//KANSKE KAN SPARA MAP SOM STATIC OCH KOLLA OM != NULL?
 		map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -139,10 +145,6 @@ public class Map extends SherlockFragmentActivity {
 				return null;
 			}
 		});
-		
-		int zoom = Integer.parseInt(this.getString(R.string.map_default_zoom));
-		CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(zoom).build();
-		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -285,6 +287,25 @@ public class Map extends SherlockFragmentActivity {
 				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
 				refreshButton.setEnabled(true);
 			}
+			
+			if(markerId > 0 && mapItems != null) {
+				PlaceInfo info = null;
+				for (PlaceInfo p : mapItems)
+					if(p.id == markerId)
+						info = p;
+				
+				if(info != null) {
+					//KANSKE BORDE ZOOMA IN LUND OCH BARA TA UPP SKYLTEN ISTÄLLET?
+					int zoom = Integer.parseInt(activity.getString(R.string.map_default_zoom));
+					CameraPosition camPos = CameraPosition.builder().target(new LatLng(info.lat, info.lng)).zoom(zoom).build();
+					map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+					markers.get(markerId).showInfoWindow();
+				}
+			} else {
+				int zoom = Integer.parseInt(activity.getString(R.string.map_default_zoom));
+				CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(zoom).build();
+				map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+			}
 		}
 
 		private String refreshNeeded() {
@@ -410,9 +431,10 @@ public class Map extends SherlockFragmentActivity {
 		
 		private void addMarkersToMap() {
 			ArrayList<PlaceInfo> list = mapItems;
+			markers = new HashMap<Integer, Marker>();
 			map.clear();
 			for (PlaceInfo i : list) {
-				map.addMarker(new MarkerOptions().position(new LatLng(i.lat, i.lng)).title(i.title).icon(Utils.getMarkerIcon(i.cat)).snippet(""+i.id));
+				markers.put(i.id, map.addMarker(new MarkerOptions().position(new LatLng(i.lat, i.lng)).title(i.title).icon(Utils.getMarkerIcon(i.cat)).snippet(""+i.id)));
 			}
 		}
 		

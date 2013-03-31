@@ -326,7 +326,6 @@ public class Places extends SherlockActivity {
 		private void initFromDownload() {
 			ArrayList<PlaceInfo> list = new ArrayList<PlaceInfo>();
 			HashMap<String, String> set = new HashMap<String, String>();
-			
 			for (int i = 0; i < this.array.length(); i++) {
 				try {
 					JSONObject o = this.array.getJSONObject(i);
@@ -337,10 +336,10 @@ public class Places extends SherlockActivity {
 					p.desc = o.getString("DESC");
 					p.lat = o.getDouble("LATITUDE");
 					p.lng = o.getDouble("LONGITUDE");
-					p.cat = o.getString("CATEGORY");
+					p.img = o.getString("CATEGORY");
+					p.cat = Utils.translateCategory(p.img);
 					
-					if(!set.containsKey(p.cat)) 
-						set.put(p.cat, null);
+					set.put(p.cat, null);
 					
 					list.add(p);
 				} catch (JSONException e) {
@@ -349,9 +348,11 @@ public class Places extends SherlockActivity {
 			}
 			
 			String[] keys = set.keySet().toArray(new String[set.keySet().size()]);
+			
 			Arrays.sort(keys);
 			
 			placeItems = new ArrayList<PlaceItem>();
+			placeItems.add(new PlaceSep());
 			for (String category : keys) {
 				PlaceCategory cat = new PlaceCategory();
 				cat.category = category;
@@ -359,8 +360,10 @@ public class Places extends SherlockActivity {
 				placeItems.add(cat);
 				ArrayList<PlaceInfo> places = new ArrayList<PlaceInfo>();
 				for (PlaceInfo p : list) 
-					if(p.cat.equals(category))
+					if(p.cat.equals(category)) {
 						places.add(p);
+						cat.img = p.img;
+					}
 				
 				Collections.sort(places);
 				for (PlaceInfo placeInfo : places) 

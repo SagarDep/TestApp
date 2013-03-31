@@ -61,6 +61,7 @@ public class Utils {
 
 	private static HashMap<String, String> dayMap				= null;
 	private static HashMap<String, String> monthMap				= null;
+	private static HashMap<String, String> catMap				= null;
 	private static HashMap<String, BitmapDescriptor> iconBMMap	= null;
 	private static HashMap<String, Bitmap> iconBMDMap			= null;
 
@@ -89,6 +90,19 @@ public class Utils {
 		monthMap.put("oct", "Okt");
 		monthMap.put("nov", "Nov");
 		monthMap.put("dec", "Dec");
+		
+		catMap = new HashMap<String, String>();
+		catMap.put("ATM", "Bankomat");
+		catMap.put("BASEBALL", "Brännboll");
+		catMap.put("BMC", "BMC");
+		catMap.put("FASTFOOD", "Snabbmat");
+		catMap.put("FOOD", "Middag");
+		catMap.put("HOME", "Hem");
+		catMap.put("HOSPITAL", "Sjukhus");
+		catMap.put("NATION", "Nationer");
+		catMap.put("STORE", "Affärer");
+		catMap.put("TRAIN", "Transport");
+		
 		
 		iconBMMap = new HashMap<String, BitmapDescriptor>();
 		iconBMMap.put("ATM", BitmapDescriptorFactory.fromResource(R.drawable.marker_atm));
@@ -133,6 +147,10 @@ public class Utils {
 		}
 		
 		return -1;
+	}
+	
+	public static String translateCategory(String cat) {
+		return catMap.get(cat);
 	}
 	
 	private static String translateMonth(String date, int monthIndex) {

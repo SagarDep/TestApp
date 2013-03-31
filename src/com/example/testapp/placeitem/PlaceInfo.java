@@ -11,6 +11,7 @@ public class PlaceInfo extends PlaceItem implements Serializable {
 	public String desc;
 	public double lat;
 	public double lng;
+	public String img;
 	public String cat;
 	
 	public PlaceInfo() {
