@@ -23,12 +23,16 @@ public class Utils {
 	public static final String PREFS_FILE 					= "prefsFile";
 	public static final String PREFS_KEY_NEWS				= "news";
 	public static final String PREFS_KEY_NEWS_UPDATE		= "newsUpdate";
+	public static final String PREFS_KEY_NEWS_TIME			= "newsTime";
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_UPDATE	= "scheduleUpdate";
+	public static final String PREFS_KEY_SCHEDULE_TIME		= "scheduleTime";
 	public static final String PREFS_KEY_PLACE				= "place";
 	public static final String PREFS_KEY_PLACE_UPDATE		= "placeDate";
+	public static final String PREFS_KEY_PLACE_TIME			= "placeTime";
 	public static final String PREFS_KEY_MAP				= "map";
 	public static final String PREFS_KEY_MAP_UPDATE			= "mapDate";
+	public static final String PREFS_KEY_MAP_TIME			= "mapTime";
 
 	public static final String REFRESH_BUTTON_TEXT			= "Uppdatera";
 	public static final String REFRESH_BUTTON_TEXT_PRESSED	= "Letar...";

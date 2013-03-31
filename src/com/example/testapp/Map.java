@@ -148,9 +148,10 @@ public class Map extends SherlockFragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
-//		refreshButton.setIcon(R.drawable.refresh);
+		refreshButton.setIcon(R.drawable.refresh_white);
 		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		if(mapTask.getStatus() != AsyncTask.Status.FINISHED){
+			refreshButton.setIcon(null);
 			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 			refreshButton.setEnabled(false);
 		}
@@ -158,6 +159,7 @@ public class Map extends SherlockFragmentActivity {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
+				refreshButton.setIcon(null);
 				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 				refreshButton.setEnabled(false);
 //				map.clear(); //TA BORT SEN
@@ -261,7 +263,7 @@ public class Map extends SherlockFragmentActivity {
 					break;
 				case MSG_ERR_USE_CACHED_DATA:
 					Log.i(Utils.TAG, "MAP (no connection) USING CACHED VERSION");
-					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateDate), true);
+					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 					break;
 				case MSG_USE_CACHED_DATA:
@@ -278,8 +280,11 @@ public class Map extends SherlockFragmentActivity {
 					break;
 			}
 			setSupportProgressBarIndeterminateVisibility(false);
-			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
-			refreshButton.setEnabled(true);
+			if(refreshButton != null) {
+				refreshButton.setIcon(R.drawable.refresh_white);
+				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
+				refreshButton.setEnabled(true);
+			}
 		}
 
 		private String refreshNeeded() {
@@ -417,6 +422,7 @@ public class Map extends SherlockFragmentActivity {
 			try {
 				editor.putString(Utils.PREFS_KEY_MAP, ObjectSerializer.serialize(mapItems));
 				editor.putString(Utils.PREFS_KEY_MAP_UPDATE, lastUpdateDate);
+				editor.putLong(Utils.PREFS_KEY_MAP_TIME, lastUpdateTime);
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e(Utils.TAG, "MAP save_to_file IOException");
@@ -430,6 +436,7 @@ public class Map extends SherlockFragmentActivity {
 			try {
 				mapItems = (ArrayList<PlaceInfo>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_MAP, null));
 				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_MAP_UPDATE, null);
+				lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_MAP_TIME, -1L);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -199,7 +199,7 @@ public class Places extends SherlockActivity {
 					break;
 				case MSG_ERR_USE_CACHED_DATA:
 					Log.i(Utils.TAG, "PLACE (no connection) USING CACHED VERSION");
-					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateDate), true);
+					errMsg = Utils.errWithDate(Utils.ECODE_NO_INTERNET_CONNECTION, new Date(lastUpdateTime), true);
 					Utils.showToast(activity, errMsg, Toast.LENGTH_LONG);
 					break;
 				case MSG_USE_CACHED_DATA:
@@ -359,7 +359,7 @@ public class Places extends SherlockActivity {
 				placeItems.add(cat);
 				ArrayList<PlaceInfo> places = new ArrayList<PlaceInfo>();
 				for (PlaceInfo p : list) 
-					if(p.cat == category)
+					if(p.cat.equals(category))
 						places.add(p);
 				
 				Collections.sort(places);
@@ -376,6 +376,7 @@ public class Places extends SherlockActivity {
 			try {
 				editor.putString(Utils.PREFS_KEY_PLACE, ObjectSerializer.serialize(placeItems));
 				editor.putString(Utils.PREFS_KEY_PLACE_UPDATE, lastUpdateDate);
+				editor.putLong(Utils.PREFS_KEY_PLACE_TIME, lastUpdateTime);
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e(Utils.TAG, "PLACE save_to_file IOException");
@@ -389,6 +390,7 @@ public class Places extends SherlockActivity {
 			try {
 				placeItems = (ArrayList<PlaceItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_PLACE, null));
 				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_PLACE_UPDATE, null);
+				lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_PLACE_TIME, -1L);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

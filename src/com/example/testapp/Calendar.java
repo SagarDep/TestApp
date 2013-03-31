@@ -204,6 +204,7 @@ public class Calendar extends SherlockActivity {
 				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
 				refreshButton.setEnabled(true);
 				refreshButton.setIcon(R.drawable.refresh_white);
+				
 			}
 		}
 		
@@ -301,6 +302,7 @@ public class Calendar extends SherlockActivity {
 			try {
 				editor.putString(Utils.PREFS_KEY_SCHEDULE, ObjectSerializer.serialize(calendarItems));
 				editor.putString(Utils.PREFS_KEY_SCHEDULE_UPDATE, lastUpdateDate);
+				editor.putLong(Utils.PREFS_KEY_SCHEDULE_TIME, lastUpdateTime);
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e(Utils.TAG, "CAL save_to_file IOException");
@@ -314,6 +316,7 @@ public class Calendar extends SherlockActivity {
 			try {
 				calendarItems = (ArrayList<ScheduleItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_SCHEDULE, null));
 				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_SCHEDULE_UPDATE, null);
+				lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_SCHEDULE_TIME, -1L);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
