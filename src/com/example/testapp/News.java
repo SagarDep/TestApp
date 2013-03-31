@@ -200,9 +200,11 @@ public class News extends SherlockActivity {
 					break;
 			}
 			setSupportProgressBarIndeterminateVisibility(false);
-			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
-			refreshButton.setEnabled(true);
-			refreshButton.setIcon(R.drawable.refresh_white);
+			if(refreshButton != null) {
+				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
+				refreshButton.setEnabled(true);
+				refreshButton.setIcon(R.drawable.refresh_white);
+			}
 		}
 
 		private String refreshNeeded() {

@@ -33,8 +33,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.actionbarsherlock.view.Window;
 import com.example.testapp.scheduleitem.CalDate;
 import com.example.testapp.scheduleitem.CalDesc;
 import com.example.testapp.scheduleitem.CalSep;
@@ -200,9 +200,11 @@ public class Calendar extends SherlockActivity {
 					break;
 			}
 			setSupportProgressBarIndeterminateVisibility(false);
-			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
-			refreshButton.setEnabled(true);
-			refreshButton.setIcon(R.drawable.refresh_white);
+			if(refreshButton != null) {
+				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
+				refreshButton.setEnabled(true);
+				refreshButton.setIcon(R.drawable.refresh_white);
+			}
 		}
 		
 		private String refreshNeeded() {

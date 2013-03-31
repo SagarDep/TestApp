@@ -83,21 +83,6 @@ public class Places extends SherlockActivity {
 		placeList = (ListView) findViewById(R.id.places_list);
 		placeTask = new PlaceTask(Places.this, false);
 		placeTask.execute("");
-		
-		
-//		placeList = (ListView) findViewById(R.id.places_list);
-//		showProgress = ProgressDialog.show(Places.this, "", Utils.MSG_LOADING_PLACES);
-//		showProgress.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//		
-//		long timeDiff = System.currentTimeMillis() - Utils.lastUpdateTime;
-//		
-//		if (Utils.markList != null && timeDiff < validTime) {
-//			Log.i(Utils.TAG, "PLACES USING CACHED VERSION " + "timeDiff =" + timeDiff + " (" + ((timeDiff / 1000.0) / 60.0) + " min)");
-//			placeList.setAdapter(new PlaceAdapter(Places.this, Utils.placeList));
-//			showProgress.dismiss();
-//		} else {
-//			Utils.initFromDB(this, showProgress, null, placeList);
-//		}
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -231,9 +216,11 @@ public class Places extends SherlockActivity {
 					break;
 			}
 			setSupportProgressBarIndeterminateVisibility(false);
-			refreshButton.setIcon(R.drawable.refresh_white);
-			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
-			refreshButton.setEnabled(true);
+			if(refreshButton != null) {
+				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT);
+				refreshButton.setEnabled(true);
+				refreshButton.setIcon(R.drawable.refresh_white);
+			}
 		}
 
 		private String refreshNeeded() {
