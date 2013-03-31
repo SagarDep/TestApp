@@ -75,6 +75,7 @@ public class Places extends SherlockActivity {
 		
 		ActionBar ab = getSupportActionBar();
 		ab.setTitle("PLATSER");
+		ab.setSubtitle("Tryck för att visa plats på kartan");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);		
 

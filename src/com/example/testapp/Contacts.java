@@ -23,6 +23,7 @@ public class Contacts extends SherlockActivity {
 		
 		ActionBar ab = getSupportActionBar();
 		ab.setTitle("KONTAKTER");
+		ab.setSubtitle("Tryck för att ringa ett nummer");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		

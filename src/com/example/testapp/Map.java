@@ -60,7 +60,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends SherlockFragmentActivity {
-	private final LatLng POS_LUND = new LatLng(55.711350, 13.190117); //Gör om beroende på skärmstorlek
+	private final LatLng POS_LUND = new LatLng(55.715363, 13.194580); //Gör om beroende på skärmstorlek
 	private final long TIME_ONE_MINUTE = 60000;
 	
 	private final String REFRESH_MSG_CONNECTION_FAILURE = "FAIL";
@@ -85,6 +85,7 @@ public class Map extends SherlockFragmentActivity {
 		
 		ActionBar ab = getSupportActionBar();
 		ab.setTitle("KARTA");
+		ab.setSubtitle("Tryck för att visa info");
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		
@@ -97,7 +98,8 @@ public class Map extends SherlockFragmentActivity {
 		//KANSKE KAN SPARA MAP SOM STATIC OCH KOLLA OM != NULL?
 		map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-
+		map.getUiSettings().setZoomControlsEnabled(false);
+		
 		mapTask = new MapTask(Map.this, false);
 		mapTask.execute("");
 		
@@ -145,6 +147,10 @@ public class Map extends SherlockFragmentActivity {
 				return null;
 			}
 		});
+		
+		int zoom = Integer.parseInt(getString(R.string.map_default_zoom));
+		CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(zoom).build();
+		map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -301,10 +307,6 @@ public class Map extends SherlockFragmentActivity {
 					map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 					markers.get(markerId).showInfoWindow();
 				}
-			} else {
-				int zoom = Integer.parseInt(activity.getString(R.string.map_default_zoom));
-				CameraPosition camPos = CameraPosition.builder().target(POS_LUND).zoom(zoom).build();
-				map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 			}
 		}
 

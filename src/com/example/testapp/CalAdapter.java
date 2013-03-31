@@ -72,15 +72,15 @@ public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 				time.setText(calDesc.getTime());
 				desc.setText(" " + calDesc.getDesc());
 				place.setText("Plats: " + calDesc.getPlace());
-				vi.setOnClickListener(new OnClickListener(){
-					
-					@Override
-					public void onClick(View vi) {
-						TextView tv = (TextView) vi.findViewById(R.id.desc_time);
-						Utils.showToast(activity, "Test " + tv.getText(), Toast.LENGTH_SHORT);
-					}
-					
-				});
+//				vi.setOnClickListener(new OnClickListener(){
+//					
+//					@Override
+//					public void onClick(View vi) {
+//						TextView tv = (TextView) vi.findViewById(R.id.desc_time);
+//						Utils.showToast(activity, "Test " + tv.getText(), Toast.LENGTH_SHORT);
+//					}
+//					
+//				});
 			} else {
 				vi = inflater.inflate(R.layout.row_cal_sep, null);
 			}

@@ -13,6 +13,8 @@
 	    <item name="background">@drawable/blue_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
+        <item name="android:subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
@@ -36,6 +38,8 @@
 	    <item name="background">@drawable/red_bar</item>
 	    <item name="android:background">@drawable/red_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
+        <item name="android:subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
@@ -58,6 +62,8 @@
 	    <item name="android:background">@drawable/green_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
+        <item name="android:subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
@@ -79,6 +85,8 @@
 	    <item name="android:background">@drawable/yellow_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
+        <item name="android:subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
@@ -100,6 +108,8 @@
 	    <item name="android:background">@drawable/purple_bar</item>
         <item name="titleTextStyle">@style/MyThemes.TitleStyle</item>
         <item name="android:titleTextStyle">@style/MyThemes.TitleStyle</item>
+        <item name="subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
+        <item name="android:subtitleTextStyle">@style/MyThemes.SubtitleStyle</item>
 	    <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	    <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
 	</style>
@@ -112,6 +122,9 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+    <style name="MyThemes.SubtitleStyle" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@color/white</item>
     </style>
  
 </resources>
