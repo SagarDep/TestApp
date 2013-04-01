@@ -33,6 +33,9 @@ public class Utils {
 	public static final String PREFS_KEY_MAP				= "map";
 	public static final String PREFS_KEY_MAP_UPDATE			= "mapDate";
 	public static final String PREFS_KEY_MAP_TIME			= "mapTime";
+	public static final String PREFS_KEY_CONTACT			= "contact";
+	public static final String PREFS_KEY_CONTACT_UPDATE		= "contactDate";
+	public static final String PREFS_KEY_CONTACT_TIME		= "contactTime";
 
 	public static final String REFRESH_BUTTON_TEXT			= "Uppdatera";
 	public static final String REFRESH_BUTTON_TEXT_PRESSED	= "Letar...";

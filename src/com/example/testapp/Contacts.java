@@ -20,7 +20,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +41,7 @@ import com.example.testapp.contactitem.ContactItem;
 import com.example.testapp.contactitem.ContactPerson;
 import com.example.testapp.contactitem.ContactSep;
 import com.example.testapp.contactitem.ContactTitle;
+import com.example.testapp.placeitem.PlaceItem;
 
 public class Contacts extends SherlockActivity {
 	private final long TIME_ONE_MINUTE = 60000;
@@ -323,17 +327,32 @@ public class Contacts extends SherlockActivity {
 				
 				contactItems.add(new ContactSep());
 			}
-			
 		}
 
 		private void saveToFile() {
-			// TODO Auto-generated method stub
-			
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			Editor editor = prefs.edit();
+			try {
+				editor.putString(Utils.PREFS_KEY_CONTACT, ObjectSerializer.serialize(contactItems));
+				editor.putString(Utils.PREFS_KEY_CONTACT_UPDATE, lastUpdateDate);
+				editor.putLong(Utils.PREFS_KEY_CONTACT_TIME, lastUpdateTime);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(Utils.TAG, "CONTACTS save_to_file IOException");
+			}
+			editor.commit();
 		}
 		
+		@SuppressWarnings("unchecked")
 		private void loadFromFile() {
-			// TODO Auto-generated method stub
-			
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			try {
+				contactItems = (ArrayList<ContactItem>) ObjectSerializer.deserialize(prefs.getString(Utils.PREFS_KEY_CONTACT, null));
+				lastUpdateDate = prefs.getString(Utils.PREFS_KEY_CONTACT_UPDATE, null);
+				lastUpdateTime = prefs.getLong(Utils.PREFS_KEY_CONTACT_TIME, -1L);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
