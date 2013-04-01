@@ -40,6 +40,7 @@ public class Utils {
 	public static final String DB_NEWS_URL		= "http://nutty.rymdraket.net/android/news.php?mode=";
 	public static final String DB_SCHEDULE_URL	= "http://nutty.rymdraket.net/android/schedule.php?mode=";
 	public static final String DB_PLACES_URL	= "http://nutty.rymdraket.net/android/places.php?mode=";
+	public static final String DB_CONTACTS_URL	= "http://nutty.rymdraket.net/android/contacts.php?mode=";
 	public static final String DB_MARKER_URL	= "http://nutty.rymdraket.net/android/markers.php";
 	public static final String DB_IMAGE_URL		= "http://nutty.rymdraket.net/android/imgs/";
 
@@ -50,7 +51,7 @@ public class Utils {
 	public static final String MSG_LOADING_SCHEDULE	= "Laddar schema...";
 	public static final String MSG_LOADING_PLACES	= "Laddar platser...";
 	public static final String MSG_LOADING_MAP		= "Laddar karta...";
-	public static final String MSG_LOADING_CONTACT	= "Laddar kontakter...";
+	public static final String MSG_LOADING_CONTACTS	= "Laddar kontakter...";
 
 	public static final int ECODE_NO_ERROR					= -1;
 	public static final int ECODE_NO_INTERNET_CONNECTION	=  0;

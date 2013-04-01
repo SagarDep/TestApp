@@ -37,6 +37,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -72,9 +73,9 @@ public class Map extends SherlockFragmentActivity {
 	private static MenuItem refreshButton			= null;
 	private static MapTask mapTask 					= null;
 	private static GoogleMap map 					= null;
-	private static HashMap<Integer, Marker> markers	= null;
+	private static SparseArray<Marker> markers		= null;
 
-	private static int markerId						= -1;
+	private int markerId							= -1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -434,10 +435,9 @@ public class Map extends SherlockFragmentActivity {
 		}
 		
 		private void addMarkersToMap() {
-			ArrayList<PlaceInfo> list = mapItems;
-			markers = new HashMap<Integer, Marker>();
 			map.clear();
-			for (PlaceInfo i : list) {
+			markers = new SparseArray<Marker>();
+			for (PlaceInfo i : mapItems) {
 				markers.put(i.id, map.addMarker(new MarkerOptions().position(new LatLng(i.lat, i.lng)).title(i.title).icon(Utils.getMarkerIcon(i.cat)).snippet(""+i.id)));
 			}
 		}

@@ -33,7 +33,6 @@
 	        android:textColor="@drawable/button_text_state"
 	        android:textSize="12sp"
 	        android:layout_alignParentLeft="true"
-	        android:textStyle="italic"
 	        />
 	
 	   	<ImageView

@@ -33,5 +33,14 @@ public class TODO {
 	 	TODO: Gör så att om man klickar på ett schemaevent så kommer man till platsen det handlar om
 	 	
 		TODO: Se till att info window i map inte tar upp hela bredden, ser konstigt ut.
+		
+		
+		Linköping
+		Lund
+		(Stockholm)
+		Umeå
+		Uppsala
+		Örebro
+	
 */
 }
