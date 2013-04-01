@@ -297,17 +297,17 @@ public class Contacts extends SherlockActivity {
 			
 			String[] keys = set.keySet().toArray(new String[set.keySet().size()]);
 			
-			Log.v(Utils.TAG, "PRE SORT");
-			for (String s : keys) {
-				Log.v(Utils.TAG, s);
-			}
+//			Log.v(Utils.TAG, "PRE SORT");
+//			for (String s : keys) {
+//				Log.v(Utils.TAG, s);
+//			}
 
 			Arrays.sort(keys);
 
-			Log.v(Utils.TAG, "AFTER SORT");
-			for (String s : keys) {
-				Log.v(Utils.TAG, s);
-			}
+//			Log.v(Utils.TAG, "AFTER SORT");
+//			for (String s : keys) {
+//				Log.v(Utils.TAG, s);
+//			}
 			
 			contactItems = new ArrayList<ContactItem>();
 			contactItems.add(new ContactSep());
