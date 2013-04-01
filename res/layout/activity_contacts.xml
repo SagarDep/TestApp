@@ -6,9 +6,24 @@
    	android:background="@color/white"
     tools:context=".Contacts" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
+      <ListView
+	    android:id="@+id/news_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:listSelector="@android:color/transparent"
+	    android:focusable="false"
+	    android:fadeScrollbars="true"
+		android:focusableInTouchMode="false"
+		android:headerDividersEnabled="false"
+		android:footerDividersEnabled="false"
+		android:divider="@null"
+		android:dividerHeight="0dp"
+		android:cacheColorHint="#00000000"
+		android:fadingEdge="none"
+        android:paddingLeft="20dp"
+        android:background="@null"
+       />
+	    
+    
 </RelativeLayout>

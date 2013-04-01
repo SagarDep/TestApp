@@ -306,6 +306,8 @@ public class Map extends SherlockFragmentActivity {
 					CameraPosition camPos = CameraPosition.builder().target(new LatLng(info.lat, info.lng)).zoom(zoom).build();
 					map.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 					markers.get(markerId).showInfoWindow();
+				} else {
+					Utils.showToast(activity, "Kan inte vissa plats på kartan", Toast.LENGTH_LONG);
 				}
 			}
 		}

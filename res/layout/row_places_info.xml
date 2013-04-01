@@ -4,10 +4,11 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
    	>
-	<RelativeLayout 
+	<RelativeLayout
+	    android:id="@+id/place_info_rl2" 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@color/main_light_green"
+	    android:background="@drawable/green_button_state"
 	    android:layout_marginRight="30dp"
 	    android:padding="4dp"
 	    >
@@ -18,7 +19,7 @@
 	         android:layout_alignParentLeft="true"
 	         android:text="@string/title"
 	         android:textAppearance="?android:attr/textAppearanceSmall"
-	         android:textColor="#3c3c3c"
+	         android:textColor="@drawable/button_text_state"
 	         android:textStyle="bold"
 	         />
 	     
@@ -29,7 +30,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_below="@+id/place_info_title"
 	        android:layout_marginTop="-5dp"
-	        android:textColor="#8e8e8e"
+	        android:textColor="@drawable/button_text_state"
 	        android:textSize="12sp"
 	        android:layout_alignParentLeft="true"
 	        android:textStyle="italic"
@@ -40,7 +41,7 @@
 	   	    android:layout_width="wrap_content"
 	   	    android:layout_height="wrap_content"
 	   	    android:layout_alignParentRight="true"
-	   	    android:src="@drawable/pink_square_big"
+	   	    android:src="@drawable/right_arrow"
 	   	    android:layout_centerVertical="true"
 	   	    />
     </RelativeLayout>
