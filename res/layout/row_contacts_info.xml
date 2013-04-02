@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/row_places_info"
+    android:id="@+id/row_contacts_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-	    android:background="@drawable/green_button_state"
-	    android:padding="10dp"
-	    android:layout_marginTop="1dp"
    	>
+	<RelativeLayout
+	    android:id="@+id/contacts_info_rl2" 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginRight="@dimen/side_margins"
+	    android:padding="10dp"
+	    android:background="@drawable/purple_button_state"
+	    android:layout_marginTop="1dp"
+	    >
 	     <TextView
-	         android:id="@+id/place_info_title"
+	         android:id="@+id/contacts_info_name"
 	         android:layout_width="wrap_content"
 	         android:layout_height="wrap_content"
 	         android:layout_alignParentLeft="true"
@@ -18,24 +24,15 @@
 	         android:textStyle="bold"
 	         />
 
-	     	    <TextView
-	        android:id="@+id/place_info_addr"
-	        android:text="@string/addr"
+	    <TextView
+	        android:id="@+id/contacts_info_phone"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/place_info_title"
-	        android:layout_marginTop="-5dp"
-	        android:textColor="@drawable/button_text_state"
-	        android:textSize="12sp"
+	        android:layout_below="@id/contacts_info_name"
 	        android:layout_alignParentLeft="true"
-	        />
+	        android:text="@string/addr"
+	        android:textColor="@drawable/button_text_state"
+	        android:textSize="12sp" />
 	
-	   	<ImageView
-	   	    android:id="@+id/place_info_arrow"
-	   	    android:layout_width="wrap_content"
-	   	    android:layout_height="wrap_content"
-	   	    android:layout_alignParentRight="true"
-	   	    android:src="@drawable/right_arrow"
-	   	    android:layout_centerVertical="true"
-	   	    />
+    </RelativeLayout>
 </RelativeLayout>

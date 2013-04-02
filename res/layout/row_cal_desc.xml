@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/main_light_red"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="@dimen/side_margins"
 		android:padding="4dp"
 	    >
 	    

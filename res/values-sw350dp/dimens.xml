@@ -8,5 +8,5 @@
     
 	<dimen name="top_bar_title_marginTop">20dp</dimen>
 	<dimen name="top_bar_update_marginTop">18dp</dimen>
-	
+	<dimen name="side_margins">30dp</dimen>
 </resources>

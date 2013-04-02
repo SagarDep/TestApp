@@ -39,8 +39,6 @@ import com.example.testapp.newsitem.NewsPost;
 import com.example.testapp.newsitem.NewsSep;
 
 public class News extends SherlockActivity {
-	private final long TIME_ONE_MINUTE = 60000;
-	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 	
@@ -147,7 +145,7 @@ public class News extends SherlockActivity {
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
 			if(lastUpdateDate != null) { // CACHE AVAILABLE
-				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
+				String updateDate = (System.currentTimeMillis() - lastUpdateTime < Utils.TIME_FIVE_MINUTES && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED)
 					msg = MSG_USE_CACHED_DATA;
 				else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE)

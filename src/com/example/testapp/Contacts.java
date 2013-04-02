@@ -44,8 +44,6 @@ import com.example.testapp.contactitem.ContactTitle;
 import com.example.testapp.placeitem.PlaceItem;
 
 public class Contacts extends SherlockActivity {
-	private final long TIME_ONE_MINUTE = 60000;
-	
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 	
@@ -81,10 +79,11 @@ public class Contacts extends SherlockActivity {
 		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
 		refreshButton.setIcon(R.drawable.refresh_white);
 		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//		if(mapTask.getStatus() != AsyncTask.Status.FINISHED){
-//			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
-//			refreshButton.setEnabled(false);
-//		}
+		if(contactTask.getStatus() != AsyncTask.Status.FINISHED){
+			refreshButton.setIcon(null);
+			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
+			refreshButton.setEnabled(false);
+		}
 		refreshButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override
@@ -92,7 +91,7 @@ public class Contacts extends SherlockActivity {
 				refreshButton.setIcon(null);
 				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
 				refreshButton.setEnabled(false);
-//				new MapTask(Map.this, true).execute("");
+				new ContactTask(Contacts.this, true).execute("");
 				return false;
 			}
 		});
@@ -152,7 +151,7 @@ public class Contacts extends SherlockActivity {
 		protected Integer doInBackground(String... params) {
 			int msg = -1;
 			if(lastUpdateDate != null) { // CACHE AVAILABLE
-				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
+				String updateDate = (System.currentTimeMillis() - lastUpdateTime < Utils.TIME_FIVE_MINUTES && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED)
 					msg = MSG_USE_CACHED_DATA;
 				else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE)

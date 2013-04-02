@@ -8,7 +8,7 @@
     
     <ListView
 	        android:id="@+id/places_list"
-	        android:layout_width="fill_parent"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
 	        android:listSelector="@android:color/transparent"
@@ -21,7 +21,9 @@
 			android:dividerHeight="0dp"
 			android:cacheColorHint="#00000000"
 			android:fadingEdge="none"
-	        android:paddingLeft="30dp"
+	        android:paddingLeft="@dimen/side_margins"
+	        android:paddingRight="@dimen/side_margins"
+	        android:scrollbarStyle="outsideOverlay"
 	        android:background="@null"
 	        />
 </RelativeLayout>

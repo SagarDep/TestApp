@@ -35,6 +35,10 @@ public class TODO {
 		TODO: Se till att info window i map inte tar upp hela bredden, ser konstigt ut.
 		
 		
+		KÄNDA BUGGAR:
+		> HTC - Schema - Tid och text går in i varandra
+		> HTC - Platser - Knapp visar inte pressed
+		
 		Linköping
 		Lund
 		(Stockholm)

@@ -3,15 +3,11 @@
     android:id="@+id/row_places_title"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-     >
-	
-    <RelativeLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
 	    android:background="@color/main_green"
-	    android:layout_marginRight="30dp"
+	    android:layout_marginLeft="@dimen/side_margins"
+	    android:layout_marginRight="@dimen/side_margins"
 	    android:padding="4dp"
-	    >
+     >
     	<ImageView
 	        android:id="@+id/place_icon" 
 	        android:layout_width="wrap_content"
@@ -30,7 +26,6 @@
 	         android:layout_toRightOf="@+id/place_icon"
 	         android:text="@string/title"
 	         android:textColor="@color/white"
-	         android:textAllCaps="true"
+	         
 	         />
-	</RelativeLayout>
 </RelativeLayout>

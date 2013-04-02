@@ -20,6 +20,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 public class Utils {
 	public static final String TAG = "APP";
 
+	public static final long TIME_ONE_MINUTE	= 60000;
+	public static final long TIME_FIVE_MINUTES	= 300000;
+	
 	public static final String PREFS_FILE 					= "prefsFile";
 	public static final String PREFS_KEY_NEWS				= "news";
 	public static final String PREFS_KEY_NEWS_UPDATE		= "newsUpdate";

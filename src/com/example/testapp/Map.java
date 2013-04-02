@@ -62,7 +62,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends SherlockFragmentActivity {
 	private final LatLng POS_LUND = new LatLng(55.715363, 13.194580); //Gör om beroende på skärmstorlek
-	private final long TIME_ONE_MINUTE = 60000;
 	
 	private final String REFRESH_MSG_CONNECTION_FAILURE = "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED = "NOT_NEEDED";
@@ -235,7 +234,7 @@ public class Map extends SherlockFragmentActivity {
 			int msg = -1;
 			
 			if(lastUpdateDate != null) { // CACHE AVAILABLE
-				String updateDate = (System.currentTimeMillis() - lastUpdateTime < TIME_ONE_MINUTE && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
+				String updateDate = (System.currentTimeMillis() - lastUpdateTime < Utils.TIME_FIVE_MINUTES && !manualRefresh) ? REFRESH_MSG_REFRESH_NOT_NEEDED : refreshNeeded();
 				if(updateDate == REFRESH_MSG_REFRESH_NOT_NEEDED)
 					msg = MSG_USE_CACHED_DATA;
 				else if(updateDate == REFRESH_MSG_CONNECTION_FAILURE)

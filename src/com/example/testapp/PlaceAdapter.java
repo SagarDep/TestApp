@@ -31,7 +31,6 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 	private Activity activity;
 	private ArrayList<PlaceItem> data;
 	private LayoutInflater inflater;
-	private static Bitmap arrow;
 	
 	public PlaceAdapter(Activity a, ArrayList<PlaceItem> d) {
 		super(a, 0, d);
@@ -39,8 +38,6 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 		this.activity = a;
 		this.data = d;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		arrow = BitmapFactory.decodeResource(activity.getResources(), R.drawable.right_arrow);
 	}
 	
 	@Override
@@ -75,7 +72,7 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 				TextView tv = (TextView) vi.findViewById(R.id.place_category);
 
 				im.setImageBitmap(icon);
-				tv.setText(category.category);
+				tv.setText(category.category.toUpperCase());
 
 			} else if (item.getType() == PlaceItem.TYPE_PLACE_INFO) {
 				vi = inflater.inflate(R.layout.row_places_info, null);
