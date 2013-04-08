@@ -12,7 +12,7 @@
          android:layout_alignParentLeft="true"
          android:layout_toLeftOf="@+id/date_date"
          android:background="@color/main_red"
-         android:text="TITLE"
+         android:text="@string/title"
     android:padding="4dp"
          android:textColor="@color/white" />
 
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="description"
+        android:text="@string/description"
 	    android:layout_marginRight="@dimen/side_margins"
 	    android:background="@color/main_red"
 	    android:padding="4dp"

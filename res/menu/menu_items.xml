@@ -6,6 +6,6 @@
         android:showAsAction="ifRoom|withText"
         android:title="@string/action_label_refresh"
         android:titleCondensed="@string/action_label_refresh"
-        android:label="Test">
+       	>
     </item>
 </menu>
