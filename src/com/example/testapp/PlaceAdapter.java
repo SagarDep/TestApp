@@ -6,21 +6,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.testapp.placeitem.PlaceCategory;
 import com.example.testapp.placeitem.PlaceInfo;
@@ -84,15 +80,48 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 				title.setText(info.title);
 				addr.setText(info.address);
 				
-				vi.setOnClickListener(new OnClickListener(){
+				vi.setOnTouchListener(new OnTouchListener() {
 					
 					@Override
-					public void onClick(View vi) {
-						Intent myIntent = new Intent(vi.getContext(), Map.class);
-						myIntent.putExtra("id", info.id);
-						activity.startActivityForResult(myIntent, 0);
+					public boolean onTouch(View v, MotionEvent event) {
+						RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.places_info_rl2);
+						
+						Rect hitBox = new Rect();
+						rl.getHitRect(hitBox);
+						
+						Log.v(Utils.TAG, "OUTSIDE SWITCH ACTION " + event.getAction() + " X=" + (int) event.getX() + "  Y=" + (int) event.getY());
+						Log.v(Utils.TAG, hitBox.toShortString());
+						
+						switch(event.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							title.setTextColor(v.getResources().getColor(R.color.white));
+							addr.setTextColor(v.getResources().getColor(R.color.white));
+							rl.setBackgroundColor(v.getResources().getColor(R.color.main_green));
+							Log.v(Utils.TAG, "INSIDE SWITCH DOWN");
+							break;
+						case MotionEvent.ACTION_UP:
+							if(hitBox.contains((int) event.getX(), (int) event.getY())) {
+								title.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								addr.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								rl.setBackgroundColor(v.getResources().getColor(R.color.main_light_green));
+								Intent myIntent = new Intent(v.getContext(), Map.class);
+								myIntent.putExtra("id", info.id);
+								activity.startActivityForResult(myIntent, 0);
+								Log.v(Utils.TAG, "INSIDE SWITCH UP");
+							}
+							break;
+						case MotionEvent.ACTION_CANCEL:
+								title.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								addr.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								rl.setBackgroundColor(v.getResources().getColor(R.color.main_light_green));
+								Log.v(Utils.TAG, "INSIDE SWITCH CANCEL");
+							break;
+						default:
+							break;
+						}
+						
+						return true;
 					}
-					
 				});
 				
 			} else {
