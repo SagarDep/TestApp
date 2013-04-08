@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -86,25 +87,24 @@ public class ContactAdapter extends ArrayAdapter<ContactItem> {
 					@Override
 					public boolean onTouch(View v, MotionEvent event) {
 						RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.contacts_info_rl2);
+						ImageView im = (ImageView) v.findViewById(R.id.contacts_im);
 						
 						Rect hitBox = new Rect();
 						rl.getHitRect(hitBox);
-						
-						Log.v(Utils.TAG, "OUTSIDE SWITCH ACTION " + event.getAction() + " X=" + (int) event.getX() + "  Y=" + (int) event.getY());
-						Log.v(Utils.TAG, hitBox.toString());
 						
 						switch(event.getAction()) {
 						case MotionEvent.ACTION_DOWN:
 							name.setTextColor(v.getResources().getColor(R.color.white));
 							phone.setTextColor(v.getResources().getColor(R.color.white));
 							rl.setBackgroundColor(v.getResources().getColor(R.color.main_purple));
-							Log.v(Utils.TAG, "INSIDE SWITCH DOWN");
+							im.setImageResource(R.drawable.icon_dial_2_pressed);
 							break;
 						case MotionEvent.ACTION_UP:
 							if(hitBox.contains((int) event.getX(), (int) event.getY())) {
 								name.setTextColor(v.getResources().getColor(R.color.main_text_title));
 								phone.setTextColor(v.getResources().getColor(R.color.main_text_title));
 								rl.setBackgroundColor(v.getResources().getColor(R.color.main_light_purple));
+								im.setImageResource(R.drawable.icon_dial_2);
 								try {
 									Intent intent = new Intent(Intent.ACTION_DIAL);
 									intent.setData(Uri.parse(("tel:"+phone.getText()).replace("-", "")));
@@ -118,7 +118,7 @@ public class ContactAdapter extends ArrayAdapter<ContactItem> {
 								name.setTextColor(v.getResources().getColor(R.color.main_text_title));
 								phone.setTextColor(v.getResources().getColor(R.color.main_text_title));
 								rl.setBackgroundColor(v.getResources().getColor(R.color.main_light_purple));
-								Log.v(Utils.TAG, "INSIDE SWITCH CANCEL");
+								im.setImageResource(R.drawable.icon_dial_2);
 							break;
 						default:
 							break;
