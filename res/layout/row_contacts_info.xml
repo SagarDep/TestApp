@@ -10,7 +10,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginRight="@dimen/side_margins"
 	    android:padding="10dp"
-	    android:background="@drawable/purple_button_state"
+	    android:background="@color/main_light_purple"
 	    android:layout_marginTop="1dp"
 	    >
 	     <TextView
@@ -20,7 +20,7 @@
 	         android:layout_alignParentLeft="true"
 	         android:text="@string/title"
 	         android:textAppearance="?android:attr/textAppearanceSmall"
-	         android:textColor="@drawable/button_text_state"
+	         android:textColor="@color/main_text_title"
 	         android:textStyle="bold"
 	         />
 

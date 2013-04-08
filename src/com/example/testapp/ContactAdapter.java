@@ -3,13 +3,21 @@ package com.example.testapp;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.testapp.contactitem.ContactItem;
 import com.example.testapp.contactitem.ContactPerson;
@@ -26,18 +34,6 @@ public class ContactAdapter extends ArrayAdapter<ContactItem> {
 		this.activity = a;
 		this.data = d;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		for (ContactItem i : d) {
-			if(i.getType() == ContactItem.TYPE_CONTACT_TITLE) {
-				ContactTitle title = (ContactTitle) i;
-				Log.v(Utils.TAG, title.title);
-			} else if (i.getType() == ContactItem.TYPE_CONTACT_PERSON) {
-				ContactPerson person = (ContactPerson) i;
-				Log.v(Utils.TAG, person.name + " " + person.phone);
-			} else {
-				Log.v(Utils.TAG, "-----");
-			}
-		}
 	}
 
 	@Override
@@ -79,11 +75,59 @@ public class ContactAdapter extends ArrayAdapter<ContactItem> {
 				vi = inflater.inflate(R.layout.row_contacts_info, null);
 
 				ContactPerson person = (ContactPerson) item;
-				TextView name = (TextView) vi.findViewById(R.id.contacts_info_name);
-				TextView phone = (TextView) vi.findViewById(R.id.contacts_info_phone);
+				final TextView name = (TextView) vi.findViewById(R.id.contacts_info_name);
+				final TextView phone = (TextView) vi.findViewById(R.id.contacts_info_phone);
 				
 				name.setText(person.name);
 				phone.setText(person.phone);
+				
+				
+				vi.setOnTouchListener(new OnTouchListener() {
+					
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.contacts_info_rl2);
+						
+						Rect hitBox = new Rect();
+						rl.getHitRect(hitBox);
+						
+						Log.v(Utils.TAG, "OUTSIDE SWITCH ACTION " + event.getAction() + " X=" + (int) event.getX() + "  Y=" + (int) event.getY());
+						Log.v(Utils.TAG, hitBox.toString());
+						
+						switch(event.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							name.setTextColor(v.getResources().getColor(R.color.white));
+							phone.setTextColor(v.getResources().getColor(R.color.white));
+							rl.setBackgroundColor(v.getResources().getColor(R.color.main_purple));
+							Log.v(Utils.TAG, "INSIDE SWITCH DOWN");
+							break;
+						case MotionEvent.ACTION_UP:
+							if(hitBox.contains((int) event.getX(), (int) event.getY())) {
+								name.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								phone.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								rl.setBackgroundColor(v.getResources().getColor(R.color.main_light_purple));
+								try {
+									Intent intent = new Intent(Intent.ACTION_DIAL);
+									intent.setData(Uri.parse(("tel:"+phone.getText()).replace("-", "")));
+									activity.startActivity(intent);
+								} catch (ActivityNotFoundException activityException) {
+				                    Log.e(Utils.TAG, "CONTACT CALL FAILED", activityException);
+				                }
+							}
+							break;
+						case MotionEvent.ACTION_CANCEL:
+								name.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								phone.setTextColor(v.getResources().getColor(R.color.main_text_title));
+								rl.setBackgroundColor(v.getResources().getColor(R.color.main_light_purple));
+								Log.v(Utils.TAG, "INSIDE SWITCH CANCEL");
+							break;
+						default:
+							break;
+						}
+						
+						return true;
+					}
+				});
 				
 			} else {
 				vi = inflater.inflate(R.layout.row_contacts_sep, null);
