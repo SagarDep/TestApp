@@ -58,8 +58,10 @@ public class News extends SherlockActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		ActionBar ab = getSupportActionBar();
-		ab.setTitle("NYHETER");
+		ab.setTitle("INFORMATION");
+		ab.setSubtitle("Tryck för att hämta senaste nytt");
 		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayShowHomeEnabled(false);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
 		setContentView(R.layout.activity_news);

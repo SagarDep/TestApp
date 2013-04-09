@@ -88,6 +88,7 @@ public class Map extends SherlockFragmentActivity {
 		ab.setTitle("KARTA");
 		ab.setSubtitle("Tryck för att visa info");
 		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayShowHomeEnabled(false);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		
 		setContentView(R.layout.activity_map);

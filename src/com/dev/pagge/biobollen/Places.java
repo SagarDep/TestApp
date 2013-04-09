@@ -76,6 +76,7 @@ public class Places extends SherlockActivity {
 		ab.setTitle("PLATSER");
 		ab.setSubtitle("Tryck för att visa platsen på kartan");
 		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayShowHomeEnabled(false);
 		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);		
 
 		setContentView(R.layout.activity_places);
