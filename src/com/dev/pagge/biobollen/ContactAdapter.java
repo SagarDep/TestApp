@@ -1,6 +1,7 @@
 package com.dev.pagge.biobollen;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -28,6 +29,7 @@ public class ContactAdapter extends ArrayAdapter<ContactItem> {
 	private Activity activity;
 	private ArrayList<ContactItem> data;
 	private LayoutInflater inflater;
+	private HashMap<String, Integer> set;
 
 	public ContactAdapter(Activity a, ArrayList<ContactItem> d) {
 		super(a, 0, d);
@@ -35,6 +37,18 @@ public class ContactAdapter extends ArrayAdapter<ContactItem> {
 		this.activity = a;
 		this.data = d;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+		this.set = new HashMap<String, Integer>();
+		
+		for (ContactItem contactItem : d) {
+			if(contactItem.getType() == ContactItem.TYPE_CONTACT_PERSON) {
+				String title = ((ContactPerson) contactItem).title;
+				if(set.containsKey(title))
+					set.put(title, set.get(title) + 1);
+				else
+					set.put(title, 1);
+			}
+		}
 	}
 
 	@Override
@@ -67,8 +81,9 @@ public class ContactAdapter extends ArrayAdapter<ContactItem> {
 				
 				String s = title.title;
 				
-				if(s.equals("GENERAL")) s += "ER";
-				else s += "S FADDRAR";
+				if(s.equals("GENERAL") && set.get("GENERAL") > 1) s += "ER";
+				else if(set.get(s) > 1) s += "S FADDRAR";
+				else s += "S FADDER";
 				
 				tv.setText(s);
 				

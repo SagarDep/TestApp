@@ -72,7 +72,10 @@ public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 				
 				time.setText(calDesc.getTime());
 				desc.setText(" " + calDesc.getDesc());
-				place.setText("Plats: " + calDesc.getPlace());
+				if(calDesc.getPlace().equals(""))
+					place.setText("");
+				else
+					place.setText("Plats: " + calDesc.getPlace());
 //				vi.setOnClickListener(new OnClickListener(){
 //					
 //					@Override

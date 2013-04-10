@@ -90,15 +90,11 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 						Rect hitBox = new Rect();
 						rl.getHitRect(hitBox);
 						
-						Log.v(Utils.TAG, "OUTSIDE SWITCH ACTION " + event.getAction() + " X=" + (int) event.getX() + "  Y=" + (int) event.getY());
-						Log.v(Utils.TAG, hitBox.toShortString());
-						
 						switch(event.getAction()) {
 						case MotionEvent.ACTION_DOWN:
 							title.setTextColor(v.getResources().getColor(R.color.white));
 							addr.setTextColor(v.getResources().getColor(R.color.white));
 							rl.setBackgroundColor(v.getResources().getColor(R.color.main_green));
-							Log.v(Utils.TAG, "INSIDE SWITCH DOWN");
 							break;
 						case MotionEvent.ACTION_UP:
 							if(hitBox.contains((int) event.getX(), (int) event.getY())) {
@@ -108,14 +104,12 @@ public class PlaceAdapter extends ArrayAdapter<PlaceItem> {
 								Intent myIntent = new Intent(v.getContext(), Map.class);
 								myIntent.putExtra("id", info.id);
 								activity.startActivityForResult(myIntent, 0);
-								Log.v(Utils.TAG, "INSIDE SWITCH UP");
 							}
 							break;
 						case MotionEvent.ACTION_CANCEL:
 								title.setTextColor(v.getResources().getColor(R.color.main_text_title));
 								addr.setTextColor(v.getResources().getColor(R.color.main_text_title));
 								rl.setBackgroundColor(v.getResources().getColor(R.color.main_light_green));
-								Log.v(Utils.TAG, "INSIDE SWITCH CANCEL");
 							break;
 						default:
 							break;
