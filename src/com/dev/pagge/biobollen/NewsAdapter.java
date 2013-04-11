@@ -2,20 +2,17 @@ package com.dev.pagge.biobollen;
 
 import java.util.ArrayList;
 
-import com.dev.pagge.biobollen.newsitem.NewsItem;
-import com.dev.pagge.biobollen.newsitem.NewsPost;
-import com.example.testapp.R;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.dev.pagge.biobollen.newsitem.NewsItem;
+import com.dev.pagge.biobollen.newsitem.NewsPost;
 
 public class NewsAdapter extends BaseAdapter {
 

@@ -52,7 +52,6 @@ import com.dev.pagge.biobollen.placeitem.PlaceCategory;
 import com.dev.pagge.biobollen.placeitem.PlaceInfo;
 import com.dev.pagge.biobollen.placeitem.PlaceItem;
 import com.dev.pagge.biobollen.placeitem.PlaceSep;
-import com.example.testapp.R;
 
 public class Places extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";

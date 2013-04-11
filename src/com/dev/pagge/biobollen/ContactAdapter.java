@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.dev.pagge.biobollen.contactitem.ContactItem;
 import com.dev.pagge.biobollen.contactitem.ContactPerson;
 import com.dev.pagge.biobollen.contactitem.ContactTitle;
-import com.example.testapp.R;
 
 public class ContactAdapter extends ArrayAdapter<ContactItem> {
 	private Activity activity;

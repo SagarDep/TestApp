@@ -37,7 +37,6 @@ import com.actionbarsherlock.view.Window;
 import com.dev.pagge.biobollen.newsitem.NewsItem;
 import com.dev.pagge.biobollen.newsitem.NewsPost;
 import com.dev.pagge.biobollen.newsitem.NewsSep;
-import com.example.testapp.R;
 
 public class News extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";

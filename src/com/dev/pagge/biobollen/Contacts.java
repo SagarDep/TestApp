@@ -41,7 +41,6 @@ import com.dev.pagge.biobollen.contactitem.ContactItem;
 import com.dev.pagge.biobollen.contactitem.ContactPerson;
 import com.dev.pagge.biobollen.contactitem.ContactSep;
 import com.dev.pagge.biobollen.contactitem.ContactTitle;
-import com.example.testapp.R;
 
 public class Contacts extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";

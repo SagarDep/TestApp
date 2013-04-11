@@ -2,20 +2,17 @@ package com.dev.pagge.biobollen;
 
 import java.util.ArrayList;
 
-import com.dev.pagge.biobollen.scheduleitem.CalDate;
-import com.dev.pagge.biobollen.scheduleitem.CalDesc;
-import com.dev.pagge.biobollen.scheduleitem.ScheduleItem;
-import com.example.testapp.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.dev.pagge.biobollen.scheduleitem.CalDate;
+import com.dev.pagge.biobollen.scheduleitem.CalDesc;
+import com.dev.pagge.biobollen.scheduleitem.ScheduleItem;
 
 public class CalAdapter extends ArrayAdapter<ScheduleItem> {
 	

@@ -1,6 +1,5 @@
 package com.dev.pagge.biobollen;
 
-import com.example.testapp.R;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapsInitializer;
 

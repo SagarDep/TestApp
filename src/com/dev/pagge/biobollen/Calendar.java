@@ -39,7 +39,6 @@ import com.dev.pagge.biobollen.scheduleitem.CalDate;
 import com.dev.pagge.biobollen.scheduleitem.CalDesc;
 import com.dev.pagge.biobollen.scheduleitem.CalSep;
 import com.dev.pagge.biobollen.scheduleitem.ScheduleItem;
-import com.example.testapp.R;
 
 public class Calendar extends SherlockActivity {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
