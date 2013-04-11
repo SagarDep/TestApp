@@ -25,7 +25,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -47,7 +48,7 @@ public class News extends SherlockActivity {
 	private static String lastUpdateDate				= null;
 	private static MenuItem refreshButton				= null;
 	private NewsTask newsTask							= null;
-	private ListView newsList							= null;
+	private ExpandableListView newsList							= null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,14 @@ public class News extends SherlockActivity {
 
 		setContentView(R.layout.activity_news);
 		
-		newsList = (ListView) findViewById(R.id.news_list);
+		newsList = (ExpandableListView) findViewById(R.id.news_list);
+		
+		TextView padding = new TextView(this);
+		padding.setHeight(getResources().getDimensionPixelOffset(R.dimen.list_top_margin));
+		
+		newsList.addHeaderView(padding);
+		newsList.addFooterView(padding);
+		
 		newsTask = new NewsTask(News.this, false);
 		newsTask.execute("");
 	}

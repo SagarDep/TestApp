@@ -6,10 +6,10 @@
     android:background="@color/white"
     tools:context=".News" >
 	    
-	    <ListView
+	    <ExpandableListView
 	        android:id="@+id/news_list"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:layout_alignParentLeft="true"
 	        android:listSelector="@android:color/transparent"
 	        android:focusable="false"
@@ -19,10 +19,12 @@
 			android:footerDividersEnabled="false"
 			android:divider="@null"
 			android:dividerHeight="0dp"
+			android:childDivider="@color/main_blue"
 			android:cacheColorHint="#00000000"
 			android:fadingEdge="none"
 	        android:paddingLeft="20dp"
 	        android:background="@null"
+	        android:groupIndicator="@null"
 	        />
 	    
 </RelativeLayout>
