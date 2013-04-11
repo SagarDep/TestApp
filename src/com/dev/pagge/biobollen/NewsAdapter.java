@@ -7,7 +7,6 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +129,7 @@ public class NewsAdapter extends BaseExpandableListAdapter {
 		
 		return v;
 	}
-
+	
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
 		return map.get(titleList.get(groupPosition));

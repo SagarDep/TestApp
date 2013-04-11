@@ -33,9 +33,10 @@
  	    android:background="@color/main_light_blue"
  	    android:paddingBottom="10dp"
  	    android:paddingLeft="10dp"
- 	    android:paddingRight="20dp"
+ 	    android:paddingRight="10dp"
  	    android:paddingTop="10dp"
  	    android:text="@string/desc"
- 	    android:textColor="@color/main_text_title" />
+ 	    android:textColor="@color/main_text_title"
+ 	    android:layout_marginRight="20dp" />
 
 </RelativeLayout>
