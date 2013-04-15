@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dev.pagge.biobollen"
-    android:versionCode="2"
-    android:versionName="1.1" >
+    android:versionCode="3"
+    android:versionName="1.15" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="14" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -65,7 +65,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDDazBUCAZIZny2dsaSlFe7r4cckL0gLOA" />
+            android:value="@string/google_maps_api_key_v2" />
 
         <activity
             android:name="com.dev.pagge.biobollen.Places"

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,6 +127,7 @@ public class NewsAdapter extends BaseExpandableListAdapter {
 		
 //		tvDate.setText(Utils.formatDate(post.getDate()));
 		tvPost.setText(Html.fromHtml(post.getText()));
+		tvPost.setMovementMethod(LinkMovementMethod.getInstance());
 		
 		return v;
 	}
