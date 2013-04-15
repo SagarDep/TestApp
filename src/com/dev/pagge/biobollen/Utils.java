@@ -101,7 +101,7 @@ public class Utils {
 		catMap = new HashMap<String, String>();
 		catMap.put("ATM", "Bankomat");
 		catMap.put("BASEBALL", "Brännboll");
-		catMap.put("BMC", "BMC");
+		catMap.put("BMC", "Universitet");
 		catMap.put("FASTFOOD", "Snabbmat");
 		catMap.put("FOOD", "Middag");
 		catMap.put("HOME", "Hem");
