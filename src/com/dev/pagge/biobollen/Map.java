@@ -60,7 +60,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends SherlockFragmentActivity {
-	private final LatLng POS_LUND = new LatLng(55.715363, 13.194580); //Gör om beroende på skärmstorlek
+	private final LatLng POS_LUND = new LatLng(55.71471, 13.200803); //Gör om beroende på skärmstorlek
 	
 	private final String REFRESH_MSG_CONNECTION_FAILURE = "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED = "NOT_NEEDED";
@@ -363,6 +363,8 @@ public class Map extends SherlockFragmentActivity {
 					
 					JSONArray array = new JSONArray(builder.toString());
 					
+					int size = array.getJSONObject(array.length()-1).getInt("ID");
+					
 					File[] files = getFilesDir().listFiles(new FilenameFilter() {
 						public boolean accept(File dir, String name) {
 					        return name.toLowerCase().endsWith(".png");
@@ -373,7 +375,7 @@ public class Map extends SherlockFragmentActivity {
 						for (int i = 0; i < files.length; i++) 
 							set.add(files[i].getName());
 					
-					for (int i = 1; i <= array.length(); i++) {
+					for (int i = 1; i <= size; i++) {
 						Bitmap image = null;
 						InputStream is = null;
 						FileOutputStream out = null;

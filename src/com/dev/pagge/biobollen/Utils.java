@@ -102,19 +102,21 @@ public class Utils {
 		catMap.put("ATM", "Bankomat");
 		catMap.put("BASEBALL", "Brännboll");
 		catMap.put("BMC", "Universitet");
+		catMap.put("BUS", "Busshållplatser");
 		catMap.put("FASTFOOD", "Snabbmat");
 		catMap.put("FOOD", "Middag");
 		catMap.put("HOME", "Hem");
 		catMap.put("HOSPITAL", "Sjukhus");
 		catMap.put("NATION", "Nationer");
 		catMap.put("STORE", "Affärer");
-		catMap.put("TRAIN", "Transport");
+		catMap.put("TRAIN", "Tågstation");
 		
 		
 		iconBMMap = new HashMap<String, BitmapDescriptor>();
 		iconBMMap.put("ATM", BitmapDescriptorFactory.fromResource(R.drawable.marker_atm));
 		iconBMMap.put("BASEBALL", BitmapDescriptorFactory.fromResource(R.drawable.marker_baseball));
 		iconBMMap.put("BMC", BitmapDescriptorFactory.fromResource(R.drawable.marker_bmc));
+		iconBMMap.put("BUS", BitmapDescriptorFactory.fromResource(R.drawable.marker_bus));
 		iconBMMap.put("FASTFOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_fastfood));
 		iconBMMap.put("FOOD", BitmapDescriptorFactory.fromResource(R.drawable.marker_food));
 		iconBMMap.put("HOME", BitmapDescriptorFactory.fromResource(R.drawable.marker_home));
@@ -214,6 +216,7 @@ public class Utils {
 		iconBMDMap.put("ATM", BitmapFactory.decodeResource(res, R.drawable.marker_atm));
 		iconBMDMap.put("BASEBALL", BitmapFactory.decodeResource(res, R.drawable.marker_baseball));
 		iconBMDMap.put("BMC", BitmapFactory.decodeResource(res, R.drawable.marker_bmc));
+		iconBMDMap.put("BUS", BitmapFactory.decodeResource(res, R.drawable.marker_bus));
 		iconBMDMap.put("FASTFOOD", BitmapFactory.decodeResource(res, R.drawable.marker_fastfood));
 		iconBMDMap.put("FOOD", BitmapFactory.decodeResource(res, R.drawable.marker_food));
 		iconBMDMap.put("HOME", BitmapFactory.decodeResource(res, R.drawable.marker_home));
