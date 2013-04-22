@@ -17,9 +17,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -85,10 +88,22 @@ public class Calendar extends SherlockActivity {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
-				refreshButton.setIcon(null);
-				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
-				refreshButton.setEnabled(false);
-				new CalendarTask(Calendar.this, true).execute("");
+//				refreshButton.setIcon(null);
+//				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
+//				refreshButton.setEnabled(false);
+//				new CalendarTask(Calendar.this, true).execute("");
+				
+				java.util.Calendar cal = java.util.Calendar.getInstance();
+				cal.add(java.util.Calendar.SECOND, 5);
+				
+				Intent intent = new Intent(Calendar.this, AlarmReceiver.class);
+				intent.putExtra("alarm_message", "Waddup suckah?");
+				
+				PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, 464155, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				
+				AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+				am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+				
 				return false;
 			}
 		});
