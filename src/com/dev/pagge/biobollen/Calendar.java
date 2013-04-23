@@ -175,7 +175,7 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 	private void loadSettings() {
 		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 		showNotifications = prefs.getBoolean(Utils.PREFS_KEY_SCHEDULE_NOTI, true);
-		minutesBeforeEvent = prefs.getString(Utils.PREFS_KEY_SCHEDULE_NOTI_TIME, "30"); //ÄNDRA TILLBAKA
+		minutesBeforeEvent = prefs.getString(Utils.PREFS_KEY_SCHEDULE_NOTI_TIME, "1"); //ÄNDRA TILLBAKA
 		notificationOffset = prefs.getInt(Utils.PREFS_KEY_SCHEDULE_NOTI_OFFSET, -1);
 	}
 	
@@ -196,52 +196,81 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 //		PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 //		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 //		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-		
-		int offset = 0;
-		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-		for (int i = 0; i < calendarItems.size(); i++) {
-			if(calendarItems.get(i).getType() == ScheduleItem.TYPE_CALDESC) {
-				CalDesc item = (CalDesc) calendarItems.get(i);
-				java.util.Calendar cal = java.util.Calendar.getInstance();
-				
-				if(item.getDay().equals("Fredag"))		cal.set(2013, 5-1, 3);
-				else if(item.getDay().equals("Lördag"))	cal.set(2013, 5-1, 4);
-				else									cal.set(2013, 5-1, 5);
-				
-				String[] start = item.getTime().split("-")[0].split(":");
-				int hours = Integer.parseInt(start[0]);
-				int minutes = Integer.parseInt(start[1]);
-				
-				cal.set(java.util.Calendar.HOUR_OF_DAY, hours);
-				cal.set(java.util.Calendar.MINUTE, minutes);
-				cal.set(java.util.Calendar.SECOND, 0);
-				cal.add(java.util.Calendar.MINUTE, offsetTime);
-				
-				
-				Intent intent = new Intent(Calendar.this, AlarmReceiver.class);
-				intent.putExtra("TITLE", item.getDesc());
-				intent.putExtra("TIME", item.getTime().split("-")[0]);
-				intent.putExtra("PLACE", item.getPlace());
-				intent.putExtra("PLACE_ID", item.getPlaceId());
-				intent.putExtra("REQ", Utils.REQUEST_CODE + offset);
 			
-				PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE + offset, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-				am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-				
-				Log.v(Utils.TAG, "ALARM ADDED   " + cal.toString());
-				
-				offset++;
-				break;
+			
+//			PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//			java.util.Calendar cal2 = java.util.Calendar.getInstance();
+//			cal2.add(java.util.Calendar.MINUTE, 5);
+//			am.set(AlarmManager.RTC_WAKEUP, cal2.getTimeInMillis(), two);
+//			am.cancel(two);
+//			two = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE);
+//			
+//			Log.v(Utils.TAG, "TESTING 2  " + (two != null ? "Alarm found" : "Alarm not found"));
+			
+			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+			Intent intent = new Intent(Calendar.this, AlarmReceiver.class);
+			
+			for (int i = 0; i < notificationOffset; i++) {
+				PendingIntent pi = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE + i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				pi.cancel();
 			}
-		}
-		
-		notificationOffset = offset;
-		
-		
-		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putInt(Utils.PREFS_KEY_SCHEDULE_NOTI_OFFSET, notificationOffset);
-		editor.commit();
+			notificationOffset = 0;
+			String s1 = "01:11-02:00";
+			String s2 = "01:16-02:00";
+			int offset = 0;
+			for (int i = 0; i < calendarItems.size(); i++) {
+				if(calendarItems.get(i).getType() == ScheduleItem.TYPE_CALDESC) {
+					CalDesc item = (CalDesc) calendarItems.get(i);
+					java.util.Calendar cal = java.util.Calendar.getInstance();
+					
+					if(item.getDay().equals("Fredag"))		cal.set(2013, 5-1, 3);
+					else if(item.getDay().equals("Lördag"))	cal.set(2013, 5-1, 4);
+					else									cal.set(2013, 5-1, 5);
+					
+					String[] start = item.getTime().split("-")[0].split(":");
+					int hours = Integer.parseInt(start[0]);
+					int minutes = Integer.parseInt(start[1]);
+
+					if(offset == 0) {
+						cal.set(2013, 4-1, 24);
+						hours = 01;
+						minutes = 27;
+						Log.v(Utils.TAG,i + "    INSIDE");
+					}
+					if(offset == 1) {
+						Log.v(Utils.TAG,i + "    INSIDE");
+						cal.set(2013, 4-1, 24);
+						hours = 01;
+						minutes = 28;
+					}
+					
+					cal.set(java.util.Calendar.HOUR_OF_DAY, hours);
+					cal.set(java.util.Calendar.MINUTE, minutes);
+					cal.set(java.util.Calendar.SECOND, 0);
+					cal.add(java.util.Calendar.MINUTE, offsetTime);
+					
+					
+					intent = new Intent(Calendar.this, AlarmReceiver.class);
+					intent.putExtra("TITLE", item.getDesc());
+					intent.putExtra("TIME", item.getTime().split("-")[0]);
+					intent.putExtra("PLACE", item.getPlace());
+					intent.putExtra("PLACE_ID", item.getPlaceId());
+					intent.putExtra("REQ", Utils.REQUEST_CODE + offset);
+				
+					PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE + offset, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+					am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+					
+					Log.v(Utils.TAG,i + "    " + cal.toString());
+					
+					offset++;
+				}
+			}
+			
+			notificationOffset = offset;
+			SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+			Editor editor = prefs.edit();
+			editor.putInt(Utils.PREFS_KEY_SCHEDULE_NOTI_OFFSET, notificationOffset);
+			editor.commit();
 	}
 	
 	@Override

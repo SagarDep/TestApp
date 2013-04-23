@@ -29,9 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		loadSettings(context);
-		Log.e(Utils.TAG, "INSIDE RECEIVER");
 		if(showNotifications) {
-			Log.e(Utils.TAG, "INSIDE IF IN RECEIVER");
 			Bundle bundle = intent.getExtras();
 			
 			String title = bundle.getString("TITLE");
