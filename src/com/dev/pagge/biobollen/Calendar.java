@@ -27,23 +27,25 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.actionbarsherlock.view.Window;
+import com.dev.pagge.biobollen.SettingsDialog.SettingsDialogListener;
 import com.dev.pagge.biobollen.scheduleitem.CalDate;
 import com.dev.pagge.biobollen.scheduleitem.CalDesc;
 import com.dev.pagge.biobollen.scheduleitem.CalSep;
 import com.dev.pagge.biobollen.scheduleitem.ScheduleItem;
 
-public class Calendar extends SherlockActivity {
+public class Calendar extends SherlockFragmentActivity  implements SettingsDialogListener {
 	private final String REFRESH_MSG_CONNECTION_FAILURE	= "FAIL";
 	private final String REFRESH_MSG_REFRESH_NOT_NEEDED	= "NOT_NEEDED";
 
@@ -76,9 +78,11 @@ public class Calendar extends SherlockActivity {
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
+		
 		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
 		refreshButton.setIcon(R.drawable.refresh_white);
-		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		if(calendarTask.getStatus() != AsyncTask.Status.FINISHED){
 			refreshButton.setIcon(null);
 			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
@@ -107,7 +111,35 @@ public class Calendar extends SherlockActivity {
 				return false;
 			}
 		});
+		
+		
+		MenuItem settingsButton = menu.add(0, 1, 0, "Settings");
+		settingsButton.setIcon(R.drawable.settings);
+		settingsButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		settingsButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				Toast.makeText(Calendar.this, "This is settings mofo", Toast.LENGTH_SHORT).show();
+				
+				new SettingsDialog().show(getSupportFragmentManager(), "SettingsDialogFragment");
+				
+				return false;
+			}
+		});
+		
+		
 	    return true;
+	}
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		Toast.makeText(this, "Positivt svar", Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		Toast.makeText(this, "Negativt svar", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override

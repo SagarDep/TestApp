@@ -18,7 +18,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Bundle bundle = intent.getExtras();
 		String message = bundle.getString("alarm_message");
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+//		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 		
 		Intent i = new Intent(context, Map.class);
 		i.putExtra("id", 6);
@@ -26,12 +26,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 		PendingIntent pIntent = PendingIntent.getActivity(context, 0, i, 0);
 		
 		Notification noti = new NotificationCompat.Builder(context)
-				.setContentTitle("Biobollen: Brännboll")
+				.setContentTitle("BioBollen: Brännboll")
 				.setContentText("13:00 St Hans Backar")
 				.setContentIntent(pIntent)
 				.setContentInfo("")
 				.setSubText("Tryck för att visa på kartan")
-				.setTicker("Brännboll 13:00")
+				.setTicker("BioBollen: Brännboll kl. 13:00\nPlats: St Hans Backar")
 				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 				.setVibrate(new long[]{0,250,100,250})
 				.setSmallIcon(R.drawable.marker_baseball)
