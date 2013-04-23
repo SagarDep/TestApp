@@ -27,7 +27,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -53,6 +52,9 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 	private static long lastUpdateTime					= -1L;
 	private static String lastUpdateDate				= null;
 	private static MenuItem refreshButton				= null;
+	private static boolean showNotifications;
+	private static String minutesBeforeEvent			= null;
+	private static int notificationOffset				= -1;
 	private CalendarTask calendarTask					= null;
 	private ListView calendarList						= null;
 	
@@ -71,15 +73,38 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 
 		setContentView(R.layout.activity_cal);
 		
+		loadSettings();
+		
 		calendarList = (ListView) findViewById(R.id.cal_list);
 		calendarTask = new CalendarTask(Calendar.this, false);
 		calendarTask.execute("");
 	}
-	
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		
-		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
+		MenuItem settingsButton = menu.add(0, 0, 0, "Inställningar");
+		settingsButton.setIcon(R.drawable.settings);
+		settingsButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		settingsButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				if(minutesBeforeEvent == null) {
+					loadSettings();
+				}
+				
+				SettingsDialog dialog = new SettingsDialog();
+				dialog.minutesBeforeEvent = minutesBeforeEvent;
+				dialog.showNotifications = showNotifications;
+				dialog.show(getSupportFragmentManager(), "SettingsDialogFragment");
+				
+				return false;
+			}
+		});
+		
+		
+		refreshButton = menu.add(0, 1, 0, Utils.REFRESH_BUTTON_TEXT);
 		refreshButton.setIcon(R.drawable.refresh_white);
 //		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -92,38 +117,29 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
-//				refreshButton.setIcon(null);
-//				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
-//				refreshButton.setEnabled(false);
-//				new CalendarTask(Calendar.this, true).execute("");
+				refreshButton.setIcon(null);
+				refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
+				refreshButton.setEnabled(false);
+				new CalendarTask(Calendar.this, true).execute("");
 				
-				java.util.Calendar cal = java.util.Calendar.getInstance();
-				cal.add(java.util.Calendar.SECOND, 5);
 				
-				Intent intent = new Intent(Calendar.this, AlarmReceiver.class);
-				intent.putExtra("alarm_message", "Waddup suckah?");
-				
-				PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, 464155, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-				
-				AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-				am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-				
-				return false;
-			}
-		});
-		
-		
-		MenuItem settingsButton = menu.add(0, 1, 0, "Settings");
-		settingsButton.setIcon(R.drawable.settings);
-		settingsButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		settingsButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				Toast.makeText(Calendar.this, "This is settings mofo", Toast.LENGTH_SHORT).show();
-				
-				new SettingsDialog().show(getSupportFragmentManager(), "SettingsDialogFragment");
-				
+//				int offsetTime = -1 * Integer.parseInt(minutesBeforeEvent);
+//				
+//				
+//				
+//				
+//				java.util.Calendar cal = java.util.Calendar.getInstance();
+//				cal.set(java.util.Calendar.HOUR_OF_DAY, 23);
+//				cal.set(java.util.Calendar.MINUTE, 12);
+////				cal.add(java.util.Calendar.SECOND, offsetTime);
+//				
+//				
+//				Intent intent = new Intent(Calendar.this, AlarmReceiver.class);
+//				intent.putExtra("alarm_message", "Waddup suckah?");
+//				
+//				PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//				AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//				am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 				return false;
 			}
 		});
@@ -133,13 +149,99 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 	}
 
 	@Override
-	public void onDialogPositiveClick(DialogFragment dialog) {
-		Toast.makeText(this, "Positivt svar", Toast.LENGTH_SHORT).show();
+	public void onDialogPositiveClick(SettingsDialog dialog) {
+//		Toast.makeText(this, dialog.minutesBeforeEvent + " " + (dialog.showNotifications? "true" : "false"), Toast.LENGTH_SHORT).show();
+		showNotifications = dialog.showNotifications;
+		minutesBeforeEvent = dialog.minutesBeforeEvent;
+		saveSettings();
+		if(showNotifications)
+			updateAlarmManager();
 	}
 	
+
 	@Override
-	public void onDialogNegativeClick(DialogFragment dialog) {
-		Toast.makeText(this, "Negativt svar", Toast.LENGTH_SHORT).show();
+	public void onDialogNegativeClick(SettingsDialog dialog) {
+//		Toast.makeText(this, "Negativt svar", Toast.LENGTH_SHORT).show();
+	}
+
+	private void saveSettings() {
+		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putBoolean(Utils.PREFS_KEY_SCHEDULE_NOTI, showNotifications);
+		editor.putString(Utils.PREFS_KEY_SCHEDULE_NOTI_TIME, minutesBeforeEvent);
+		editor.commit();
+	}
+
+	private void loadSettings() {
+		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+		showNotifications = prefs.getBoolean(Utils.PREFS_KEY_SCHEDULE_NOTI, true);
+		minutesBeforeEvent = prefs.getString(Utils.PREFS_KEY_SCHEDULE_NOTI_TIME, "30"); //ÄNDRA TILLBAKA
+		notificationOffset = prefs.getInt(Utils.PREFS_KEY_SCHEDULE_NOTI_OFFSET, -1);
+	}
+	
+	public void updateAlarmManager() {
+		int offsetTime = -1 * Integer.parseInt(minutesBeforeEvent);
+		
+		
+		
+		
+//		java.util.Calendar cal = java.util.Calendar.getInstance();
+//		cal.add(java.util.Calendar.SECOND, 35);
+//		cal.add(java.util.Calendar.SECOND, offsetTime);
+//		
+//		
+//		Intent intent = new Intent(Calendar.this, AlarmReceiver.class);
+//		intent.putExtra("alarm_message", "Waddup suckah?");
+//		
+//		PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+		
+		int offset = 0;
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		for (int i = 0; i < calendarItems.size(); i++) {
+			if(calendarItems.get(i).getType() == ScheduleItem.TYPE_CALDESC) {
+				CalDesc item = (CalDesc) calendarItems.get(i);
+				java.util.Calendar cal = java.util.Calendar.getInstance();
+				
+				if(item.getDay().equals("Fredag"))		cal.set(2013, 5-1, 3);
+				else if(item.getDay().equals("Lördag"))	cal.set(2013, 5-1, 4);
+				else									cal.set(2013, 5-1, 5);
+				
+				String[] start = item.getTime().split("-")[0].split(":");
+				int hours = Integer.parseInt(start[0]);
+				int minutes = Integer.parseInt(start[1]);
+				
+				cal.set(java.util.Calendar.HOUR_OF_DAY, hours);
+				cal.set(java.util.Calendar.MINUTE, minutes);
+				cal.set(java.util.Calendar.SECOND, 0);
+				cal.add(java.util.Calendar.MINUTE, offsetTime);
+				
+				
+				Intent intent = new Intent(Calendar.this, AlarmReceiver.class);
+				intent.putExtra("TITLE", item.getDesc());
+				intent.putExtra("TIME", item.getTime().split("-")[0]);
+				intent.putExtra("PLACE", item.getPlace());
+				intent.putExtra("PLACE_ID", item.getPlaceId());
+				intent.putExtra("REQ", Utils.REQUEST_CODE + offset);
+			
+				PendingIntent sender = PendingIntent.getBroadcast(Calendar.this, Utils.REQUEST_CODE + offset, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+				
+				Log.v(Utils.TAG, "ALARM ADDED   " + cal.toString());
+				
+				offset++;
+				break;
+			}
+		}
+		
+		notificationOffset = offset;
+		
+		
+		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putInt(Utils.PREFS_KEY_SCHEDULE_NOTI_OFFSET, notificationOffset);
+		editor.commit();
 	}
 	
 	@Override
@@ -226,6 +328,7 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 					if(showProgress != null) showProgress.dismiss();
 					lastUpdateTime = System.currentTimeMillis();
 					saveToFile();
+					updateAlarmManager();
 					break;
 				case MSG_ERR_USE_CACHED_DATA:
 					Log.i(Utils.TAG, "CAL (no connection) USING CACHED VERSION");
@@ -334,7 +437,9 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 					String time = o.getString("scheduleFrom") + "-" + o.getString("scheduleTo");
 					String title = o.getString("scheduleTitle");
 					String place = o.getString("schedulePlace");
-					calendarItems.add(new CalDesc(time, title, place));
+					String day = o.getString("scheduleDay");
+					int id = o.getInt("placeId");
+					calendarItems.add(new CalDesc(time, title, place, id, day));
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

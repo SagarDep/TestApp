@@ -2,6 +2,7 @@ package com.dev.pagge.biobollen;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -30,6 +31,10 @@ public class Utils {
 	public static final String PREFS_KEY_SCHEDULE			= "schedule";
 	public static final String PREFS_KEY_SCHEDULE_UPDATE	= "scheduleUpdate";
 	public static final String PREFS_KEY_SCHEDULE_TIME		= "scheduleTime";
+	public static final String PREFS_KEY_SCHEDULE_NOTI		= "scheduleNoti";
+	public static final String PREFS_KEY_SCHEDULE_NOTI_TIME	= "scheduleNotiTime";
+	public static final String PREFS_KEY_SCHEDULE_NOTI_INIT	= "scheduleNotiInit";
+	public static final String PREFS_KEY_SCHEDULE_NOTI_OFFSET	= "scheduleNotiInit";
 	public static final String PREFS_KEY_PLACE				= "place";
 	public static final String PREFS_KEY_PLACE_UPDATE		= "placeDate";
 	public static final String PREFS_KEY_PLACE_TIME			= "placeTime";
@@ -50,6 +55,8 @@ public class Utils {
 	public static final String DB_MARKER_URL	= "http://nutty.rymdraket.net/android/markers.php";
 	public static final String DB_IMAGE_URL		= "http://nutty.rymdraket.net/android/imgs/";
 
+	public static final int REQUEST_CODE 		= 464155;
+	
 	public static final int DB_MODE_REFRESH		= 0;
 	public static final int DB_MODE_GET			= 1;
 	
