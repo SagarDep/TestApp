@@ -175,7 +175,7 @@ public class Calendar extends SherlockFragmentActivity  implements SettingsDialo
 	private void loadSettings() {
 		SharedPreferences prefs = getSharedPreferences(Utils.PREFS_FILE, Context.MODE_PRIVATE);
 		showNotifications = prefs.getBoolean(Utils.PREFS_KEY_SCHEDULE_NOTI, true);
-		minutesBeforeEvent = prefs.getString(Utils.PREFS_KEY_SCHEDULE_NOTI_TIME, "1"); //ÄNDRA TILLBAKA
+		minutesBeforeEvent = prefs.getString(Utils.PREFS_KEY_SCHEDULE_NOTI_TIME, "30"); //ÄNDRA TILLBAKA
 		notificationOffset = prefs.getInt(Utils.PREFS_KEY_SCHEDULE_NOTI_OFFSET, -1);
 	}
 	
