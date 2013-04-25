@@ -11,8 +11,6 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver {
 	private boolean showNotifications;
@@ -24,7 +22,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 	 PLACE
 	 PLACE_ID
 	 */
-	
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -38,11 +35,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 			int placeId = bundle.getInt("PLACE_ID");
 			int requestCode = bundle.getInt("REQ");
 			
-			//			String message = bundle.getString("alarm_message");
-	//		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-			
 			Intent i = new Intent(context, Map.class);
 			i.putExtra("id", placeId);
+			i.setAction(bundle.getString("TITLE"));
 			
 			PendingIntent pIntent = PendingIntent.getActivity(context, 0, i, 0);
 			

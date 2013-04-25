@@ -94,7 +94,7 @@ public class Map extends SherlockFragmentActivity {
 		Bundle extras = getIntent().getExtras();
 		if(extras != null)
 			markerId = extras.getInt("id");
-		
+
 		//KANSKE KAN SPARA MAP SOM STATIC OCH KOLLA OM != NULL?
 		map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
@@ -156,8 +156,9 @@ public class Map extends SherlockFragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		refreshButton = menu.add(0, 0, 0, Utils.REFRESH_BUTTON_TEXT);
-		refreshButton.setIcon(R.drawable.refresh_white);
-		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		refreshButton.setIcon(R.drawable.refresh_dark);
+//		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		refreshButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		if(mapTask.getStatus() != AsyncTask.Status.FINISHED){
 			refreshButton.setIcon(null);
 			refreshButton.setTitle(Utils.REFRESH_BUTTON_TEXT_PRESSED);
